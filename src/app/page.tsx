@@ -70,12 +70,12 @@ export default function Home() {
       loop
       muted
       playsInline
-      poster="/videos/galaxy-poster.jpg"
+      poster="/Dreamhouse/videos/galaxy-poster.jpg"
       className="absolute inset-0 w-full h-full object-cover"
       aria-hidden="true"
     >
-      <source src="/videos/galaxy.mp4" type="video/mp4" />
-      <source src="/videos/galaxy.webm" type="video/webm" />
+      <source src="/Dreamhouse/videos/galaxy.mp4" type="video/mp4" />
+      <source src="/Dreamhouse/videos/galaxy.webm" type="video/webm" />
     </video>
   );
 
