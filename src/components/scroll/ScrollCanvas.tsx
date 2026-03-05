@@ -48,10 +48,19 @@ export default function ScrollCanvas({
 
       // Pre-query all reveal elements per section
       const revealsPerSection: HTMLElement[][] = [];
-      contents.forEach((contentEl, idx) => {
-        const r = Array.from(contentEl.querySelectorAll<HTMLElement>("[data-reveal]"));
-        revealsPerSection.push(r);
-        console.log(`Section ${idx}: found ${r.length} data-reveal elements`);
+      contents.forEach((contentEl) => {
+        revealsPerSection.push(
+          Array.from(contentEl.querySelectorAll<HTMLElement>("[data-reveal]"))
+        );
+      });
+
+      // Pre-query all line elements per section and cache their lengths
+      const linesPerSection: { el: SVGPathElement; length: number }[][] = [];
+      contents.forEach((contentEl) => {
+        const paths = Array.from(contentEl.querySelectorAll<SVGPathElement>("[data-line]"));
+        linesPerSection.push(
+          paths.map((p) => ({ el: p, length: p.getTotalLength() }))
+        );
       });
 
       // Set initial states — everything hidden except section 0
@@ -67,6 +76,12 @@ export default function ScrollCanvas({
           gsap.set(reveals, { autoAlpha: 0, y: 12 });
         }
       });
+      // Hide all line elements (fully hidden via dashoffset)
+      linesPerSection.forEach((lines) => {
+        lines.forEach(({ el, length }) => {
+          gsap.set(el, { strokeDasharray: length, strokeDashoffset: length });
+        });
+      });
 
       // Single master ScrollTrigger drives everything
       ScrollTrigger.create({
@@ -78,12 +93,6 @@ export default function ScrollCanvas({
           const progress = self.progress; // 0 to 1
           const activeIndex = Math.min(Math.floor(progress * N), N - 1);
           const sectionProgress = progress * N - activeIndex; // 0..1 within section
-
-          // Debug: log every ~5% of scroll
-          if (Math.round(progress * 100) % 5 === 0) {
-            const reveals = revealsPerSection[activeIndex];
-            console.log(`progress=${progress.toFixed(3)} section=${activeIndex} sp=${sectionProgress.toFixed(3)} reveals=${reveals.length}`);
-          }
 
           // --- Crossfade logic ---
           for (let i = 0; i < N; i++) {
@@ -137,6 +146,34 @@ export default function ScrollCanvas({
             } else {
               // Reset non-active sections' reveals to hidden
               gsap.set(reveals, { autoAlpha: 0, y: 12 });
+            }
+          }
+
+          // --- Line drawing (synced with text reveals) ---
+          for (let i = 0; i < N; i++) {
+            const lines = linesPerSection[i];
+            if (lines.length === 0) continue;
+
+            if (i === activeIndex) {
+              const revealProgress = clamp(
+                (sectionProgress - 0.05) / 0.55,
+                0,
+                1
+              );
+              lines.forEach(({ el, length }) => {
+                gsap.set(el, {
+                  strokeDasharray: length,
+                  strokeDashoffset: length * (1 - revealProgress),
+                });
+              });
+            } else {
+              // Reset — fully hidden
+              lines.forEach(({ el, length }) => {
+                gsap.set(el, {
+                  strokeDasharray: length,
+                  strokeDashoffset: length,
+                });
+              });
             }
           }
         },

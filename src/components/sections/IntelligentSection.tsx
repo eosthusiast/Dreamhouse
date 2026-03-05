@@ -12,6 +12,23 @@ export default function IntelligentSection() {
       />
 
       <div className="relative z-20 w-full h-full">
+        {/* SVG line connecting text elements */}
+        <svg
+          className="absolute inset-0 w-full h-full pointer-events-none"
+          viewBox="0 0 1000 600"
+          preserveAspectRatio="none"
+          fill="none"
+        >
+          <path
+            data-line
+            d="M 120 210 C 200 220, 300 280, 400 320 S 500 380, 580 400"
+            stroke="rgba(251, 240, 224, 0.4)"
+            strokeWidth="1.5"
+            fill="none"
+            strokeLinecap="round"
+          />
+        </svg>
+
         <div
           data-reveal
           className="absolute font-playfair italic text-cream text-lg md:text-xl lg:text-2xl max-w-xs md:max-w-sm"
