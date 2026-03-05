@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const GALLERY_1 = [
   {
-    src: "/images/gallery/waterfall-closeup.jpg",
+    src: "/Dreamhouse/images/gallery/waterfall-closeup.jpg",
     alt: "Waterfall closeup",
     width: "40%",
     marginLeft: "auto",
@@ -19,7 +19,7 @@ const GALLERY_1 = [
     marginTop: "0",
   },
   {
-    src: "/images/gallery/deck-chairs.png",
+    src: "/Dreamhouse/images/gallery/deck-chairs.png",
     alt: "Relaxing on deck chairs",
     width: "45%",
     marginLeft: "auto",
@@ -28,7 +28,7 @@ const GALLERY_1 = [
     marginTop: "-4rem",
   },
   {
-    src: "/images/gallery/dancing-indoors.png",
+    src: "/Dreamhouse/images/gallery/dancing-indoors.png",
     alt: "Dancing indoors",
     width: "40%",
     marginLeft: "5%",
@@ -40,7 +40,7 @@ const GALLERY_1 = [
 
 const GALLERY_2 = [
   {
-    src: "/images/gallery/meditation-group.png",
+    src: "/Dreamhouse/images/gallery/meditation-group.png",
     alt: "Group meditation",
     width: "40%",
     marginLeft: "5%",
@@ -49,7 +49,7 @@ const GALLERY_2 = [
     marginTop: "0",
   },
   {
-    src: "/images/gallery/surfer.jpg",
+    src: "/Dreamhouse/images/gallery/surfer.jpg",
     alt: "Surfer riding a wave",
     width: "40%",
     marginLeft: "auto",
@@ -58,7 +58,7 @@ const GALLERY_2 = [
     marginTop: "-3rem",
   },
   {
-    src: "/images/gallery/beach-woman.jpg",
+    src: "/Dreamhouse/images/gallery/beach-woman.jpg",
     alt: "Woman watching the ocean",
     width: "40%",
     marginLeft: "auto",

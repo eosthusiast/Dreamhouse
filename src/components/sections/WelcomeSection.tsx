@@ -6,7 +6,7 @@ export default function WelcomeSection() {
       {/* Left side - heading */}
       <div className="flex-1" data-reveal>
         <Image
-          src="/images/typography/welcome-to-the-dream-house.png"
+          src="/Dreamhouse/images/typography/welcome-to-the-dream-house.png"
           alt="Welcome to The Dream House"
           width={800}
           height={400}

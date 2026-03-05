@@ -34,32 +34,32 @@ export default function Home() {
     },
     {
       id: "story-beach",
-      image: "/images/sections/beach-sunset.png",
+      image: "/Dreamhouse/images/sections/beach-sunset.png",
       content: <StorySection variant="beach" />,
     },
     {
       id: "story-ocean",
-      image: "/images/sections/ocean-sparkle.png",
+      image: "/Dreamhouse/images/sections/ocean-sparkle.png",
       content: <StorySection variant="ocean" />,
     },
     {
       id: "welcome",
-      image: "/images/sections/welcome-silhouettes.png",
+      image: "/Dreamhouse/images/sections/welcome-silhouettes.png",
       content: <WelcomeSection />,
     },
     {
       id: "inspired",
-      image: "/images/sections/inspired-dancing.png",
+      image: "/Dreamhouse/images/sections/inspired-dancing.png",
       content: <InspiredBySection />,
     },
     {
       id: "intelligent",
-      image: "/images/sections/intelligent-ocean.png",
+      image: "/Dreamhouse/images/sections/intelligent-ocean.png",
       content: <IntelligentSection />,
     },
     {
       id: "portal",
-      image: "/images/sections/portal-waterfall.png",
+      image: "/Dreamhouse/images/sections/portal-waterfall.png",
       content: <PortalSection />,
     },
   ];

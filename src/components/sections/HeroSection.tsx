@@ -95,7 +95,7 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
         {/* Ornate PNG heading */}
         <div ref={headingRef} className="text-center mb-12">
           <Image
-            src="/images/typography/dream-your-way-in.png"
+            src="/Dreamhouse/images/typography/dream-your-way-in.png"
             alt="Dream your way in"
             width={800}
             height={160}
@@ -122,7 +122,7 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
       >
         <div className="text-center mb-12 max-w-4xl">
           <Image
-            src="/images/typography/what-will-that-dream.png"
+            src="/Dreamhouse/images/typography/what-will-that-dream.png"
             alt="What would that dream dare to become with the right community by your side?"
             width={1200}
             height={400}
