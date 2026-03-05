@@ -40,7 +40,7 @@ export default function Navigation({ visible }: NavigationProps) {
           : "-translate-y-full opacity-0 pointer-events-none"
       }`}
     >
-      <div className="flex items-center justify-end px-8 md:px-16 lg:px-20 py-4 md:py-6">
+      <div className="flex items-center justify-end py-4 md:py-6" style={{ paddingLeft: "2rem", paddingRight: "3rem" }}>
         {/* Nav items - desktop */}
         <ul className="hidden md:flex items-center gap-8 ml-auto">
           {NAV_ITEMS.map((item) => (

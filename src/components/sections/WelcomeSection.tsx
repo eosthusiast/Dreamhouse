@@ -2,32 +2,38 @@ import Image from "next/image";
 
 export default function WelcomeSection() {
   return (
-    <div className="relative w-full h-full flex items-center px-6 md:px-16 lg:px-24">
-      {/* Left side - heading */}
-      <div className="flex-1" data-reveal>
+    <div className="relative w-full h-full">
+      {/* Heading - large, left side, vertically centered */}
+      <div
+        data-reveal
+        className="absolute"
+        style={{ left: "6%", top: "35%", transform: "translateY(-50%)" }}
+      >
         <Image
           src="/Dreamhouse/images/typography/welcome-to-the-dream-house.png"
           alt="Welcome to The Dream House"
-          width={800}
-          height={400}
-          className="w-[70vw] max-w-[600px] h-auto"
+          width={900}
+          height={500}
+          className="h-auto"
+          style={{ width: "48vw", maxWidth: "780px" }}
         />
       </div>
 
-      {/* Center-right - details */}
-      <div className="flex-1 flex justify-center">
-        <div className="text-right font-playfair italic text-cream/90 text-base md:text-lg lg:text-xl space-y-1">
+      {/* Details - right side, vertically centered */}
+      <div
+        className="absolute"
+        style={{ right: "10%", top: "65%", transform: "translateY(-30%)" }}
+      >
+        <div className="font-playfair italic text-cream/90 text-lg md:text-xl lg:text-2xl" style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
           <p data-reveal>1 month</p>
           <p data-reveal>10 &ndash; 16 people</p>
-          <p data-reveal className="mt-4">
-            Carefully curated.
-          </p>
+          <p data-reveal>Carefully curated.</p>
           <p data-reveal>Consciously held.</p>
           <p data-reveal>Co-created.</p>
-          <p data-reveal className="mt-4 max-w-xs ml-auto">
+          <p data-reveal className="mt-6 max-w-xs">
             Fertile soil for the truest
             <br />
-            version of yourself to play.
+            version of yourself to play
           </p>
         </div>
       </div>

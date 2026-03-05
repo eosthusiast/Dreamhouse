@@ -11,6 +11,7 @@ gsap.registerPlugin(ScrollTrigger);
 interface ScrollSection {
   id: string;
   image: string | null;
+  imagePosition?: string;
   content: React.ReactNode;
 }
 
@@ -47,10 +48,10 @@ export default function ScrollCanvas({
 
       // Pre-query all reveal elements per section
       const revealsPerSection: HTMLElement[][] = [];
-      contents.forEach((contentEl) => {
-        revealsPerSection.push(
-          Array.from(contentEl.querySelectorAll<HTMLElement>("[data-reveal]"))
-        );
+      contents.forEach((contentEl, idx) => {
+        const r = Array.from(contentEl.querySelectorAll<HTMLElement>("[data-reveal]"));
+        revealsPerSection.push(r);
+        console.log(`Section ${idx}: found ${r.length} data-reveal elements`);
       });
 
       // Set initial states — everything hidden except section 0
@@ -72,11 +73,17 @@ export default function ScrollCanvas({
         trigger: containerRef.current,
         start: "top top",
         end: "bottom bottom",
-        scrub: true,
+        scrub: 0.5,
         onUpdate: (self) => {
           const progress = self.progress; // 0 to 1
           const activeIndex = Math.min(Math.floor(progress * N), N - 1);
           const sectionProgress = progress * N - activeIndex; // 0..1 within section
+
+          // Debug: log every ~5% of scroll
+          if (Math.round(progress * 100) % 5 === 0) {
+            const reveals = revealsPerSection[activeIndex];
+            console.log(`progress=${progress.toFixed(3)} section=${activeIndex} sp=${sectionProgress.toFixed(3)} reveals=${reveals.length}`);
+          }
 
           // --- Crossfade logic ---
           for (let i = 0; i < N; i++) {
@@ -165,6 +172,7 @@ export default function ScrollCanvas({
                 alt=""
                 fill
                 className="object-cover"
+                style={section.imagePosition ? { objectPosition: section.imagePosition } : undefined}
                 sizes="100vw"
                 priority={i < 2}
                 quality={85}

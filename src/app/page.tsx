@@ -45,6 +45,7 @@ export default function Home() {
     {
       id: "welcome",
       image: "/Dreamhouse/images/sections/welcome-silhouettes.png",
+      imagePosition: "center 72%",
       content: <WelcomeSection />,
     },
     {

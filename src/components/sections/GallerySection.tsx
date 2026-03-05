@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const GALLERY_1 = [
   {
-    src: "/Dreamhouse/images/gallery/waterfall-closeup.jpg",
+    src: "/Dreamhouse/images/gallery/waterfall-closeup.png",
     alt: "Waterfall closeup",
     width: "40%",
     marginLeft: "auto",
@@ -49,7 +49,7 @@ const GALLERY_2 = [
     marginTop: "0",
   },
   {
-    src: "/Dreamhouse/images/gallery/surfer.jpg",
+    src: "/Dreamhouse/images/gallery/surfer.png",
     alt: "Surfer riding a wave",
     width: "40%",
     marginLeft: "auto",
@@ -58,7 +58,7 @@ const GALLERY_2 = [
     marginTop: "-3rem",
   },
   {
-    src: "/Dreamhouse/images/gallery/beach-woman.jpg",
+    src: "/Dreamhouse/images/gallery/beach-woman.png",
     alt: "Woman watching the ocean",
     width: "40%",
     marginLeft: "auto",
