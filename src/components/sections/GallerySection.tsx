@@ -8,10 +8,10 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const GALLERY_1 = [
+const GALLERY_IMAGES = [
   {
-    src: "/Dreamhouse/images/gallery/waterfall-closeup.png",
-    alt: "Waterfall closeup",
+    src: "/Dreamhouse/images/gallery/surfer-girl.jpg",
+    alt: "Surfer watching the waves",
     width: "40%",
     marginLeft: "auto",
     marginRight: "5%",
@@ -19,8 +19,8 @@ const GALLERY_1 = [
     marginTop: "0",
   },
   {
-    src: "/Dreamhouse/images/gallery/deck-chairs.png",
-    alt: "Relaxing on deck chairs",
+    src: "/Dreamhouse/images/gallery/dancing-light.png",
+    alt: "Dancing indoors in golden light",
     width: "45%",
     marginLeft: "auto",
     marginRight: "auto",
@@ -28,47 +28,44 @@ const GALLERY_1 = [
     marginTop: "-4rem",
   },
   {
-    src: "/Dreamhouse/images/gallery/dancing-indoors.png",
-    alt: "Dancing indoors",
+    src: "/Dreamhouse/images/gallery/deck-guitar.jpg",
+    alt: "Relaxing on deck chairs with guitar",
     width: "40%",
     marginLeft: "5%",
     marginRight: "auto",
     rotate: "-1deg",
     marginTop: "-3rem",
   },
-];
-
-const GALLERY_2 = [
   {
-    src: "/Dreamhouse/images/gallery/meditation-group.png",
-    alt: "Group meditation",
+    src: "/Dreamhouse/images/gallery/meditation-circle.png",
+    alt: "Meditation circle at sunset",
     width: "40%",
-    marginLeft: "5%",
-    marginRight: "auto",
+    marginLeft: "auto",
+    marginRight: "8%",
     rotate: "1deg",
-    marginTop: "0",
+    marginTop: "-6rem",
   },
   {
-    src: "/Dreamhouse/images/gallery/surfer.png",
+    src: "/Dreamhouse/images/gallery/surfer-wave.jpg",
     alt: "Surfer riding a wave",
-    width: "40%",
+    width: "45%",
     marginLeft: "auto",
     marginRight: "auto",
     rotate: "-1deg",
-    marginTop: "-3rem",
-  },
-  {
-    src: "/Dreamhouse/images/gallery/beach-woman.png",
-    alt: "Woman watching the ocean",
-    width: "40%",
-    marginLeft: "auto",
-    marginRight: "5%",
-    rotate: "2deg",
     marginTop: "-4rem",
   },
+  {
+    src: "/Dreamhouse/images/gallery/meditation-sunset.png",
+    alt: "Evening circle with lanterns",
+    width: "40%",
+    marginLeft: "5%",
+    marginRight: "auto",
+    rotate: "2deg",
+    marginTop: "-5rem",
+  },
 ];
 
-type GalleryImage = (typeof GALLERY_1)[number];
+type GalleryImage = (typeof GALLERY_IMAGES)[number];
 
 function GalleryGroup({
   images,
@@ -142,8 +139,7 @@ function GalleryGroup({
 export default function GallerySection() {
   return (
     <section className="bg-cream relative z-10" style={{ padding: "4rem 0 6rem" }}>
-      <GalleryGroup images={GALLERY_1} />
-      <GalleryGroup images={GALLERY_2} />
+      <GalleryGroup images={GALLERY_IMAGES} />
     </section>
   );
 }

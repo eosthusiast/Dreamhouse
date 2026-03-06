@@ -95,26 +95,58 @@ export default function ScrollCanvas({
           const sectionProgress = progress * N - activeIndex; // 0..1 within section
 
           // --- Crossfade logic ---
+          const FADE_ZONE = 0.1; // Normal crossfade for non-hero sections
+
+          // Galaxy fade: slow dissolve from 50% of section 0 to 75% into section 2
+          const galaxyFadeStart = (0 + 0.5) / N;
+          const galaxyFadeEnd = (2 + 0.75) / N;
+
           for (let i = 0; i < N; i++) {
             let alpha = 0;
+            let blendMode = "normal";
 
-            if (i === activeIndex) {
-              // Active section: fade in during first 10%, fully visible rest
-              alpha = sectionProgress < 0.1
-                ? sectionProgress / 0.1
-                : 1.0;
-            } else if (i === activeIndex - 1 && sectionProgress < 0.1) {
-              // Previous section lingering during fade-in of current
-              alpha = 1.0 - sectionProgress / 0.1;
-            }
-
-            // First section starts fully visible at progress 0
-            if (i === 0 && activeIndex === 0) {
-              alpha = 1.0;
+            if (i === 0) {
+              // Galaxy video: always screen blend (at alpha=1 looks same as normal,
+              // then screen effect gradually appears as alpha drops — no snap)
+              if (progress < galaxyFadeStart) {
+                alpha = 1;
+              } else if (progress < galaxyFadeEnd) {
+                alpha = 1 - (progress - galaxyFadeStart) / (galaxyFadeEnd - galaxyFadeStart);
+              }
+              blendMode = alpha > 0 ? "screen" : "normal";
+              // Elevate galaxy z-index above beach layer during fade
+              if (images[i]) {
+                (images[i] as HTMLElement).style.zIndex = alpha > 0 ? "10" : "1";
+              }
+            } else if (i === 1) {
+              // Beach under galaxy: gradual fade-in synced with galaxy fade-out
+              // Prevents brightness pop — both layers ramp together
+              if (progress < galaxyFadeStart) {
+                alpha = 0;
+              } else if (progress < galaxyFadeEnd) {
+                alpha = (progress - galaxyFadeStart) / (galaxyFadeEnd - galaxyFadeStart);
+              } else if (activeIndex <= 2) {
+                alpha = 1;
+              } else if (activeIndex === 3 && sectionProgress < FADE_ZONE) {
+                alpha = 1 - sectionProgress / FADE_ZONE;
+              }
+            } else {
+              // Normal crossfade for all other sections
+              if (i === activeIndex) {
+                alpha = sectionProgress < FADE_ZONE
+                  ? sectionProgress / FADE_ZONE
+                  : 1.0;
+              } else if (i === activeIndex - 1 && sectionProgress < FADE_ZONE) {
+                alpha = 1.0 - sectionProgress / FADE_ZONE;
+              }
             }
 
             gsap.set(images[i], { autoAlpha: alpha });
             gsap.set(contents[i], { autoAlpha: alpha });
+
+            if (images[i]) {
+              (images[i] as HTMLElement).style.mixBlendMode = blendMode;
+            }
           }
 
           // --- Sequential text reveals ---
@@ -123,9 +155,11 @@ export default function ScrollCanvas({
             if (reveals.length === 0) continue;
 
             if (i === activeIndex) {
-              // Reveal text from 5% to 60% of section (~135vh of 225vh), 90vh linger
+              // Beach section: text after galaxy fade; other sections: text after normal crossfade
+              const textStart = i === 2 ? 0.35 : 0.15;
+              const textSpan = i === 2 ? 0.45 : 0.50;
               const revealProgress = clamp(
-                (sectionProgress - 0.05) / 0.55,
+                (sectionProgress - textStart) / textSpan,
                 0,
                 1
               );
@@ -155,8 +189,11 @@ export default function ScrollCanvas({
             if (lines.length === 0) continue;
 
             if (i === activeIndex) {
+              // Section 2: line starts at 44% (after "You've felt it" appears)
+              const lineStart = i === 2 ? 0.44 : 0.15;
+              const lineSpan = i === 2 ? 0.36 : 0.50;
               const revealProgress = clamp(
-                (sectionProgress - 0.05) / 0.55,
+                (sectionProgress - lineStart) / lineSpan,
                 0,
                 1
               );
@@ -179,7 +216,7 @@ export default function ScrollCanvas({
         },
       });
     },
-    { scope: containerRef, dependencies: [sections, scrollPerSection] }
+    { scope: containerRef, dependencies: [scrollPerSection] }
   );
 
   const totalHeight = sections.length * scrollPerSection;

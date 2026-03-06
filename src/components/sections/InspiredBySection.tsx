@@ -20,7 +20,7 @@ export default function InspiredBySection() {
     <div className="relative w-full h-full flex items-center justify-center px-6 md:px-16">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 max-w-5xl w-full">
         {/* Column 1 - top left */}
-        <div className="space-y-3 md:pt-0">
+        <div className="space-y-3" style={{ paddingTop: 0 }}>
           {col0.map((item, i) => (
             <p
               key={i}
@@ -33,7 +33,7 @@ export default function InspiredBySection() {
         </div>
 
         {/* Column 2 - center */}
-        <div className="space-y-3 md:pt-16">
+        <div className="space-y-3" style={{ paddingTop: "8rem" }}>
           {col1.map((item, i) => (
             <p
               key={i}
@@ -46,7 +46,7 @@ export default function InspiredBySection() {
         </div>
 
         {/* Column 3 - bottom right */}
-        <div className="space-y-3 md:pt-32 text-right">
+        <div className="space-y-3 text-right" style={{ paddingTop: "16rem" }}>
           {col2.map((item, i) => (
             <p
               key={i}

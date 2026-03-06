@@ -29,7 +29,7 @@ export default function Home() {
     },
     {
       id: "hero-2",
-      image: null,
+      image: "/Dreamhouse/images/sections/beach-sunset.png",
       content: null, // Hero content handled internally by HeroSection
     },
     {

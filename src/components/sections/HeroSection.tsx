@@ -53,21 +53,20 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
   const handleHero1Submit = useCallback((dream: string) => {
     if (!hero1Ref.current || !hero2Ref.current) return;
 
+    // Set phase early so DreamInput renders during the fade-in (no layout shift)
+    setPhase("hero2");
+
     const tl = gsap.timeline();
     tl.to(hero1Ref.current, {
       autoAlpha: 0,
-      duration: 0.8,
+      duration: 3,
       ease: "power2.inOut",
     }).fromTo(
       hero2Ref.current,
       { autoAlpha: 0 },
-      { autoAlpha: 1, duration: 0.8, ease: "power2.inOut" },
-      "-=0.3"
+      { autoAlpha: 1, duration: 3, ease: "power2.inOut" },
+      "-=1.2"
     );
-
-    tl.eventCallback("onComplete", () => {
-      setPhase("hero2");
-    });
 
     if (typeof window !== "undefined") {
       sessionStorage.setItem("dream1", dream);
@@ -79,8 +78,41 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
       if (typeof window !== "undefined") {
         sessionStorage.setItem("dream2", dream);
       }
+      // Disable input immediately but keep it rendered (no layout shift)
       setPhase("done");
       onGateComplete();
+
+      // Animated transition: fade out hero2 content, then GSAP-scroll
+      // through the dark→light crossfade to land on blank beach
+      setTimeout(() => {
+        const tl = gsap.timeline();
+
+        // 1. Fade out hero2 content (slower, no snap)
+        if (hero2Ref.current) {
+          tl.to(hero2Ref.current, {
+            autoAlpha: 0,
+            duration: 1.2,
+            ease: "power2.in",
+          });
+        }
+
+        // 2. Animated scroll — drives the ScrollCanvas crossfade from galaxy to beach
+        const N = 8;
+        const scrollPerSectionVh = 225;
+        const vh = window.innerHeight / 100;
+        const scrollRange = N * scrollPerSectionVh * vh - window.innerHeight;
+        // Target: 44% into section 2 — "You've felt it" visible, line about to start
+        const targetProgress = (2 + 0.44) / N;
+        const targetScroll = targetProgress * scrollRange;
+
+        const scrollProxy = { y: window.scrollY };
+        tl.to(scrollProxy, {
+          y: targetScroll,
+          duration: 3.5,
+          ease: "power2.inOut",
+          onUpdate: () => window.scrollTo(0, scrollProxy.y),
+        }, "-=0.3");
+      }, 400);
     },
     [onGateComplete]
   );

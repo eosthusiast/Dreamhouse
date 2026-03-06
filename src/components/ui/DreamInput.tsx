@@ -39,10 +39,11 @@ export default function DreamInput({
     }
   };
 
-  if (!visible) return null;
-
   return (
-    <div className="flex flex-col items-center gap-10 w-full max-w-xl mx-auto px-4">
+    <div
+      className="flex flex-col items-center gap-10 w-full max-w-xl mx-auto px-4"
+      style={{ pointerEvents: visible ? "auto" : "none" }}
+    >
       {/* Dream input — real visible input, styled to look minimal */}
       <div className="relative w-full max-w-sm">
         <input
