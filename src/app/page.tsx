@@ -66,18 +66,23 @@ export default function Home() {
   ];
 
   const heroVideo = (
-    <video
-      autoPlay
-      loop
-      muted
-      playsInline
-      poster="/Dreamhouse/videos/galaxy-poster.jpg"
-      className="absolute inset-0 w-full h-full object-cover"
-      aria-hidden="true"
-    >
-      <source src="/Dreamhouse/videos/galaxy.mp4" type="video/mp4" />
-      <source src="/Dreamhouse/videos/galaxy.webm" type="video/webm" />
-    </video>
+    <>
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        poster="/Dreamhouse/videos/galaxy-poster.jpg"
+        className="absolute inset-0 w-full h-full object-cover"
+        aria-hidden="true"
+      >
+        <source src="/Dreamhouse/videos/hero-bg-2.webm" type="video/webm" />
+      </video>
+      <div
+        className="absolute inset-0 w-full h-full pointer-events-none"
+        style={{ background: "rgba(88, 44, 131, 0.30)", mixBlendMode: "color" }}
+      />
+    </>
   );
 
   return (
@@ -93,6 +98,7 @@ export default function Home() {
       </div>
 
       <GallerySection />
+
     </main>
   );
 }

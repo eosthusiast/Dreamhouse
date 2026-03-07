@@ -106,30 +106,36 @@ export default function ScrollCanvas({
             let blendMode = "normal";
 
             if (i === 0) {
-              // Galaxy video: always screen blend (at alpha=1 looks same as normal,
-              // then screen effect gradually appears as alpha drops — no snap)
+              // Galaxy video: screen blend with quadratic alpha curve
+              // Quadratic (1-t)² fades faster early, reducing mid-transition brightness
               if (progress < galaxyFadeStart) {
                 alpha = 1;
               } else if (progress < galaxyFadeEnd) {
-                alpha = 1 - (progress - galaxyFadeStart) / (galaxyFadeEnd - galaxyFadeStart);
+                const t = (progress - galaxyFadeStart) / (galaxyFadeEnd - galaxyFadeStart);
+                alpha = (1 - t) * (1 - t);
               }
               blendMode = alpha > 0 ? "screen" : "normal";
-              // Elevate galaxy z-index above beach layer during fade
               if (images[i]) {
                 (images[i] as HTMLElement).style.zIndex = alpha > 0 ? "10" : "1";
               }
             } else if (i === 1) {
-              // Beach under galaxy: gradual fade-in synced with galaxy fade-out
-              // Prevents brightness pop — both layers ramp together
+              // Beach under galaxy: quadratic fade-in (t²) synced with galaxy
+              // Slower early = less combined brightness at mid-transition
               if (progress < galaxyFadeStart) {
                 alpha = 0;
               } else if (progress < galaxyFadeEnd) {
-                alpha = (progress - galaxyFadeStart) / (galaxyFadeEnd - galaxyFadeStart);
+                const t = (progress - galaxyFadeStart) / (galaxyFadeEnd - galaxyFadeStart);
+                alpha = t * t;
               } else if (activeIndex <= 2) {
                 alpha = 1;
               } else if (activeIndex === 3 && sectionProgress < FADE_ZONE) {
                 alpha = 1 - sectionProgress / FADE_ZONE;
               }
+            } else if (i === 2 && progress < galaxyFadeEnd) {
+              alpha = 0;
+            } else if (i === 2 && progress < galaxyFadeEnd + 0.02) {
+              // Brief fade-in to avoid snap when section 2 becomes active
+              alpha = (progress - galaxyFadeEnd) / 0.02;
             } else {
               // Normal crossfade for all other sections
               if (i === activeIndex) {
@@ -141,8 +147,15 @@ export default function ScrollCanvas({
               }
             }
 
+            // Section 2 content: allow text/lines to show even while image is suppressed
+            // (section 1's beach provides the background image during galaxy fade)
+            let contentAlpha = alpha;
+            if (i === 2 && activeIndex === 2 && alpha === 0) {
+              contentAlpha = 1;
+            }
+
             gsap.set(images[i], { autoAlpha: alpha });
-            gsap.set(contents[i], { autoAlpha: alpha });
+            gsap.set(contents[i], { autoAlpha: contentAlpha });
 
             if (images[i]) {
               (images[i] as HTMLElement).style.mixBlendMode = blendMode;
