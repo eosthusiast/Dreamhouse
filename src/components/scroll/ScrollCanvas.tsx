@@ -150,7 +150,7 @@ export default function ScrollCanvas({
             // Section 2 content: allow text/lines to show even while image is suppressed
             // (section 1's beach provides the background image during galaxy fade)
             let contentAlpha = alpha;
-            if (i === 2 && activeIndex === 2 && alpha === 0) {
+            if (i === 2 && activeIndex === 2 && progress < galaxyFadeEnd + 0.02) {
               contentAlpha = 1;
             }
 
