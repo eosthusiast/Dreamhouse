@@ -41,8 +41,8 @@ export default function DreamInput({
 
   return (
     <div
-      className="flex flex-col items-center gap-10 w-full max-w-xl mx-auto px-4"
-      style={{ pointerEvents: visible ? "auto" : "none" }}
+      className="flex flex-col items-center w-full max-w-xl mx-auto px-4"
+      style={{ gap: "1.25rem", pointerEvents: visible ? "auto" : "none" }}
     >
       {/* Dream input — real visible input, styled to look minimal */}
       <div className="relative w-full max-w-sm">

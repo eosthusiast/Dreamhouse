@@ -125,7 +125,7 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
         className="flex flex-col items-center justify-center h-full w-full px-4"
       >
         {/* Ornate PNG heading */}
-        <div ref={headingRef} className="text-center mb-12">
+        <div ref={headingRef} className="text-center" style={{ marginBottom: "1.5rem", overflow: "hidden" }}>
           <Image
             src="/Dreamhouse/images/typography/dream-your-way-in.png"
             alt="Dream your way in"
@@ -133,6 +133,7 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
             height={160}
             priority
             className="w-[85vw] max-w-[700px] md:max-w-[800px] h-auto mx-auto"
+            style={{ marginTop: "-18%", marginBottom: "-22%" }}
           />
         </div>
 
@@ -152,13 +153,14 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
         className="absolute inset-0 flex flex-col items-center justify-center h-full w-full px-6"
         style={{ visibility: "hidden", opacity: 0 }}
       >
-        <div className="text-center mb-12 max-w-4xl">
+        <div className="text-center" style={{ marginBottom: "1.5rem", overflow: "hidden" }}>
           <Image
             src="/Dreamhouse/images/typography/what-will-that-dream.png"
             alt="What would that dream dare to become with the right community by your side?"
             width={1200}
             height={400}
             className="w-[90vw] max-w-[900px] h-auto mx-auto"
+            style={{ marginTop: "-15%", marginBottom: "-18%" }}
           />
         </div>
 
