@@ -4,30 +4,21 @@ import { useState, useEffect, useRef } from "react";
 import { NAV_ITEMS } from "@/lib/constants";
 
 interface NavigationProps {
-  visible: boolean;
+  visible?: boolean;
+  variant?: "dark" | "light";
 }
 
-export default function Navigation({ visible }: NavigationProps) {
+export default function Navigation({ visible = true, variant = "dark" }: NavigationProps) {
+  const isDark = variant === "dark";
   const [isHidden, setIsHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const lastScrollY = useRef(0);
 
-  // Track scroll direction to show/hide nav
+  // Reset hidden state when nav becomes visible
   useEffect(() => {
-    if (!visible) return;
-
-    const handleScroll = () => {
-      const currentY = window.scrollY;
-      if (currentY > lastScrollY.current + 10) {
-        setIsHidden(true); // scrolling down
-      } else if (currentY < lastScrollY.current - 10) {
-        setIsHidden(false); // scrolling up
-      }
-      lastScrollY.current = currentY;
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    if (visible) {
+      setIsHidden(false);
+    }
   }, [visible]);
 
   return (
@@ -47,7 +38,7 @@ export default function Navigation({ visible }: NavigationProps) {
             <li key={item.label}>
               <a
                 href={item.href}
-                className="font-playfair italic text-sm lg:text-base text-cream/80 hover:text-cream transition-colors tracking-wider"
+                className={`font-playfair italic text-sm lg:text-base transition-colors tracking-wider ${isDark ? "text-cream/80 hover:text-cream" : "text-galaxy-deep/70 hover:text-galaxy-deep"}`}
               >
                 {item.label}
               </a>
@@ -57,19 +48,19 @@ export default function Navigation({ visible }: NavigationProps) {
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden ml-auto text-cream p-2"
+          className={`md:hidden ml-auto p-2 ${isDark ? "text-cream" : "text-galaxy-deep"}`}
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
         >
           <div className="space-y-1.5">
             <span
-              className={`block w-6 h-px bg-cream transition-transform ${menuOpen ? "rotate-45 translate-y-[7px]" : ""}`}
+              className={`block w-6 h-px ${isDark ? "bg-cream" : "bg-galaxy-deep"} transition-transform ${menuOpen ? "rotate-45 translate-y-[7px]" : ""}`}
             />
             <span
-              className={`block w-6 h-px bg-cream transition-opacity ${menuOpen ? "opacity-0" : ""}`}
+              className={`block w-6 h-px ${isDark ? "bg-cream" : "bg-galaxy-deep"} transition-opacity ${menuOpen ? "opacity-0" : ""}`}
             />
             <span
-              className={`block w-6 h-px bg-cream transition-transform ${menuOpen ? "-rotate-45 -translate-y-[7px]" : ""}`}
+              className={`block w-6 h-px ${isDark ? "bg-cream" : "bg-galaxy-deep"} transition-transform ${menuOpen ? "-rotate-45 -translate-y-[7px]" : ""}`}
             />
           </div>
         </button>
@@ -83,7 +74,7 @@ export default function Navigation({ visible }: NavigationProps) {
               <li key={item.label}>
                 <a
                   href={item.href}
-                  className="font-playfair italic text-2xl text-cream/80 hover:text-cream transition-colors"
+                  className={`font-playfair italic text-2xl transition-colors ${isDark ? "text-cream/80 hover:text-cream" : "text-cream/80 hover:text-cream"}`}
                   onClick={() => setMenuOpen(false)}
                 >
                   {item.label}

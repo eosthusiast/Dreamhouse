@@ -7,6 +7,7 @@ import {
   useRef,
   type ReactNode,
 } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -25,6 +26,7 @@ export function useLenis() {
 
 export function LenisProvider({ children }: { children: ReactNode }) {
   const lenisRef = useRef<Lenis | null>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     // Force scroll to top before anything else (scroll restoration fix)
@@ -48,22 +50,30 @@ export function LenisProvider({ children }: { children: ReactNode }) {
     // Disable GSAP lag smoothing for accurate Lenis sync
     gsap.ticker.lagSmoothing(0);
 
-    // Start with scroll locked (hero gate)
-    lenis.stop();
+    // Only lock scroll on the homepage (hero gate)
+    const isHomepage = pathname === "/" || pathname === "/Dreamhouse" || pathname === "/Dreamhouse/";
+    if (isHomepage) {
+      lenis.stop();
 
-    // Listen for unlock event from the dream gate
-    const handleUnlock = () => {
-      lenis.start();
-    };
+      // Listen for unlock event from the dream gate
+      const handleUnlock = () => {
+        lenis.start();
+      };
 
-    window.addEventListener("dreamhouse:unlock-scroll", handleUnlock);
+      window.addEventListener("dreamhouse:unlock-scroll", handleUnlock);
+
+      return () => {
+        window.removeEventListener("dreamhouse:unlock-scroll", handleUnlock);
+        lenis.destroy();
+        lenisRef.current = null;
+      };
+    }
 
     return () => {
-      window.removeEventListener("dreamhouse:unlock-scroll", handleUnlock);
       lenis.destroy();
       lenisRef.current = null;
     };
-  }, []);
+  }, [pathname]);
 
   return (
     <LenisContext.Provider value={{ lenis: lenisRef.current }}>

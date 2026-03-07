@@ -55,8 +55,8 @@ const GALLERY_IMAGES = [
     marginTop: "-4rem",
   },
   {
-    src: "/Dreamhouse/images/gallery/meditation-sunset.png",
-    alt: "Evening circle with lanterns",
+    src: "/Dreamhouse/images/gallery/links-gathering.jpg",
+    alt: "Community gathering",
     width: "40%",
     marginLeft: "16%",
     marginRight: "auto",
@@ -139,6 +139,21 @@ function GalleryGroup({
 export default function GallerySection() {
   return (
     <section className="bg-cream relative z-10" style={{ padding: "4rem 0 6rem" }}>
+      <div className="flex justify-center" style={{ marginBottom: "3rem" }}>
+        <a
+          href="/Dreamhouse/who"
+          className="font-playfair italic text-lg md:text-xl tracking-wide transition-all duration-500 hover:shadow-lg"
+          style={{
+            padding: "1.05rem 3.6rem",
+            background: "linear-gradient(135deg, #e8a87c 0%, #d4a0c0 50%, #b8a9c9 100%)",
+            color: "rgba(255, 255, 255, 0.95)",
+            borderRadius: "9999px",
+            boxShadow: "0 4px 20px rgba(232, 168, 124, 0.25)",
+          }}
+        >
+          I accept the invitation
+        </a>
+      </div>
       <GalleryGroup images={GALLERY_IMAGES} />
     </section>
   );
