@@ -29,9 +29,9 @@ const OCEAN_TEXTS = [
   { text: "What if that wasn\u2019t luck?", x: 60, y: 78, align: "right" as const },
 ];
 
-// SVG paths connecting text positions (coordinates in 0-1000 x 0-600 viewBox)
-const BEACH_PATH = "M 100 90 C 180 90, 200 150, 250 230 S 350 300, 400 340 C 450 380, 550 420, 650 430";
-const OCEAN_PATH = "M 120 90 C 200 100, 300 180, 400 280 S 500 350, 550 300 C 580 270, 580 380, 600 470";
+// Gentle S-curves connecting text positions
+const BEACH_PATH = "M 90 95 C 130 110, 160 150, 200 200 C 240 250, 280 270, 340 290 C 400 310, 480 350, 540 380 C 600 410, 620 420, 640 430";
+const OCEAN_PATH = "M 110 95 C 150 110, 200 160, 250 220 C 300 280, 380 310, 440 320 C 500 330, 520 350, 540 380 C 560 410, 580 440, 600 460";
 
 export default function StorySection({ variant }: StorySectionProps) {
   const texts = variant === "beach" ? BEACH_TEXTS : OCEAN_TEXTS;

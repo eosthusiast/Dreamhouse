@@ -31,9 +31,9 @@ export default function WelcomeSection() {
           <p data-reveal>Consciously held.</p>
           <p data-reveal>Co-created.</p>
           <p data-reveal className="mt-6 max-w-xs">
-            Fertile soil for the truest
+            Where inspiring people
             <br />
-            version of yourself to play
+            go to get inspired.
           </p>
         </div>
       </div>

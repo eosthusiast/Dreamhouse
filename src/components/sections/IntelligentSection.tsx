@@ -12,7 +12,7 @@ export default function IntelligentSection() {
       />
 
       <div className="relative z-20 w-full h-full">
-        {/* SVG line connecting text elements */}
+        {/* SVG line connecting text elements — gentle arc */}
         <svg
           className="absolute inset-0 w-full h-full pointer-events-none"
           viewBox="0 0 1000 600"
@@ -21,7 +21,7 @@ export default function IntelligentSection() {
         >
           <path
             data-line
-            d="M 120 210 C 200 220, 300 280, 400 320 S 500 380, 580 400"
+            d="M 180 200 C 250 210, 320 260, 380 310 C 440 360, 480 400, 540 380 C 600 360, 660 380, 720 420 C 780 460, 800 470, 820 475"
             stroke="rgba(251, 240, 224, 0.4)"
             strokeWidth="1.5"
             fill="none"
@@ -31,22 +31,40 @@ export default function IntelligentSection() {
 
         <div
           data-reveal
-          className="absolute font-playfair italic text-cream text-lg md:text-xl lg:text-2xl max-w-xs md:max-w-sm"
-          style={{ left: "10%", top: "35%", textAlign: "left" }}
+          className="absolute font-playfair italic text-cream text-lg md:text-xl lg:text-2xl"
+          style={{ left: "15%", top: "30%", maxWidth: "28rem" }}
         >
           For those that feel the need for a more intelligent way to live
         </div>
         <div
           data-reveal
-          className="absolute font-playfair italic text-cream text-lg md:text-xl lg:text-2xl max-w-xs md:max-w-sm"
+          className="absolute font-playfair italic text-cream text-lg md:text-xl lg:text-2xl"
           style={{
-            left: "60%",
-            top: "70%",
+            left: "55%",
+            top: "55%",
+            maxWidth: "24rem",
             textAlign: "right",
             transform: "translateX(-100%)",
           }}
         >
           in connection with nature, ourselves and each other.
+        </div>
+        {/* Invisible spacers to delay "Fertile soil" reveal to end of section */}
+        <div data-reveal className="absolute" style={{ opacity: 0, pointerEvents: "none", width: 0, height: 0 }} />
+        <div data-reveal className="absolute" style={{ opacity: 0, pointerEvents: "none", width: 0, height: 0 }} />
+        <div data-reveal className="absolute" style={{ opacity: 0, pointerEvents: "none", width: 0, height: 0 }} />
+        <div
+          data-reveal
+          className="absolute font-playfair italic text-cream text-lg md:text-xl lg:text-2xl"
+          style={{
+            left: "82%",
+            top: "75%",
+            maxWidth: "22rem",
+            textAlign: "right",
+            transform: "translateX(-100%)",
+          }}
+        >
+          Fertile soil for the truest version of yourself to play.
         </div>
       </div>
     </div>
