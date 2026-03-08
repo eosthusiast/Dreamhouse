@@ -27,6 +27,7 @@ export default function InspiredBySection() {
               key={i}
               data-reveal
               className="font-playfair italic text-cream text-base md:text-lg lg:text-xl"
+              style={{ textShadow: "0 2px 20px rgba(0,0,0,0.6), 0 0 40px rgba(0,0,0,0.3)" }}
             >
               {item.text}
             </p>
@@ -40,6 +41,7 @@ export default function InspiredBySection() {
               key={i}
               data-reveal
               className="font-playfair italic text-cream text-base md:text-lg lg:text-xl text-center"
+              style={{ textShadow: "0 2px 20px rgba(0,0,0,0.6), 0 0 40px rgba(0,0,0,0.3)" }}
             >
               {item.text}
             </p>
@@ -53,6 +55,7 @@ export default function InspiredBySection() {
               key={i}
               data-reveal
               className="font-playfair italic text-cream text-base md:text-lg lg:text-xl"
+              style={{ textShadow: "0 2px 20px rgba(0,0,0,0.6), 0 0 40px rgba(0,0,0,0.3)" }}
             >
               {item.text}
             </p>

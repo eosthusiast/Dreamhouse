@@ -67,6 +67,7 @@ export default function StorySection({ variant }: StorySectionProps) {
             top: `${item.y}%`,
             textAlign: item.align,
             transform: `translate(${item.align === "right" ? "-100%" : "0"}, -50%)`,
+            ...(variant === "ocean" ? { textShadow: "0 2px 20px rgba(0,0,0,0.6), 0 0 40px rgba(0,0,0,0.3)" } : {}),
           }}
         >
           {item.text}

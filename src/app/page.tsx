@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import ScrollCanvas from "@/components/scroll/ScrollCanvas";
 import HeroSection from "@/components/sections/HeroSection";
 import StorySection from "@/components/sections/StorySection";
@@ -14,6 +14,41 @@ import Navigation from "@/components/layout/Navigation";
 
 export default function Home() {
   const [gateComplete, setGateComplete] = useState(false);
+  const [navVariant, setNavVariant] = useState<"dark" | "light">("dark");
+  const lastActiveRef = useRef(-1);
+
+  const galleryRef = useRef<HTMLDivElement>(null);
+  const inGalleryRef = useRef(false);
+
+  // Sections with light backgrounds where nav needs dark text
+  const LIGHT_SECTIONS = new Set([4]); // welcome
+
+  const handleActiveSection = useCallback((index: number) => {
+    if (inGalleryRef.current) return; // gallery overrides
+    if (index === lastActiveRef.current) return;
+    lastActiveRef.current = index;
+    setNavVariant(LIGHT_SECTIONS.has(index) ? "light" : "dark");
+  }, []);
+
+  // Watch gallery section entering viewport
+  useEffect(() => {
+    const el = galleryRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        inGalleryRef.current = entry.isIntersecting;
+        if (entry.isIntersecting) {
+          setNavVariant("light");
+        } else {
+          // Revert to whatever the scroll canvas section dictates
+          setNavVariant(LIGHT_SECTIONS.has(lastActiveRef.current) ? "light" : "dark");
+        }
+      },
+      { threshold: 0, rootMargin: "0px 0px -90% 0px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const handleGateComplete = useCallback(() => {
     setGateComplete(true);
@@ -30,11 +65,13 @@ export default function Home() {
     {
       id: "hero-2",
       image: "/Dreamhouse/images/sections/beach-sunset.png",
+      imagePosition: "center 33%",
       content: null, // Hero content handled internally by HeroSection
     },
     {
       id: "story-beach",
       image: "/Dreamhouse/images/sections/beach-sunset.png",
+      imagePosition: "center 33%",
       content: <StorySection variant="beach" />,
     },
     {
@@ -87,17 +124,20 @@ export default function Home() {
 
   return (
     <main>
-      <Navigation visible={gateComplete} />
+      <Navigation visible={gateComplete} variant={navVariant} />
 
       <div id="scroll-canvas">
         <ScrollCanvas
           sections={sections}
           heroVideo={heroVideo}
           scrollPerSection={225}
+          onActiveSection={handleActiveSection}
         />
       </div>
 
-      <GallerySection />
+      <div ref={galleryRef}>
+        <GallerySection />
+      </div>
 
     </main>
   );

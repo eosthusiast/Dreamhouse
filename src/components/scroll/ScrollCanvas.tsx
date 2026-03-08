@@ -19,6 +19,7 @@ interface ScrollCanvasProps {
   sections: ScrollSection[];
   heroVideo?: React.ReactNode;
   scrollPerSection?: number;
+  onActiveSection?: (index: number) => void;
 }
 
 function clamp(value: number, min: number, max: number) {
@@ -29,6 +30,7 @@ export default function ScrollCanvas({
   sections,
   heroVideo,
   scrollPerSection = 225,
+  onActiveSection,
 }: ScrollCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
@@ -93,6 +95,8 @@ export default function ScrollCanvas({
           const progress = self.progress; // 0 to 1
           const activeIndex = Math.min(Math.floor(progress * N), N - 1);
           const sectionProgress = progress * N - activeIndex; // 0..1 within section
+
+          onActiveSection?.(activeIndex);
 
           // --- Crossfade logic ---
           const FADE_ZONE = 0.1; // Normal crossfade for non-hero sections
@@ -250,6 +254,7 @@ export default function ScrollCanvas({
           <div
             key={section.id}
             data-scroll-image
+            data-section-index={i}
             className="absolute inset-0 w-full h-full"
             style={{ zIndex: i + 1 }}
           >
@@ -275,6 +280,7 @@ export default function ScrollCanvas({
           <div
             key={`content-${section.id}`}
             data-scroll-content
+            data-section-index={i}
             className="absolute inset-0 w-full h-full flex items-center justify-center"
             style={{ zIndex: sections.length + i + 1 }}
           >
