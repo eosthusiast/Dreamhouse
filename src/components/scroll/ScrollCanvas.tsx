@@ -78,10 +78,10 @@ export default function ScrollCanvas({
           gsap.set(reveals, { autoAlpha: 0, y: 12 });
         }
       });
-      // Hide all line elements (fully hidden via dashoffset)
+      // Hide all line elements (fully hidden via dashoffset + autoAlpha)
       linesPerSection.forEach((lines) => {
         lines.forEach(({ el, length }) => {
-          gsap.set(el, { strokeDasharray: length, strokeDashoffset: length });
+          gsap.set(el, { strokeDasharray: length, strokeDashoffset: length, autoAlpha: 0 });
         });
       });
 
@@ -166,15 +166,15 @@ export default function ScrollCanvas({
             }
           }
 
-          // --- Sequential text reveals ---
+          // --- Sequential text reveals (staggered, one at a time) ---
           for (let i = 0; i < N; i++) {
             const reveals = revealsPerSection[i];
             if (reveals.length === 0) continue;
 
             if (i === activeIndex) {
               // Beach section: text after galaxy fade; other sections: text after normal crossfade
-              const textStart = i === 2 ? 0.35 : 0.15;
-              const textSpan = i === 2 ? 0.45 : 0.50;
+              const textStart = i === 2 ? 0.30 : 0.10;
+              const textSpan = i === 2 ? 0.55 : 0.70;
               const revealProgress = clamp(
                 (sectionProgress - textStart) / textSpan,
                 0,
@@ -182,10 +182,13 @@ export default function ScrollCanvas({
               );
               const M = reveals.length;
 
+              // Each element gets an equal slice of the progress bar
+              // Element j occupies [j/M, (j+1)/M] — fade in over the first 30% of its slice
               reveals.forEach((el, j) => {
-                const threshold = j / M;
+                const sliceStart = j / M;
+                const sliceEnd = (j + 0.3) / M; // fade in over 30% of its slice
                 const elementAlpha = clamp(
-                  (revealProgress - threshold) * M * 1.5,
+                  (revealProgress - sliceStart) / (sliceEnd - sliceStart),
                   0,
                   1
                 );
@@ -200,25 +203,39 @@ export default function ScrollCanvas({
             }
           }
 
-          // --- Line drawing (synced with text reveals) ---
+          // --- Line drawing (each line gets its own slice, synced with text reveals) ---
           for (let i = 0; i < N; i++) {
             const lines = linesPerSection[i];
             if (lines.length === 0) continue;
 
             if (i === activeIndex) {
-              // Section 2: line starts at 44% (after "You've felt it" appears)
-              const lineStart = i === 2 ? 0.44 : 0.15;
-              const lineSpan = i === 2 ? 0.36 : 0.50;
-              const revealProgress = clamp(
+              const lineStart = i === 2 ? 0.35 : 0.15;
+              const lineSpan = i === 2 ? 0.50 : 0.65;
+              const overallProgress = clamp(
                 (sectionProgress - lineStart) / lineSpan,
                 0,
                 1
               );
-              lines.forEach(({ el, length }) => {
-                gsap.set(el, {
-                  strokeDasharray: length,
-                  strokeDashoffset: length * (1 - revealProgress),
-                });
+              const L = lines.length;
+              lines.forEach(({ el, length }, k) => {
+                // Each line draws during its own slice of the progress
+                const sliceStart = k / L;
+                const sliceEnd = (k + 1) / L;
+                const lineProgress = clamp(
+                  (overallProgress - sliceStart) / (sliceEnd - sliceStart),
+                  0,
+                  1
+                );
+                if (length > 0) {
+                  gsap.set(el, {
+                    strokeDasharray: length,
+                    strokeDashoffset: length * (1 - lineProgress),
+                    autoAlpha: lineProgress > 0 ? 1 : 0,
+                  });
+                } else {
+                  // Fallback: if getTotalLength returned 0, use opacity only
+                  gsap.set(el, { autoAlpha: lineProgress > 0 ? 1 : 0 });
+                }
               });
             } else {
               // Reset — fully hidden
@@ -226,6 +243,7 @@ export default function ScrollCanvas({
                 gsap.set(el, {
                   strokeDasharray: length,
                   strokeDashoffset: length,
+                  autoAlpha: 0,
                 });
               });
             }

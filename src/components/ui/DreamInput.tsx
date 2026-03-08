@@ -20,10 +20,14 @@ export default function DreamInput({
 
   useEffect(() => {
     if (autoFocus && visible && inputRef.current) {
-      const timer = setTimeout(() => {
-        inputRef.current?.focus();
-      }, 800);
-      return () => clearTimeout(timer);
+      // Try to focus immediately, then retry a few times
+      // (browsers may block focus during animations)
+      inputRef.current.focus();
+      const retries = [100, 300, 600, 1000];
+      const timers = retries.map((delay) =>
+        setTimeout(() => inputRef.current?.focus(), delay)
+      );
+      return () => timers.forEach(clearTimeout);
     }
   }, [autoFocus, visible]);
 
@@ -56,6 +60,7 @@ export default function DreamInput({
           inputMode="text"
           autoComplete="off"
           autoCapitalize="off"
+          autoFocus={autoFocus && visible}
           placeholder=""
           className="
             w-full bg-transparent border-0 border-b border-turquoise/30

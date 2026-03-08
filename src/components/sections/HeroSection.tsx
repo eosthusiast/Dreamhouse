@@ -47,6 +47,9 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
 
     tl.eventCallback("onComplete", () => {
       setPhase("hero1");
+      // Focus the input after animation makes it visible
+      const input = inputRef.current?.querySelector("input");
+      input?.focus();
     });
   }, []);
 
@@ -64,7 +67,15 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
     }).fromTo(
       hero2Ref.current,
       { autoAlpha: 0 },
-      { autoAlpha: 1, duration: 3, ease: "power2.inOut" },
+      {
+        autoAlpha: 1,
+        duration: 3,
+        ease: "power2.inOut",
+        onComplete: () => {
+          const input = hero2Ref.current?.querySelector("input");
+          input?.focus();
+        },
+      },
       "-=1.2"
     );
 

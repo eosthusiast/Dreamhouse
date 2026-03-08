@@ -21,7 +21,7 @@ export default function IntelligentSection() {
         >
           <path
             data-line
-            d="M 180 200 C 250 210, 320 260, 380 310 C 440 360, 480 400, 540 380 C 600 360, 660 380, 720 420 C 780 460, 800 470, 820 475"
+            d="M 150 180 Q 350 330 550 330 Q 690 330 820 450"
             stroke="rgba(251, 240, 224, 0.4)"
             strokeWidth="1.5"
             fill="none"
@@ -49,10 +49,6 @@ export default function IntelligentSection() {
         >
           in connection with nature, ourselves and each other.
         </div>
-        {/* Invisible spacers to delay "Fertile soil" reveal to end of section */}
-        <div data-reveal className="absolute" style={{ opacity: 0, pointerEvents: "none", width: 0, height: 0 }} />
-        <div data-reveal className="absolute" style={{ opacity: 0, pointerEvents: "none", width: 0, height: 0 }} />
-        <div data-reveal className="absolute" style={{ opacity: 0, pointerEvents: "none", width: 0, height: 0 }} />
         <div
           data-reveal
           className="absolute font-playfair italic text-cream text-lg md:text-xl lg:text-2xl"
