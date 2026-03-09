@@ -77,6 +77,7 @@ export default function Home() {
     {
       id: "story-ocean",
       image: "/Dreamhouse/images/sections/ocean-sparkle.png",
+      mobileImagePosition: "20% 10%",
       content: <StorySection variant="ocean" />,
     },
     {

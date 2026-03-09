@@ -1,4 +1,109 @@
+"use client";
+
+import { useRef, useState, useEffect, useLayoutEffect, useCallback } from "react";
+
+interface TextConfig {
+  text: string;
+  x: number;
+  y: number;
+  mobileX?: number;
+  mobileY: number;
+  align: "left" | "right";
+  topAlign?: boolean;
+  maxWidth: string;
+}
+
+const TEXTS: TextConfig[] = [
+  {
+    text: "For those that feel the need for a more intelligent way to live",
+    x: 15,
+    y: 30,
+    mobileY: 12,
+    align: "left",
+    topAlign: true,
+    maxWidth: "28rem",
+  },
+  {
+    text: "in connection with nature, ourselves and each other.",
+    x: 82,
+    y: 63,
+    mobileX: 94,
+    mobileY: 63,
+    align: "right",
+    maxWidth: "24rem",
+  },
+  {
+    text: "Fertile soil for the truest version of yourself to play.",
+    x: 82,
+    y: 75,
+    mobileX: 94,
+    mobileY: 70,
+    align: "right",
+    maxWidth: "22rem",
+  },
+];
+
+const LINE_STYLE = {
+  stroke: "rgba(251, 240, 224, 0.4)",
+  strokeWidth: 1.5,
+  fill: "none",
+  strokeLinecap: "round" as const,
+};
+
 export default function IntelligentSection() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const textRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [path, setPath] = useState<string>("");
+  const [isMobile, setIsMobile] = useState(false);
+
+  const computePath = useCallback(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    const refs = textRefs.current;
+    if (refs.some((r) => !r)) return;
+
+    const containerRect = container.getBoundingClientRect();
+    const mobile = containerRect.width < 768;
+    setIsMobile(mobile);
+
+    const rects = refs.map((r) => {
+      const rect = r!.getBoundingClientRect();
+      return {
+        left: rect.left - containerRect.left,
+        right: rect.right - containerRect.left,
+        top: rect.top - containerRect.top,
+        bottom: rect.bottom - containerRect.top,
+        centerX: rect.left - containerRect.left + rect.width / 2,
+        centerY: rect.top - containerRect.top + rect.height / 2,
+      };
+    });
+
+    if (rects.length >= 2) {
+      // S-curve from bottom-center of block 0 to above block 1 (identical to ocean StorySection)
+      const startX = rects[0].centerX;
+      const startY = rects[0].bottom + 12;
+      const endX = mobile ? rects[1].centerX : rects[1].left - 12;
+      const endY = rects[1].top - 12;
+
+      const cp1x = startX + (endX - startX) * 0.15;
+      const cp1y = startY + (endY - startY) * 0.55;
+      const cp2x = endX - (endX - startX) * 0.15;
+      const cp2y = startY + (endY - startY) * 0.45;
+
+      setPath(`M ${startX} ${startY} C ${cp1x} ${cp1y} ${cp2x} ${cp2y} ${endX} ${endY}`);
+    }
+  }, []);
+
+  useLayoutEffect(() => {
+    computePath();
+  }, [computePath]);
+
+  useEffect(() => {
+    const observer = new ResizeObserver(() => computePath());
+    if (containerRef.current) observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, [computePath]);
+
   return (
     <div className="relative w-full h-full">
       {/* Purple-golden gradient overlay */}
@@ -11,57 +116,43 @@ export default function IntelligentSection() {
         }}
       />
 
-      <div className="relative z-20 w-full h-full">
-        {/* SVG line connecting text elements — gentle arc */}
-        <svg
-          className="absolute inset-0 w-full h-full pointer-events-none"
-          viewBox="0 0 1000 600"
-          preserveAspectRatio="none"
-          fill="none"
-        >
-          <path
-            data-line
-            d="M 150 180 Q 350 330 550 330 Q 690 330 820 450"
-            stroke="rgba(251, 240, 224, 0.4)"
-            strokeWidth="1.5"
+      <div ref={containerRef} className="relative z-20 w-full h-full">
+        {path && (
+          <svg
+            className="absolute inset-0 w-full h-full pointer-events-none"
             fill="none"
-            strokeLinecap="round"
-          />
-        </svg>
+          >
+            <path data-line d={path} {...LINE_STYLE} />
+          </svg>
+        )}
 
-        <div
-          data-reveal
-          className="absolute font-playfair italic text-cream text-lg md:text-xl lg:text-2xl"
-          style={{ left: "15%", top: "30%", maxWidth: "28rem" }}
-        >
-          For those that feel the need for a more intelligent way to live
-        </div>
-        <div
-          data-reveal
-          className="absolute font-playfair italic text-cream text-lg md:text-xl lg:text-2xl"
-          style={{
-            left: "55%",
-            top: "55%",
-            maxWidth: "24rem",
-            textAlign: "right",
-            transform: "translateX(-100%)",
-          }}
-        >
-          in connection with nature, ourselves and each other.
-        </div>
-        <div
-          data-reveal
-          className="absolute font-playfair italic text-cream text-lg md:text-xl lg:text-2xl"
-          style={{
-            left: "82%",
-            top: "75%",
-            maxWidth: "22rem",
-            textAlign: "right",
-            transform: "translateX(-100%)",
-          }}
-        >
-          Fertile soil for the truest version of yourself to play.
-        </div>
+        {TEXTS.map((item, i) => (
+          <div
+            key={i}
+            ref={(el) => { textRefs.current[i] = el; }}
+            {...(i === 0 ? { "data-reveal": true } : { "data-reveal-after-line": true })}
+            className="absolute font-playfair italic text-cream text-lg md:text-xl lg:text-2xl"
+            style={{
+              ...(item.align === "right"
+                ? {
+                    right: isMobile
+                      ? `${100 - (item.mobileX ?? item.x)}%`
+                      : `${100 - item.x}%`,
+                    left: "auto",
+                  }
+                : {
+                    left: isMobile ? "8%" : `${item.x}%`,
+                  }),
+              top: isMobile ? `${item.mobileY}%` : `${item.y}%`,
+              maxWidth: isMobile ? "85%" : item.maxWidth,
+              textAlign: item.align,
+              transform: `translate(0, ${item.topAlign && !isMobile ? "0" : "-50%"})`,
+              textShadow: "0 2px 20px rgba(0,0,0,0.6), 0 0 40px rgba(0,0,0,0.3)",
+            }}
+          >
+            {item.text}
+          </div>
+        ))}
       </div>
     </div>
   );

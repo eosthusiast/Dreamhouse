@@ -31,7 +31,7 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
     tl.to(headingRef.current, {
       autoAlpha: 1,
       y: 0,
-      duration: 1.8,
+      duration: 2.7,
       ease: "power2.out",
       delay: 3,
     }).to(
@@ -39,7 +39,7 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
       {
         autoAlpha: 1,
         y: 0,
-        duration: 1,
+        duration: 1.5,
         ease: "power2.out",
       },
       "-=0.5"
@@ -62,7 +62,7 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
     const tl = gsap.timeline();
     tl.to(hero1Ref.current, {
       autoAlpha: 0,
-      duration: 3,
+      duration: 1.5,
       ease: "power2.inOut",
     }).fromTo(
       hero2Ref.current,

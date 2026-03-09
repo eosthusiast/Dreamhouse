@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -12,6 +12,7 @@ interface ScrollSection {
   id: string;
   image: string | null;
   imagePosition?: string;
+  mobileImagePosition?: string;
   content: React.ReactNode;
 }
 
@@ -34,6 +35,14 @@ export default function ScrollCanvas({
 }: ScrollCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   useGSAP(
     () => {
@@ -50,20 +59,28 @@ export default function ScrollCanvas({
 
       // Pre-query all reveal elements per section
       const revealsPerSection: HTMLElement[][] = [];
+      const revealsAfterLinePerSection: HTMLElement[][] = [];
       contents.forEach((contentEl) => {
         revealsPerSection.push(
           Array.from(contentEl.querySelectorAll<HTMLElement>("[data-reveal]"))
         );
-      });
-
-      // Pre-query all line elements per section and cache their lengths
-      const linesPerSection: { el: SVGPathElement; length: number }[][] = [];
-      contents.forEach((contentEl) => {
-        const paths = Array.from(contentEl.querySelectorAll<SVGPathElement>("[data-line]"));
-        linesPerSection.push(
-          paths.map((p) => ({ el: p, length: p.getTotalLength() }))
+        revealsAfterLinePerSection.push(
+          Array.from(contentEl.querySelectorAll<HTMLElement>("[data-reveal-after-line]"))
         );
       });
+
+      // Line elements queried lazily (dynamically rendered by child components)
+      let lastActiveIndex = -1;
+      function getLinesPerSection() {
+        const result: { el: SVGPathElement; length: number }[][] = [];
+        contents.forEach((contentEl) => {
+          const paths = Array.from(contentEl.querySelectorAll<SVGPathElement>("[data-line]"));
+          result.push(
+            paths.map((p) => ({ el: p, length: p.getTotalLength() }))
+          );
+        });
+        return result;
+      }
 
       // Set initial states — everything hidden except section 0
       images.forEach((img, i) => {
@@ -74,15 +91,10 @@ export default function ScrollCanvas({
       });
       // Hide all reveal elements
       revealsPerSection.forEach((reveals) => {
-        if (reveals.length > 0) {
-          gsap.set(reveals, { autoAlpha: 0, y: 12 });
-        }
+        if (reveals.length > 0) gsap.set(reveals, { autoAlpha: 0, y: 12 });
       });
-      // Hide all line elements (fully hidden via dashoffset + autoAlpha)
-      linesPerSection.forEach((lines) => {
-        lines.forEach(({ el, length }) => {
-          gsap.set(el, { strokeDasharray: length, strokeDashoffset: length, autoAlpha: 0 });
-        });
+      revealsAfterLinePerSection.forEach((reveals) => {
+        if (reveals.length > 0) gsap.set(reveals, { autoAlpha: 0, y: 12 });
       });
 
       // Single master ScrollTrigger drives everything
@@ -203,9 +215,36 @@ export default function ScrollCanvas({
             }
           }
 
-          // --- Line drawing (each line gets its own slice, synced with text reveals) ---
+          // --- Reveals that appear only after the line is fully drawn ---
           for (let i = 0; i < N; i++) {
-            const lines = linesPerSection[i];
+            const reveals = revealsAfterLinePerSection[i];
+            if (reveals.length === 0) continue;
+
+            if (i === activeIndex) {
+              const lineEnd = (i === 2 ? 0.35 : 0.15) + (i === 2 ? 0.50 : 0.65); // 0.80
+              const afterLineSpan = 0.10;
+              const revealProgress = clamp((sectionProgress - lineEnd) / afterLineSpan, 0, 1);
+              const M = reveals.length;
+              reveals.forEach((el, j) => {
+                const sliceStart = j / M;
+                const sliceEnd = (j + 0.3) / M;
+                const elementAlpha = clamp(
+                  (revealProgress - sliceStart) / (sliceEnd - sliceStart),
+                  0,
+                  1
+                );
+                gsap.set(el, { autoAlpha: elementAlpha, y: 12 * (1 - elementAlpha) });
+              });
+            } else {
+              gsap.set(reveals, { autoAlpha: 0, y: 12 });
+            }
+          }
+
+          // --- Line drawing (each line gets its own slice, synced with text reveals) ---
+          // Re-query lines lazily (they may be dynamically rendered by child components)
+          const linesPerSection = getLinesPerSection();
+          for (let i = 0; i < N; i++) {
+            const lines = linesPerSection[i] || [];
             if (lines.length === 0) continue;
 
             if (i === activeIndex) {
@@ -282,7 +321,12 @@ export default function ScrollCanvas({
                 alt=""
                 fill
                 className="object-cover"
-                style={section.imagePosition ? { objectPosition: section.imagePosition } : undefined}
+                style={{
+                  objectPosition:
+                    isMobile && section.mobileImagePosition
+                      ? section.mobileImagePosition
+                      : section.imagePosition ?? undefined,
+                }}
                 sizes="100vw"
                 priority={i < 2}
                 quality={85}
