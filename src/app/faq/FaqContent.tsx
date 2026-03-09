@@ -1,7 +1,23 @@
 "use client";
 
-import { motion } from "motion/react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import Navigation from "@/components/layout/Navigation";
+import PageBackground from "@/components/PageBackground";
+import { Fraunces, Nunito } from "next/font/google";
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  axes: ["SOFT", "WONK", "opsz"],
+  variable: "--font-fraunces",
+  display: "swap",
+});
+
+const nunito = Nunito({
+  subsets: ["latin"],
+  variable: "--font-nunito",
+  display: "swap",
+});
 
 const QUESTIONS = [
   {
@@ -39,59 +55,179 @@ const QUESTIONS = [
 ];
 
 export default function FaqContent() {
+  const [open, setOpen] = useState<number | null>(null);
+  const wrapperClass = `${fraunces.variable} ${nunito.variable}`;
+
   return (
-    <main
-      className="min-h-screen selection:bg-warm-gold/20"
-      style={{ backgroundColor: "#fbf0e0", color: "#1a1a1a" }}
+    <div
+      className={wrapperClass}
+      style={{
+        ["--cream" as string]: "#fdf8f0",
+        ["--coral" as string]: "#e8806a",
+        ["--terra" as string]: "#c95f45",
+        ["--gold" as string]: "#e8b84b",
+        ["--sage" as string]: "#8cb89a",
+        ["--lavender" as string]: "#b8a8d4",
+        ["--text-dark" as string]: "#231810",
+        ["--text-mid" as string]: "#5a3828",
+        ["--text-soft" as string]: "#8a6050",
+        backgroundColor: "var(--cream)",
+        minHeight: "100vh",
+        position: "relative",
+        overflowX: "hidden",
+      }}
     >
-      <Navigation variant="light" />
+      <PageBackground />
 
-      {/* Hero */}
-      <section className="flex flex-col items-center justify-center min-h-[30vh] px-6 text-center">
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="text-5xl md:text-[6.3rem] lg:text-[7.7rem] font-playfair tracking-tight leading-none mb-6"
-          style={{ color: "rgba(26,26,26,1)" }}
+      <div style={{ position: "relative", zIndex: 3 }}>
+        <Navigation variant="light" />
+
+        {/* Hero */}
+        <section
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "35vh",
+            padding: "6rem 1.5rem 3rem",
+            textAlign: "center",
+          }}
         >
-          Questions
-        </motion.h1>
-      </section>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            style={{
+              fontFamily: "var(--font-nunito)",
+              fontSize: "0.72rem",
+              fontWeight: 700,
+              letterSpacing: "0.32em",
+              textTransform: "uppercase",
+              color: "var(--coral)",
+              marginBottom: "1.25rem",
+              opacity: 0.9,
+            }}
+          >
+            Dream House
+          </motion.div>
 
-      {/* Content container */}
-      <div className="max-w-[750px] mx-auto px-8 md:px-6 pb-24">
-        {/* Divider */}
-        <div className="flex justify-center my-6 md:my-10">
-          <div className="w-16 h-px" style={{ backgroundColor: "rgba(26,26,26,0.30)" }} />
-        </div>
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+            style={{
+              fontFamily: "var(--font-fraunces)",
+              fontSize: "clamp(4rem, 9vw, 8rem)",
+              fontWeight: 500,
+              letterSpacing: "-0.02em",
+              lineHeight: 1.05,
+              color: "var(--text-dark)",
+              marginBottom: "1.25rem",
+            }}
+          >
+            <em style={{ fontStyle: "italic" }}>Questions</em>
+          </motion.h1>
+        </section>
 
-        {/* Questions */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <div className="space-y-10">
+        {/* Content container */}
+        <div style={{ maxWidth: "750px", margin: "0 auto", padding: "0 2rem 6rem" }}>
+          {/* Divider */}
+          <hr style={{ border: "none", height: "1px", background: "linear-gradient(to right, transparent, rgba(232,128,106,0.35), transparent)", margin: "0 auto 3rem", maxWidth: "480px" }} />
+
+          {/* Accordion */}
+          <div>
             {QUESTIONS.map((item, i) => (
-              <div key={i}>
-                <p
-                  className="text-lg md:text-xl mb-3"
-                  style={{ color: "rgba(26,26,26,1)" }}
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.05 }}
+              >
+                {/* Question row */}
+                <button
+                  onClick={() => setOpen(open === i ? null : i)}
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: "1rem",
+                    padding: "1.75rem 0",
+                    background: "none",
+                    border: "none",
+                    borderBottom: "1px solid rgba(232,128,106,0.12)",
+                    cursor: "pointer",
+                    textAlign: "left",
+                  }}
                 >
-                  {item.q}
-                </p>
-                <p
-                  className="text-base md:text-lg leading-relaxed"
-                  style={{ color: "rgba(26,26,26,0.90)" }}
-                >
-                  {item.a}
-                </p>
-              </div>
+                  <span
+                    style={{
+                      color: "var(--gold)",
+                      fontSize: "0.8rem",
+                      flexShrink: 0,
+                      paddingTop: "0.25rem",
+                    }}
+                  >
+                    ✦
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-fraunces)",
+                      fontSize: "clamp(1.05rem, 2vw, 1.25rem)",
+                      fontWeight: 400,
+                      lineHeight: 1.5,
+                      color: "var(--text-dark)",
+                      flex: 1,
+                    }}
+                  >
+                    {item.q}
+                  </span>
+                  <motion.span
+                    animate={{ rotate: open === i ? 180 : 0 }}
+                    transition={{ duration: 0.25 }}
+                    style={{
+                      flexShrink: 0,
+                      fontSize: "1rem",
+                      color: "var(--text-soft)",
+                      paddingTop: "0.2rem",
+                    }}
+                  >
+                    ▾
+                  </motion.span>
+                </button>
+
+                {/* Answer expand */}
+                <AnimatePresence initial={false}>
+                  {open === i && (
+                    <motion.div
+                      key="answer"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                      style={{ overflow: "hidden" }}
+                    >
+                      <p
+                        style={{
+                          fontSize: "clamp(1rem, 1.8vw, 1.1rem)",
+                          lineHeight: 1.85,
+                          color: "var(--text-mid)",
+                          padding: "1.25rem 0 1.75rem 2rem",
+                        }}
+                      >
+                        {item.a}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
             ))}
           </div>
-        </motion.section>
+
+          <div style={{ paddingBottom: "2rem" }} />
+        </div>
       </div>
-    </main>
+    </div>
   );
 }
