@@ -19,7 +19,7 @@ const GALLERY_IMAGES = [
     marginTop: "0",
   },
   {
-    src: "/Dreamhouse/images/gallery/dancing-light.png",
+    src: "/Dreamhouse/images/gallery/dancing-light.jpg",
     alt: "Dancing indoors in golden light",
     width: "45%",
     marginLeft: "auto",
@@ -37,7 +37,7 @@ const GALLERY_IMAGES = [
     marginTop: "-3rem",
   },
   {
-    src: "/Dreamhouse/images/gallery/meditation-circle.png",
+    src: "/Dreamhouse/images/gallery/meditation-circle.jpg",
     alt: "Meditation circle at sunset",
     width: "40%",
     marginLeft: "25%",

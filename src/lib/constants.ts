@@ -6,32 +6,32 @@ export const SECTIONS = [
   {
     id: "story-1",
     label: "Story Beach",
-    image: "/images/sections/beach-sunset.png",
+    image: "/images/sections/beach-sunset.jpg",
   },
   {
     id: "story-2",
     label: "Story Ocean",
-    image: "/images/sections/ocean-sparkle.png",
+    image: "/images/sections/ocean-sparkle.jpg",
   },
   {
     id: "welcome",
     label: "Welcome",
-    image: "/images/sections/welcome-silhouettes.png",
+    image: "/images/sections/welcome-silhouettes.jpg",
   },
   {
     id: "inspired",
     label: "Inspired By",
-    image: "/images/sections/inspired-dancing.png",
+    image: "/images/sections/inspired-dancing.jpg",
   },
   {
     id: "intelligent",
     label: "Intelligent Living",
-    image: "/images/sections/intelligent-ocean.png",
+    image: "/images/sections/intelligent-ocean.jpg",
   },
   {
     id: "portal",
     label: "Portal",
-    image: "/images/sections/portal-waterfall.png",
+    image: "/images/sections/portal-waterfall.jpg",
   },
 ] as const;
 

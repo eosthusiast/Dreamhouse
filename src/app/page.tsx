@@ -64,41 +64,41 @@ export default function Home() {
     },
     {
       id: "hero-2",
-      image: "/Dreamhouse/images/sections/beach-sunset.png",
+      image: "/Dreamhouse/images/sections/beach-sunset.jpg",
       imagePosition: "center 33%",
       content: null, // Hero content handled internally by HeroSection
     },
     {
       id: "story-beach",
-      image: "/Dreamhouse/images/sections/beach-sunset.png",
+      image: "/Dreamhouse/images/sections/beach-sunset.jpg",
       imagePosition: "center 33%",
       content: <StorySection variant="beach" />,
     },
     {
       id: "story-ocean",
-      image: "/Dreamhouse/images/sections/ocean-sparkle.png",
+      image: "/Dreamhouse/images/sections/ocean-sparkle.jpg",
       mobileImagePosition: "20% 10%",
       content: <StorySection variant="ocean" />,
     },
     {
       id: "welcome",
-      image: "/Dreamhouse/images/sections/welcome-silhouettes.png",
+      image: "/Dreamhouse/images/sections/welcome-silhouettes.jpg",
       imagePosition: "center 72%",
       content: <WelcomeSection />,
     },
     {
       id: "inspired",
-      image: "/Dreamhouse/images/sections/inspired-dancing.png",
+      image: "/Dreamhouse/images/sections/inspired-dancing.jpg",
       content: <InspiredBySection />,
     },
     {
       id: "intelligent",
-      image: "/Dreamhouse/images/sections/intelligent-ocean.png",
+      image: "/Dreamhouse/images/sections/intelligent-ocean.jpg",
       content: <IntelligentSection />,
     },
     {
       id: "portal",
-      image: "/Dreamhouse/images/sections/portal-waterfall.png",
+      image: "/Dreamhouse/images/sections/portal-waterfall.jpg",
       content: <PortalSection />,
     },
   ];
