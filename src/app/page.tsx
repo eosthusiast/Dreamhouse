@@ -105,12 +105,12 @@ export default function Home() {
 
   const heroVideo = (
     <>
+      <div className="absolute inset-0 w-full h-full" style={{ background: "#050a1a" }} />
       <video
         autoPlay
         loop
         muted
         playsInline
-        poster="/Dreamhouse/videos/galaxy-poster.jpg"
         className="absolute inset-0 w-full h-full object-cover"
         aria-hidden="true"
       >
