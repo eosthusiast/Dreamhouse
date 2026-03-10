@@ -100,6 +100,7 @@ export default function Home() {
       id: "portal",
       image: "/Dreamhouse/images/sections/portal-waterfall.jpg",
       content: <PortalSection />,
+      scrollVh: 100,
     },
   ];
 

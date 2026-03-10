@@ -14,6 +14,7 @@ interface ScrollSection {
   imagePosition?: string;
   mobileImagePosition?: string;
   content: React.ReactNode;
+  scrollVh?: number;
 }
 
 interface ScrollCanvasProps {
@@ -60,6 +61,14 @@ export default function ScrollCanvas({
         );
 
       const N = sections.length;
+
+      // Pre-compute per-section scroll heights and normalized boundaries
+      const sectionVhs = sections.map(s => s.scrollVh ?? scrollPerSection);
+      const totalVh = sectionVhs.reduce((a, b) => a + b, 0);
+      const sectionNormStarts = sectionVhs.map((_, i) =>
+        sectionVhs.slice(0, i).reduce((a, b) => a + b, 0) / totalVh
+      );
+      const sectionNormWidths = sectionVhs.map(h => h / totalVh);
 
       // Pre-query all reveal elements per section
       const revealsPerSection: HTMLElement[][] = [];
@@ -109,8 +118,19 @@ export default function ScrollCanvas({
         scrub: 0.5,
         onUpdate: (self) => {
           const progress = self.progress; // 0 to 1
-          const activeIndex = Math.min(Math.floor(progress * N), N - 1);
-          const sectionProgress = progress * N - activeIndex; // 0..1 within section
+
+          let activeIndex = N - 1;
+          let sectionProgress = 1;
+          for (let i = 0; i < N; i++) {
+            if (progress < sectionNormStarts[i] + sectionNormWidths[i] || i === N - 1) {
+              activeIndex = i;
+              sectionProgress = clamp(
+                (progress - sectionNormStarts[i]) / sectionNormWidths[i],
+                0, 1
+              );
+              break;
+            }
+          }
 
           onActiveSection?.(activeIndex);
 
@@ -118,8 +138,8 @@ export default function ScrollCanvas({
           const FADE_ZONE = 0.25; // Normal crossfade for non-hero sections
 
           // Galaxy fade: slow dissolve from 50% of section 0 to 75% into section 2
-          const galaxyFadeStart = (0 + 0.5) / N;
-          const galaxyFadeEnd = (2 + 0.75) / N;
+          const galaxyFadeStart = sectionNormStarts[0] + 0.5 * sectionNormWidths[0];
+          const galaxyFadeEnd = sectionNormStarts[2] + 0.75 * sectionNormWidths[2];
 
           for (let i = 0; i < N; i++) {
             let alpha = 0;
@@ -294,10 +314,10 @@ export default function ScrollCanvas({
         },
       });
     },
-    { scope: containerRef, dependencies: [scrollPerSection] }
+    { scope: containerRef, dependencies: [scrollPerSection, sections] }
   );
 
-  const totalHeight = sections.length * scrollPerSection;
+  const totalHeight = sections.reduce((sum, s) => sum + (s.scrollVh ?? scrollPerSection), 0);
 
   return (
     <div
