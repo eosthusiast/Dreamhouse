@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState, useEffect, useLayoutEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
+import { gsap } from "gsap";
 
 interface TextConfig {
   text: string;
@@ -68,19 +69,22 @@ export default function IntelligentSection() {
 
     const rects = refs.map((r) => {
       const rect = r!.getBoundingClientRect();
+      // Subtract GSAP's y offset so SVG paths match the text's revealed (y:0) position,
+      // not the displaced (y:12) position from ScrollCanvas's initial setup
+      const gsapY = Number(gsap.getProperty(r!, "y")) || 0;
       return {
         left: rect.left - containerRect.left,
         right: rect.right - containerRect.left,
-        top: rect.top - containerRect.top,
-        bottom: rect.bottom - containerRect.top,
+        top: rect.top - containerRect.top - gsapY,
+        bottom: rect.bottom - containerRect.top - gsapY,
         centerX: rect.left - containerRect.left + rect.width / 2,
-        centerY: rect.top - containerRect.top + rect.height / 2,
+        centerY: rect.top - containerRect.top + rect.height / 2 - gsapY,
       };
     });
 
     if (rects.length >= 2) {
       // S-curve from bottom-center of block 0 to above block 1 (identical to ocean StorySection)
-      const startX = rects[0].centerX;
+      const startX = mobile ? rects[0].left : rects[0].centerX;
       const startY = rects[0].bottom + 12;
       const endX = mobile ? rects[1].centerX : rects[1].left - 12;
       const endY = rects[1].top - 12;
@@ -94,8 +98,18 @@ export default function IntelligentSection() {
     }
   }, []);
 
-  useLayoutEffect(() => {
-    computePath();
+  // Wait for fonts to load before measuring, then re-measure after isMobile re-render
+  useEffect(() => {
+    let live = true;
+    document.fonts.ready.then(() => {
+      document.body.offsetHeight; // force layout flush so font metrics are applied
+      if (!live) return;
+      computePath(); // first call: corrects font metrics, may set isMobile → re-render
+      requestAnimationFrame(() => {
+        if (live) computePath(); // second call: picks up post-re-render text positions
+      });
+    });
+    return () => { live = false; };
   }, [computePath]);
 
   useEffect(() => {

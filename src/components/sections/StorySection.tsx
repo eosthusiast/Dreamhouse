@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState, useEffect, useLayoutEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
+import { gsap } from "gsap";
 
 interface StorySectionProps {
   variant: "beach" | "ocean";
@@ -74,13 +75,16 @@ export default function StorySection({ variant }: StorySectionProps) {
 
     const rects = refs.map((r) => {
       const rect = r!.getBoundingClientRect();
+      // Subtract GSAP's y offset so SVG paths match the text's revealed (y:0) position,
+      // not the displaced (y:12) position from ScrollCanvas's initial setup
+      const gsapY = Number(gsap.getProperty(r!, "y")) || 0;
       return {
         left: rect.left - containerRect.left,
         right: rect.right - containerRect.left,
-        top: rect.top - containerRect.top,
-        bottom: rect.bottom - containerRect.top,
+        top: rect.top - containerRect.top - gsapY,
+        bottom: rect.bottom - containerRect.top - gsapY,
         centerX: rect.left - containerRect.left + rect.width / 2,
-        centerY: rect.top - containerRect.top + rect.height / 2,
+        centerY: rect.top - containerRect.top + rect.height / 2 - gsapY,
         width: rect.width,
         height: rect.height,
       };
@@ -136,9 +140,18 @@ export default function StorySection({ variant }: StorySectionProps) {
     }
   }, [variant]);
 
-  // Compute synchronously before paint so ScrollCanvas can find the lines
-  useLayoutEffect(() => {
-    computePaths();
+  // Wait for fonts to load before measuring, then re-measure after isMobile re-render
+  useEffect(() => {
+    let live = true;
+    document.fonts.ready.then(() => {
+      document.body.offsetHeight; // force layout flush so font metrics are applied
+      if (!live) return;
+      computePaths(); // first call: corrects font metrics, may set isMobile → re-render
+      requestAnimationFrame(() => {
+        if (live) computePaths(); // second call: picks up post-re-render text positions
+      });
+    });
+    return () => { live = false; };
   }, [computePaths]);
 
   // Recompute on resize
@@ -178,15 +191,13 @@ export default function StorySection({ variant }: StorySectionProps) {
                   : "max-w-[80%] md:max-w-xs lg:max-w-sm"
           }`}
           style={{
-            ...(variant === "ocean" && item.align === "right"
+            ...(item.align === "right" && (variant === "ocean" || isMobile)
               ? {
                   right: isMobile ? `${100 - (item.mobileX ?? item.x)}%` : `${100 - item.x}%`,
                   left: "auto",
                 }
               : {
-                  left: isMobile
-                    ? (item.mobileX ? `${item.mobileX}%` : item.align === "right" ? `${item.x}%` : "6%")
-                    : `${item.x}%`,
+                  left: isMobile ? (item.mobileX ? `${item.mobileX}%` : "6%") : `${item.x}%`,
                 }),
             top: isMobile ? `${item.mobileY}%` : `${item.y}%`,
             textAlign: item.align,
