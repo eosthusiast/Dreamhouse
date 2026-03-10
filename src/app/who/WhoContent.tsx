@@ -282,13 +282,13 @@ export default function WhoContent() {
             {/* Frosted glass yes-list */}
             <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", textAlign: "left" }}>
               {[
-                "Accidentally inspire people constantly",
-                "Believe joy and ambition belong in the same room",
-                "Sharing your gifts, and being of service, energise you",
-                "Have something you're building that means something to you",
-                "Miss the kind of community that was just around you earlier in life",
-                "Get genuinely energised by people who think differently to you",
-                "Are willing to be fully seen and see others honestly",
+                "You accidentally inspire people constantly",
+                "You believe joy and ambition belong in the same room",
+                "You sharing your gifts, and being of service, energise you",
+                "You have something you're building that means something to you",
+                "You miss the kind of community that was just around you earlier in life",
+                "You get genuinely energised by people who think differently to you",
+                "You are willing to be fully seen and see others honestly",
               ].map((item, i) => (
                 <motion.div
                   key={i}

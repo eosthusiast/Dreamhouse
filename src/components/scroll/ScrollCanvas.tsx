@@ -27,6 +27,10 @@ function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
+function smoothstep(t: number) {
+  return t * t * (3 - 2 * t);
+}
+
 export default function ScrollCanvas({
   sections,
   heroVideo,
@@ -111,7 +115,7 @@ export default function ScrollCanvas({
           onActiveSection?.(activeIndex);
 
           // --- Crossfade logic ---
-          const FADE_ZONE = 0.1; // Normal crossfade for non-hero sections
+          const FADE_ZONE = 0.25; // Normal crossfade for non-hero sections
 
           // Galaxy fade: slow dissolve from 50% of section 0 to 75% into section 2
           const galaxyFadeStart = (0 + 0.5) / N;
@@ -145,7 +149,7 @@ export default function ScrollCanvas({
               } else if (activeIndex <= 2) {
                 alpha = 1;
               } else if (activeIndex === 3 && sectionProgress < FADE_ZONE) {
-                alpha = 1 - sectionProgress / FADE_ZONE;
+                alpha = 1 - smoothstep(sectionProgress / FADE_ZONE);
               }
             } else if (i === 2 && progress < galaxyFadeEnd) {
               alpha = 0;
@@ -156,10 +160,10 @@ export default function ScrollCanvas({
               // Normal crossfade for all other sections
               if (i === activeIndex) {
                 alpha = sectionProgress < FADE_ZONE
-                  ? sectionProgress / FADE_ZONE
+                  ? smoothstep(sectionProgress / FADE_ZONE)
                   : 1.0;
               } else if (i === activeIndex - 1 && sectionProgress < FADE_ZONE) {
-                alpha = 1.0 - sectionProgress / FADE_ZONE;
+                alpha = 1.0 - smoothstep(sectionProgress / FADE_ZONE);
               }
             }
 
