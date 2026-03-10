@@ -67,20 +67,24 @@ export default function IntelligentSection() {
     const mobile = containerRect.width < 768;
     setIsMobile(mobile);
 
+    // Temporarily reset GSAP y to 0 so getBoundingClientRect reflects true position.
+    // This avoids stale GSAP cache issues on mobile after React re-renders.
+    const savedY = refs.map(r => Number(gsap.getProperty(r!, "y")) || 0);
+    refs.forEach(r => gsap.set(r!, { y: 0 }));
+
     const rects = refs.map((r) => {
       const rect = r!.getBoundingClientRect();
-      // Subtract GSAP's y offset so SVG paths match the text's revealed (y:0) position,
-      // not the displaced (y:12) position from ScrollCanvas's initial setup
-      const gsapY = Number(gsap.getProperty(r!, "y")) || 0;
       return {
         left: rect.left - containerRect.left,
         right: rect.right - containerRect.left,
-        top: rect.top - containerRect.top - gsapY,
-        bottom: rect.bottom - containerRect.top - gsapY,
+        top: rect.top - containerRect.top,
+        bottom: rect.bottom - containerRect.top,
         centerX: rect.left - containerRect.left + rect.width / 2,
-        centerY: rect.top - containerRect.top + rect.height / 2 - gsapY,
+        centerY: rect.top - containerRect.top + rect.height / 2,
       };
     });
+
+    refs.forEach((r, i) => gsap.set(r!, { y: savedY[i] }));
 
     if (rects.length >= 2) {
       // S-curve from bottom-center of block 0 to above block 1 (identical to ocean StorySection)
@@ -98,19 +102,20 @@ export default function IntelligentSection() {
     }
   }, []);
 
-  // Wait for fonts to load before measuring, then re-measure after isMobile re-render
+  // Wait for fonts to load before measuring
   useEffect(() => {
     let live = true;
     document.fonts.ready.then(() => {
       document.body.offsetHeight; // force layout flush so font metrics are applied
-      if (!live) return;
-      computePath(); // first call: corrects font metrics, may set isMobile → re-render
-      requestAnimationFrame(() => {
-        if (live) computePath(); // second call: picks up post-re-render text positions
-      });
+      if (live) computePath();
     });
     return () => { live = false; };
   }, [computePath]);
+
+  // Re-compute path after isMobile state change triggers re-render
+  useEffect(() => {
+    computePath();
+  }, [isMobile, computePath]);
 
   useEffect(() => {
     const observer = new ResizeObserver(() => computePath());
