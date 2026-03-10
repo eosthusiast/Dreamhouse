@@ -152,8 +152,6 @@ export default function WhoContent() {
               lineHeight: 1.05,
               color: "var(--text-dark)",
               marginBottom: "1.25rem",
-              maxWidth: "800px",
-              whiteSpace: "nowrap",
             }}
           >
             Who Is This{" "}
@@ -281,29 +279,16 @@ export default function WhoContent() {
               })}
             </div>
 
-            <p
-              style={{
-                fontSize: "clamp(1.15rem, 2.2vw, 1.55rem)",
-                fontWeight: 300,
-                lineHeight: 1.8,
-                color: "var(--text-mid)",
-                maxWidth: "660px",
-                margin: "0 auto 2.5rem",
-              }}
-            >
-              The ones who are done waiting for life to get interesting
-              <br />
-              and have decided to make it that way themselves.
-            </p>
-
             {/* Frosted glass yes-list */}
             <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", textAlign: "left" }}>
               {[
-                "You want to experiment with how to live more fully",
-                "You want to figure out how to be of greater service to the world",
-                "You're ready to dream bigger than you've let yourself before",
-                "You believe joy and ambition belong in the same room",
-                "You're genuinely interested in other people — not just networking, actually interested",
+                "Accidentally inspire people constantly",
+                "Believe joy and ambition belong in the same room",
+                "Sharing your gifts, and being of service, energise you",
+                "Have something you're building that means something to you",
+                "Miss the kind of community that was just around you earlier in life",
+                "Get genuinely energised by people who think differently to you",
+                "Are willing to be fully seen and see others honestly",
               ].map((item, i) => (
                 <motion.div
                   key={i}
@@ -335,21 +320,6 @@ export default function WhoContent() {
                 </motion.div>
               ))}
             </div>
-
-            <p
-              style={{
-                fontFamily: "var(--font-fraunces)",
-                fontSize: "1.1rem",
-                fontStyle: "italic",
-                color: "var(--text-soft)",
-                marginTop: "2rem",
-                lineHeight: 1.65,
-              }}
-            >
-              You don&apos;t need to have it figured out.
-              <br />
-              You just need to be willing to show up and find out.
-            </p>
           </motion.section>
 
         </div>
@@ -413,27 +383,11 @@ export default function WhoContent() {
 
               <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
                 {[
-                  {
-                    title: "You need alcohol to have fun",
-                    body: "Dream House runs on something different. Genuine connection, deep conversation, and a dance hall that doesn't need a bar to get going.",
-                  },
-                  {
-                    title: "You're looking for a conference, a vacation, or a structured curriculum",
-                    body: "Dream House is a container, not a course. What you get out of it depends entirely on what you bring.",
-                  },
-                  {
-                    title: "You need every outcome guaranteed before you arrive",
-                    body: "The most important things that will happen to you here aren't on any agenda. They arrive sideways.",
-                  },
-                  {
-                    title: "You want to observe from the edges",
-                    body: "Everyone here contributes. That's not optional — it's the whole point.",
-                  },
-                  {
-                    title: "This is someone else's idea of your yes",
-                    body: "This has to come from you. Fully, freely, and genuinely.",
-                  },
-                ].map((item, i) => (
+                  "You need alcohol to have fun",
+                  "You're looking for a conference, a vacation, or a structured curriculum",
+                  "You need every outcome guaranteed before you arrive",
+                  "You want to observe from the edges",
+                ].map((title, i) => (
                   <motion.div
                     key={i}
                     initial={{ opacity: 0, x: -16 }}
@@ -459,28 +413,16 @@ export default function WhoContent() {
                     >
                       ✕
                     </span>
-                    <div>
-                      <p
-                        style={{
-                          fontFamily: "var(--font-fraunces)",
-                          fontSize: "1.2rem",
-                          fontWeight: 400,
-                          color: "rgba(253,220,200,0.9)",
-                          marginBottom: "0.4rem",
-                        }}
-                      >
-                        {item.title}
-                      </p>
-                      <p
-                        style={{
-                          fontSize: "1.14rem",
-                          lineHeight: 1.65,
-                          color: "rgba(253,220,200,0.5)",
-                        }}
-                      >
-                        {item.body}
-                      </p>
-                    </div>
+                    <p
+                      style={{
+                        fontFamily: "var(--font-fraunces)",
+                        fontSize: "1.2rem",
+                        fontWeight: 400,
+                        color: "rgba(253,220,200,0.9)",
+                      }}
+                    >
+                      {title}
+                    </p>
                   </motion.div>
                 ))}
               </div>
@@ -488,177 +430,8 @@ export default function WhoContent() {
           </div>
         </section>
 
-        {/* ── Content container (continued) ── */}
-        <div style={{ maxWidth: "760px", margin: "0 auto", padding: "0 2rem" }}>
-
-          {/* ── Different fields ── */}
-          <div style={{ paddingTop: "4rem" }} />
-          <motion.section
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.8 }}
-            style={{ marginBottom: "4rem" }}
-          >
-            <SectionLabel>The Community</SectionLabel>
-
-            <h2
-              style={{
-                fontFamily: "var(--font-fraunces)",
-                fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)",
-                fontWeight: 400,
-                letterSpacing: "-0.01em",
-                lineHeight: 1.15,
-                color: "var(--text-dark)",
-                textAlign: "center",
-                marginBottom: "1.5rem",
-              }}
-            >
-              Different fields.
-              <br />
-              <em style={{ color: "var(--sage)", fontStyle: "italic" }}>Same orientation.</em>
-            </h2>
-
-            {/* Fields list as individual spans */}
-            <div
-              style={{
-                fontFamily: "var(--font-fraunces)",
-                fontStyle: "italic",
-                fontSize: "1.2rem",
-                fontWeight: 300,
-                color: "var(--text-mid)",
-                display: "flex",
-                flexWrap: "wrap",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "0 0",
-                marginBottom: "1.75rem",
-                lineHeight: 2,
-              }}
-            >
-              {[
-                "Founders", "Writers", "Designers", "Artists",
-                "Researchers", "Builders", "Makers", "Coaches",
-                "Strategists", "Photographers",
-              ].map((field) => (
-                <span key={field} style={{ display: "flex", alignItems: "center" }}>
-                  <span
-                    style={{ transition: "color 0.2s", cursor: "default" }}
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = "var(--coral)"; }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = ""; }}
-                  >
-                    {field}
-                  </span>
-                  <span style={{ opacity: 0.4, margin: "0 0.5em" }}>·</span>
-                </span>
-              ))}
-              <em>and everything in between</em>
-            </div>
-
-            <p
-              style={{
-                fontSize: "1.26rem",
-                lineHeight: 1.95,
-                color: "var(--text-dark)",
-                textAlign: "center",
-                marginBottom: "3rem",
-              }}
-            >
-              They come from different fields and different cities. What unites
-              them isn&apos;t what they do. It&apos;s how they do it: with care,
-              with curiosity, and with the quiet conviction that their work
-              should mean something.
-            </p>
-
-            {/* Fit list */}
-            <ThinRule />
-            <div style={{ paddingTop: "2.5rem" }}>
-            <SectionLabel>The Real Filter</SectionLabel>
-
-            <h2
-              style={{
-                fontFamily: "var(--font-fraunces)",
-                fontSize: "clamp(2rem, 4vw, 3rem)",
-                fontWeight: 400,
-                letterSpacing: "-0.01em",
-                color: "var(--text-dark)",
-                textAlign: "center",
-                marginBottom: "1.75rem",
-              }}
-            >
-              You might be a{" "}
-              <em style={{ color: "var(--gold)", fontStyle: "italic" }}>great fit</em>{" "}
-              if you
-            </h2>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
-              {[
-                {
-                  title: "Have something you're building that matters to you",
-                  body: "A project, a business, a body of work — and you want a month of real momentum on it",
-                },
-                {
-                  title: "Miss the kind of community you had earlier in life",
-                  body: "When interesting people were just around — and you haven't quite found that again since",
-                },
-                {
-                  title: "Get genuinely energised by people who think differently to you",
-                  body: "Not as a networking strategy. Just because other minds are one of life's great pleasures",
-                },
-                {
-                  title: "Are willing to be seen — and to see others — honestly",
-                  body: "The real version. Not the polished one",
-                },
-                {
-                  title: "Are ready to spend a month living beautifully instead of just efficiently",
-                  body: "Because those two things were never supposed to be opposites",
-                },
-              ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  whileHover={{ paddingLeft: "0.5rem" }}
-                  transition={{ duration: 0.2 }}
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1.6rem 1fr",
-                    gap: "0 0.75rem",
-                    padding: "1.8rem 0",
-                    borderBottom: i < 2 ? "1px solid rgba(232,128,106,0.1)" : "none",
-                  }}
-                >
-                  <span style={{ color: "var(--gold)", paddingTop: "0.15rem" }}>✦</span>
-                  <div>
-                    <p
-                      style={{
-                        fontFamily: "var(--font-fraunces)",
-                        fontSize: "1.2rem",
-                        fontWeight: 400,
-                        color: "var(--text-dark)",
-                        marginBottom: "0.25rem",
-                      }}
-                    >
-                      {item.title}
-                    </p>
-                    <p
-                      style={{
-                        fontSize: "1.1rem",
-                        lineHeight: 1.65,
-                        color: "var(--text-soft)",
-                      }}
-                    >
-                      {item.body}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-            </div>
-          </motion.section>
-
-        </div>
-
         {/* ── Founder section (wider, outside 760px container) ── */}
-        <div style={{ maxWidth: "960px", margin: "0 auto", padding: "0 2rem" }}>
+        <div style={{ maxWidth: "960px", margin: "0 auto", padding: "5rem 2rem 0" }}>
           <motion.section
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -671,7 +444,7 @@ export default function WhoContent() {
                 borderRadius: "16px",
                 background:
                   "linear-gradient(135deg, rgba(232,128,106,0.1) 0%, rgba(184,168,212,0.12) 50%, rgba(140,184,154,0.1) 100%)",
-                padding: "4.9rem 2rem 7rem",
+                padding: "2.5rem 2rem 3rem",
                 textAlign: "center",
               }}
             >
@@ -682,25 +455,11 @@ export default function WhoContent() {
                   fontWeight: 400,
                   letterSpacing: "-0.01em",
                   color: "var(--text-dark)",
-                  marginBottom: "0.5rem",
-                }}
-              >
-                Who am I?
-              </h2>
-
-              <p
-                style={{
-                  fontFamily: "var(--font-nunito)",
-                  fontSize: "0.62rem",
-                  fontWeight: 700,
-                  letterSpacing: "0.3em",
-                  textTransform: "uppercase",
-                  color: "var(--coral)",
                   marginBottom: "2rem",
                 }}
               >
-                Founder &amp; Host
-              </p>
+                Hello, I&apos;m Carolin Fleissner
+              </h2>
 
               {/* Main photo */}
               <div
@@ -724,25 +483,9 @@ export default function WhoContent() {
                 />
               </div>
 
-              <p
-                style={{
-                  fontFamily: "var(--font-fraunces)",
-                  fontSize: "clamp(1.3rem, 3vw, 2rem)",
-                  fontWeight: 400,
-                  fontStyle: "italic",
-                  color: "var(--text-dark)",
-                  marginBottom: "1.75rem",
-                }}
-              >
-                I&apos;m Carolin Fleissner
-              </p>
-
               <div
                 style={{
                   textAlign: "left",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1rem",
                   fontSize: "clamp(1rem, 2vw, 1.1rem)",
                   lineHeight: 2,
                   color: "var(--text-mid)",
@@ -752,17 +495,12 @@ export default function WhoContent() {
                 <p>
                   The Dream House was born from my lifelong fascination with what
                   makes humans dream bigger, do the impossible, and live with more
-                  presence, vitality, and love.
-                </p>
-                <p>
-                  It emerged from a decade spent building intentional teams and
-                  cultures{" "}
+                  presence, vitality, and love. It emerged from a decade spent
+                  building intentional teams and cultures{" "}
                   <em style={{ color: "var(--text-soft)" }}>
                     (which resulted in creating a multi-billion-dollar company that
                     taught cars to drive themselves.)
-                  </em>
-                </p>
-                <p>
+                  </em>{" "}
                   Combined with the last few years that I have spent immersing
                   myself in transformational containers around the world. After
                   witnessing how culture can drive billion-dollar innovation, I
@@ -771,7 +509,7 @@ export default function WhoContent() {
                 </p>
               </div>
 
-              {/* Frosted glass blockquote — consolidated passage */}
+              {/* Frosted glass blockquote */}
               <blockquote
                 style={{
                   fontFamily: "var(--font-fraunces)",
@@ -790,31 +528,10 @@ export default function WhoContent() {
                   textAlign: "left",
                 }}
               >
-                <p style={{ marginBottom: "1rem" }}>This is my passionate project. A gift.</p>
-                <p style={{ marginBottom: "1rem" }}>
-                  I don&apos;t quite know why I pour so much of myself into
-                  building this, and yet, I know that I have to.
-                </p>
-                <p>That magic is waiting on the other side of it.</p>
+                This is my passionate project. A gift. I join the experiment
+                just like everyone else, and am along for the rollercoaster,
+                the adventure.
               </blockquote>
-
-              <div
-                style={{
-                  textAlign: "left",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1rem",
-                  fontSize: "clamp(1rem, 2vw, 1.1rem)",
-                  lineHeight: 1.85,
-                  color: "var(--text-mid)",
-                  marginBottom: "2rem",
-                }}
-              >
-                <p>
-                  I&apos;ll be in residence with you, not just coordinating from
-                  the sidelines. This is a shared experience, not a service.
-                </p>
-              </div>
 
               {/* Additional photos */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
@@ -843,18 +560,6 @@ export default function WhoContent() {
                 ))}
               </div>
 
-              <p
-                style={{
-                  fontFamily: "var(--font-fraunces)",
-                  fontStyle: "italic",
-                  fontSize: "1.08rem",
-                  color: "var(--text-mid)",
-                  lineHeight: 1.85,
-                  marginTop: "2rem",
-                }}
-              >
-                A shared experience. Not a service.
-              </p>
             </div>
           </motion.section>
         </div>

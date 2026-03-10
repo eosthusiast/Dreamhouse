@@ -1,6 +1,8 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
+import Image from "next/image";
+import { useState, useEffect, useCallback } from "react";
 import Navigation from "@/components/layout/Navigation";
 import PageBackground from "@/components/PageBackground";
 import { Fraunces, Nunito } from "next/font/google";
@@ -20,50 +22,315 @@ const nunito = Nunito({
 
 const PHASE_COLORS = ["#e8806a", "#e8b84b", "#8cb89a", "#b8a8d4"];
 
-const PHASES = [
-  {
-    phase: "Phase I · Week One",
-    title: "Connection",
-    subtitle: "Safety. Identity. Landing.",
-    body: "We begin by arriving, truly arriving. Establishing safety, structure, and the feeling of home. Connecting to mind, body, spirit, heart, nature. To each other. To yourself. This is where the masks begin to soften.",
-  },
-  {
-    phase: "Phase II · Week Two",
-    title: "Exploration",
-    subtitle: "Wonder. Edges. The unknown.",
-    body: "We begin to move. Test limits. Gather information. Differentiate. Step into the unfamiliar, in your work, your conversations, your sense of what\u2019s possible. Leave the comfort zone, gently but deliberately.",
-  },
-  {
-    phase: "Phase III · Week Three",
-    title: "Expansion",
-    subtitle: "MAGIK. Heat. Breakthrough.",
-    body: "Witness what ignites when we bring heat. Incubate, create, release. Break the patterns that no longer serve you. This is the week of transformation, the one that earns the name.",
-  },
-  {
-    phase: "Phase IV · Week Four",
-    title: "Integration",
-    subtitle: "Ground. Reorganise. Carry forward.",
-    body: "Stabilise what was gained. Reorganise around a new level of coherence. Make it real, plan, commit, account. Leave not just changed, but anchored in that change.",
-  },
+const SLIDER_TIERS = [
+  { value: 3000,  label: "€3,000",  name: "covering costs",                                        accent: PHASE_COLORS[0] },
+  { value: 5000,  label: "€5,000",  name: "covering true costs of 1 person",                       accent: PHASE_COLORS[1] },
+  { value: 8000,  label: "€8,000",  name: "supporting others in experiencing this",                 accent: PHASE_COLORS[2] },
+  { value: 10000, label: "€10,000", name: "you want Caro to get paid something for creating this",  accent: PHASE_COLORS[3] },
 ];
 
-const PRICING_TIERS = [
-  {
-    tier: "\u20AC3,000 \u2014 The Foundation Tier",
-    desc: "This covers everything. Venue, food, chef, operations etc.",
-    accent: "#e8806a",
-  },
-  {
-    tier: "Between the two \u2014 The Sustaining Tier",
-    desc: "Anything above the floor helps cover the personal costs of creating this experience, and funds financial aid so others who couldn\u2019t otherwise attend, can.",
-    accent: "#e8b84b",
-  },
-  {
-    tier: "\u20AC10,000 \u2014 The Generous Tier",
-    desc: "If there is surplus, it flows back into the experience itself, and into projects that support local communities.",
-    accent: "#8cb89a",
-  },
-];
+function Lightbox({ src, onClose }: { src: string; onClose: () => void }) {
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", handler);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", handler);
+      document.body.style.overflow = "";
+    };
+  }, [onClose]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.25 }}
+      onClick={onClose}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 1000,
+        background: "rgba(10,6,4,0.92)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        cursor: "zoom-out",
+        padding: "2rem",
+      }}
+    >
+      <motion.div
+        initial={{ scale: 0.93, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.93, opacity: 0 }}
+        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        style={{
+          position: "relative",
+          maxWidth: "min(90vw, 1200px)",
+          maxHeight: "90vh",
+          width: "100%",
+          height: "100%",
+        }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={src}
+          alt=""
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "contain",
+            borderRadius: "8px",
+          }}
+        />
+      </motion.div>
+      <button
+        onClick={onClose}
+        style={{
+          position: "fixed",
+          top: "1.25rem",
+          right: "1.5rem",
+          background: "none",
+          border: "none",
+          color: "rgba(253,248,240,0.7)",
+          fontSize: "2rem",
+          cursor: "pointer",
+          lineHeight: 1,
+          padding: "0.25rem",
+        }}
+        aria-label="Close"
+      >
+        ×
+      </button>
+    </motion.div>
+  );
+}
+
+function DreamDuesSlider() {
+  const [sliderVal, setSliderVal] = useState(5000);
+
+  const tier = SLIDER_TIERS.reduce((prev, curr) =>
+    Math.abs(curr.value - sliderVal) < Math.abs(prev.value - sliderVal) ? curr : prev
+  );
+
+  const pct = ((sliderVal - 3000) / (10000 - 3000)) * 100;
+
+  return (
+    <motion.section
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8 }}
+      style={{ marginBottom: "3rem" }}
+    >
+      {/* Label */}
+      <p
+        style={{
+          fontFamily: "var(--font-nunito)",
+          fontSize: "0.68rem",
+          fontWeight: 700,
+          letterSpacing: "0.28em",
+          textTransform: "uppercase",
+          color: "var(--coral)",
+          textAlign: "center",
+          marginBottom: "1.25rem",
+          opacity: 0.85,
+        }}
+      >
+        Dream Dues
+      </p>
+
+      {/* Heading */}
+      <h2
+        style={{
+          fontFamily: "var(--font-fraunces)",
+          fontSize: "clamp(1.54rem, 3.15vw, 2.45rem)",
+          fontWeight: 400,
+          letterSpacing: "-0.01em",
+          lineHeight: 1.15,
+          color: "var(--text-dark)",
+          textAlign: "center",
+          marginBottom: "1.75rem",
+        }}
+      >
+        Choose what
+        <br />
+        you can{" "}
+        <em style={{ color: "var(--coral)", fontStyle: "italic" }}>give</em>
+      </h2>
+
+      {/* Intro */}
+      <p
+        style={{
+          fontSize: "clamp(1rem, 2vw, 1.1rem)",
+          lineHeight: 1.85,
+          color: "var(--text-mid)",
+          textAlign: "center",
+          maxWidth: "560px",
+          margin: "0 auto 1.25rem",
+        }}
+      >
+        Most people spend €4–6k on a single transformational week. Dream
+        House is a month. Not-for-profit by design. Everything is included
+        from the moment you arrive — your private room, meals, and every
+        community experience.
+      </p>
+
+      <p
+        style={{
+          fontSize: "clamp(1rem, 2vw, 1.1rem)",
+          lineHeight: 1.85,
+          color: "var(--text-mid)",
+          textAlign: "center",
+          maxWidth: "560px",
+          margin: "0 auto 1.25rem",
+        }}
+      >
+        We offer a sliding scale: those who pay more help cover the true cost
+        of running the residency and fund financial aid making this genuinely
+        available to everyone who&apos;s meant to be here.
+      </p>
+
+      {/* Slider */}
+      <div style={{ maxWidth: "560px", margin: "0 auto 2rem" }}>
+        <style>{`
+          .dh-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(
+              to right,
+              #e8806a ${pct}%,
+              rgba(35,24,16,0.15) ${pct}%
+            );
+            outline: none;
+            cursor: pointer;
+          }
+          .dh-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #fdf8f0;
+            border: 2px solid #e8806a;
+            box-shadow: 0 2px 12px rgba(232,128,106,0.35);
+            cursor: pointer;
+            transition: box-shadow 0.15s;
+          }
+          .dh-slider::-webkit-slider-thumb:hover {
+            box-shadow: 0 2px 18px rgba(232,128,106,0.55);
+          }
+          .dh-slider::-moz-range-thumb {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #fdf8f0;
+            border: 2px solid #e8806a;
+            box-shadow: 0 2px 12px rgba(232,128,106,0.35);
+            cursor: pointer;
+          }
+        `}</style>
+
+        <input
+          type="range"
+          min={3000}
+          max={10000}
+          step={100}
+          value={sliderVal}
+          onChange={(e) => setSliderVal(Number(e.target.value))}
+          className="dh-slider"
+        />
+
+        {/* Tick labels — positioned at true % along the 3k–10k range */}
+        <div style={{ position: "relative", height: "1.5rem", marginTop: "0.75rem" }}>
+          {[3000, 5000, 8000, 10000].map((v) => {
+            const nudge: Record<number, number> = { 5000: 1.25, 8000: -1.25 };
+            const pos = ((v - 3000) / (10000 - 3000)) * 100 + (nudge[v] ?? 0);
+            return (
+              <span
+                key={v}
+                onClick={() => setSliderVal(v)}
+                style={{
+                  position: "absolute",
+                  left: `${pos}%`,
+                  transform: "translateX(-50%)",
+                  fontFamily: "var(--font-nunito)",
+                  fontSize: "0.78rem",
+                  color: sliderVal === v ? "var(--coral)" : "var(--text-soft)",
+                  fontWeight: sliderVal === v ? 700 : 400,
+                  transition: "color 0.2s",
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                €{v.toLocaleString()}
+              </span>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Active tier card */}
+      <motion.div
+        key={tier.value}
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        style={{
+          maxWidth: "560px",
+          margin: "0 auto 2rem",
+          backgroundColor: `${tier.accent}10`,
+          border: `1.5px solid ${tier.accent}44`,
+          borderRadius: "16px",
+          padding: "2rem 2rem",
+          textAlign: "center",
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "var(--font-fraunces)",
+            fontSize: "clamp(2rem, 4vw, 3rem)",
+            fontWeight: 400,
+            color: "var(--text-dark)",
+            letterSpacing: "-0.02em",
+            marginBottom: "0.5rem",
+          }}
+        >
+          €{sliderVal.toLocaleString()}
+        </p>
+        <p
+          style={{
+            fontFamily: "var(--font-nunito)",
+            fontSize: "0.65rem",
+            fontWeight: 700,
+            letterSpacing: "0.24em",
+            textTransform: "uppercase",
+            color: tier.accent,
+            marginBottom: "0.75rem",
+            opacity: 0.9,
+          }}
+        >
+          {tier.name}
+        </p>
+      </motion.div>
+
+      {/* Financial Aid */}
+      <p
+        style={{
+          fontFamily: "var(--font-fraunces)",
+          fontSize: "clamp(1rem, 2vw, 1.1rem)",
+          color: "var(--text-soft)",
+          textAlign: "center",
+          fontStyle: "italic",
+        }}
+      >
+        Financial Aid Available — Send Carolin a message.
+      </p>
+    </motion.section>
+  );
+}
 
 function ThinRule() {
   return (
@@ -81,6 +348,8 @@ function ThinRule() {
 
 export default function HousesContent() {
   const wrapperClass = `${fraunces.variable} ${nunito.variable}`;
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+  const openLightbox = useCallback((src: string) => setLightboxSrc(src), []);
 
   return (
     <div
@@ -101,6 +370,12 @@ export default function HousesContent() {
         overflowX: "hidden",
       }}
     >
+      <AnimatePresence>
+        {lightboxSrc && (
+          <Lightbox src={lightboxSrc} onClose={() => setLightboxSrc(null)} />
+        )}
+      </AnimatePresence>
+
       <PageBackground />
 
       <div style={{ position: "relative", zIndex: 3 }}>
@@ -170,12 +445,23 @@ export default function HousesContent() {
               marginBottom: "3rem",
             }}
           >
-            <span>Past: El Salvador February 2025</span>
+            <span>
+              Past:{" "}
+              <a
+                href="https://docs.google.com/presentation/d/1Mj1q4NIkL4EF7BFH0IJh_JKF-L6K33JQ98KiO-gWBgQ/edit?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "var(--coral)", textDecoration: "none" }}
+              >
+                El Salvador February 2025
+              </a>
+            </span>
           </motion.div>
         </section>
 
         {/* Content container */}
         <div style={{ maxWidth: "750px", margin: "0 auto", padding: "0 2rem 6rem" }}>
+
           {/* Portugal Chapter */}
           <motion.section
             initial={{ opacity: 0, y: 20 }}
@@ -200,10 +486,7 @@ export default function HousesContent() {
                 href="https://maps.app.goo.gl/2i8Y1mDy1rbo8vun6"
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{
-                  color: "var(--coral)",
-                  textDecoration: "none",
-                }}
+                style={{ color: "var(--coral)", textDecoration: "none" }}
               >
                 Fools Valley, Portugal
               </a>
@@ -224,7 +507,45 @@ export default function HousesContent() {
 
           <ThinRule />
 
-          {/* The Enchanted Valley */}
+          {/* Photo 1 — full-width cinematic banner */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
+            onClick={() => openLightbox("/Dreamhouse/images/houses/fools-valley-0.jpg")}
+            style={{
+              position: "relative",
+              width: "100%",
+              height: "55vh",
+              borderRadius: "12px",
+              overflow: "hidden",
+              marginBottom: "3rem",
+              cursor: "zoom-in",
+            }}
+          >
+            <Image
+              src="/Dreamhouse/images/houses/fools-valley-0.jpg"
+              alt="Fools Valley, Portugal"
+              fill
+              style={{
+                objectFit: "cover",
+                filter: "saturate(0.82)",
+              }}
+              sizes="750px"
+            />
+            {/* Dreamy cream overlay */}
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                background: "linear-gradient(to bottom, rgba(253,248,240,0.08) 0%, rgba(253,248,240,0.18) 100%)",
+                pointerEvents: "none",
+              }}
+            />
+          </motion.div>
+
+          {/* Fools Valley */}
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -243,7 +564,7 @@ export default function HousesContent() {
                 marginBottom: "2rem",
               }}
             >
-              The Enchanted Valley
+              Fools Valley
             </h2>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem", fontSize: "clamp(1rem, 2vw, 1.15rem)", lineHeight: 1.85, color: "var(--text-mid)" }}>
@@ -269,6 +590,7 @@ export default function HousesContent() {
               </p>
             </div>
 
+            {/* Amenities */}
             <div
               style={{
                 display: "flex",
@@ -293,167 +615,48 @@ export default function HousesContent() {
                 </span>
               ))}
             </div>
-
-            <p
-              style={{
-                fontFamily: "var(--font-fraunces)",
-                fontStyle: "italic",
-                fontSize: "clamp(1.05rem, 2vw, 1.3rem)",
-                color: "var(--text-soft)",
-                textAlign: "center",
-                marginTop: "2.5rem",
-                lineHeight: 1.7,
-              }}
-            >
-              Enough structure to hold you.
-              <br />
-              Enough spaciousness to surprise you.
-            </p>
           </motion.section>
 
-          <ThinRule />
-
-          {/* Shape of the Month */}
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
+          {/* Photo 2+3 — 2-column grid */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            style={{ marginBottom: "3rem" }}
+            transition={{ duration: 0.9 }}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "1rem",
+              maxWidth: "760px",
+              margin: "0 auto 3rem",
+            }}
           >
-            <h2
-              style={{
-                fontFamily: "var(--font-fraunces)",
-                fontSize: "clamp(2.2rem, 4.5vw, 3.5rem)",
-                fontWeight: 400,
-                letterSpacing: "-0.01em",
-                color: "var(--text-dark)",
-                textAlign: "center",
-                marginBottom: "2rem",
-              }}
-            >
-              The Shape of the Month
-            </h2>
-
-            <div
-              style={{
-                fontSize: "clamp(1rem, 2vw, 1.15rem)",
-                lineHeight: 1.85,
-                color: "var(--text-mid)",
-                textAlign: "center",
-                marginBottom: "3rem",
-              }}
-            >
-              <p style={{ marginBottom: "1rem" }}>
-                Every real transformation moves through four rooms.
-                <br />
-                We&apos;ve made space for all of them.
-              </p>
-              <p>
-                This isn&apos;t a schedule. It&apos;s an arc. A living, breathing
-                container that holds you differently as the month unfolds &mdash;
-                moving from roots, to edges, to fire, to ground.
-              </p>
-            </div>
-
-            {/* Phases */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "2.5rem" }}>
-              {PHASES.map((phase, i) => {
-                const accent = PHASE_COLORS[i];
-                return (
-                  <motion.div
-                    key={phase.phase}
-                    initial={{ opacity: 0, x: -12 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: i * 0.1 }}
-                    style={{
-                      display: "flex",
-                      gap: "1.5rem",
-                      alignItems: "flex-start",
-                    }}
-                  >
-                    {/* Numbered circle badge */}
-                    <div
-                      style={{
-                        flexShrink: 0,
-                        width: "2.4rem",
-                        height: "2.4rem",
-                        borderRadius: "50%",
-                        backgroundColor: `${accent}22`,
-                        border: `2px solid ${accent}66`,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontFamily: "var(--font-nunito)",
-                        fontWeight: 700,
-                        fontSize: "0.85rem",
-                        color: accent,
-                        marginTop: "0.2rem",
-                      }}
-                    >
-                      {i + 1}
-                    </div>
-
-                    {/* Content with left accent border */}
-                    <div
-                      style={{
-                        borderLeft: `3px solid ${accent}55`,
-                        paddingLeft: "1.25rem",
-                        flex: 1,
-                      }}
-                    >
-                      <p
-                        style={{
-                          fontFamily: "var(--font-nunito)",
-                          fontSize: "0.65rem",
-                          fontWeight: 700,
-                          letterSpacing: "0.28em",
-                          textTransform: "uppercase",
-                          color: accent,
-                          marginBottom: "0.5rem",
-                          opacity: 0.85,
-                        }}
-                      >
-                        {phase.phase}
-                      </p>
-                      <h3
-                        style={{
-                          fontFamily: "var(--font-fraunces)",
-                          fontSize: "clamp(1.5rem, 3vw, 2.2rem)",
-                          fontWeight: 400,
-                          color: "var(--text-dark)",
-                          marginBottom: "0.35rem",
-                        }}
-                      >
-                        {phase.title}
-                      </h3>
-                      <p
-                        style={{
-                          fontFamily: "var(--font-fraunces)",
-                          fontSize: "1rem",
-                          fontStyle: "italic",
-                          color: "var(--text-soft)",
-                          marginBottom: "0.75rem",
-                        }}
-                      >
-                        {phase.subtitle}
-                      </p>
-                      <p
-                        style={{
-                          fontSize: "clamp(1rem, 1.8vw, 1.1rem)",
-                          lineHeight: 1.8,
-                          color: "var(--text-mid)",
-                        }}
-                      >
-                        {phase.body}
-                      </p>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </motion.section>
+            {[
+              { src: "/Dreamhouse/images/houses/fools-valley-2.jpg", alt: "Fools Valley — the valley" },
+              { src: "/Dreamhouse/images/houses/fools-valley-3.jpg", alt: "Fools Valley — the grounds" },
+            ].map((img) => (
+              <div
+                key={img.src}
+                onClick={() => openLightbox(img.src)}
+                style={{
+                  position: "relative",
+                  aspectRatio: "4/3",
+                  borderRadius: "10px",
+                  overflow: "hidden",
+                  boxShadow: "0 4px 24px rgba(35,24,16,0.10)",
+                  cursor: "zoom-in",
+                }}
+              >
+                <Image
+                  src={img.src}
+                  alt={img.alt}
+                  fill
+                  style={{ objectFit: "cover", filter: "saturate(0.88)" }}
+                  sizes="375px"
+                />
+              </div>
+            ))}
+          </motion.div>
 
           <ThinRule />
 
@@ -468,7 +671,7 @@ export default function HousesContent() {
             <h2
               style={{
                 fontFamily: "var(--font-fraunces)",
-                fontSize: "clamp(2.2rem, 4.5vw, 3.5rem)",
+                fontSize: "clamp(1.54rem, 3.15vw, 2.45rem)",
                 fontWeight: 400,
                 letterSpacing: "-0.01em",
                 color: "var(--text-dark)",
@@ -476,7 +679,7 @@ export default function HousesContent() {
                 marginBottom: "1rem",
               }}
             >
-              The Rituals &amp; the Rhythms
+              The rituals &amp; the rhythms
             </h2>
 
             <p
@@ -494,13 +697,41 @@ export default function HousesContent() {
 
             <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
               {[
-                { icon: "🌙", title: "The Opening Ceremony: A Mystery School for Connection", body: "Your first weekend together is a mystery school for connection. Everyone must arrive by 12pm on July 4th. It\u2019s super important we open the experience together." },
-                { icon: "🪄", title: "Whiteboard", body: "A whiteboard that each of you is encouraged to fill with your ideas and offerings." },
-                { icon: "🍵", title: "Daily Rituals", body: "Sunrise tea ceremonies, morning intention settings, movement, lunch & learns\u2026" },
-                { icon: "💻", title: "Deep Work", body: "Opportunities created to get into deep focus with supportive accountability and collaboration if useful. It could be your most productive month of the year." },
-                { icon: "✨", title: "Peer Workshops", body: "Everyone in this house knows something the others don\u2019t. We make structured space for that exchange. You will teach. You will be taught. Often by the person you least expected." },
-                { icon: "🌿", title: "Giving Back", body: "Opportunities to give back to the local community. Being of service." },
-                { icon: "🔮", title: "Community & Hosting", body: "Some days the valley belongs only to us \u2014 intimate, held, sacred. Other days we open the gates and invite our wider European community in. Both are part of the magic." },
+                {
+                  icon: "🌙",
+                  title: "The Opening Ceremony: A Mystery School for Connection",
+                  body: "Your first weekend together is a mystery school for connection. Everyone must arrive by 12pm on July 4th. It\u2019s super important we open the experience together.",
+                },
+                {
+                  icon: "🪄",
+                  title: "Whiteboard",
+                  body: "A whiteboard that each of you is encouraged to fill with your ideas and offerings.",
+                },
+                {
+                  icon: "🍵",
+                  title: "Daily Rituals",
+                  body: "Sunrise tea ceremonies, morning intention settings, movement, lunch & learns\u2026 we get to create them, together.",
+                },
+                {
+                  icon: "💻",
+                  title: "Deep Work",
+                  body: "Opportunities created to get into deep focus with supportive accountability and collaboration if useful. It could be your most productive month of the year.",
+                },
+                {
+                  icon: "✨",
+                  title: "Peer Workshops",
+                  body: "Everyone in this house knows something the others don\u2019t. We make structured space for that exchange. You will teach. You will be taught. Often by the person you least expected.",
+                },
+                {
+                  icon: "🌿",
+                  title: "Giving Back",
+                  body: "Opportunities to give back to the local community. Being of service.",
+                },
+                {
+                  icon: "🔮",
+                  title: "Community & Hosting",
+                  body: "Some days the valley belongs only to us \u2014 intimate, held, sacred. Other days we open the gates and invite our wider European community in.",
+                },
               ].map((ritual) => (
                 <motion.div
                   key={ritual.title}
@@ -538,6 +769,33 @@ export default function HousesContent() {
             </div>
           </motion.section>
 
+          {/* Photo 4 — wide single */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9 }}
+            onClick={() => openLightbox("/Dreamhouse/images/houses/fools-valley-4.jpg")}
+            style={{
+              position: "relative",
+              width: "100%",
+              aspectRatio: "16/7",
+              borderRadius: "12px",
+              overflow: "hidden",
+              marginBottom: "3rem",
+              boxShadow: "0 4px 24px rgba(35,24,16,0.10)",
+              cursor: "zoom-in",
+            }}
+          >
+            <Image
+              src="/Dreamhouse/images/houses/fools-valley-4.jpg"
+              alt="Fools Valley — a quiet corner"
+              fill
+              style={{ objectFit: "cover", filter: "saturate(0.85)" }}
+              sizes="750px"
+            />
+          </motion.div>
+
           <ThinRule />
 
           {/* French Castle */}
@@ -551,14 +809,14 @@ export default function HousesContent() {
             <h2
               style={{
                 fontFamily: "var(--font-fraunces)",
-                fontSize: "clamp(2.2rem, 4.5vw, 3.5rem)",
+                fontSize: "clamp(1.54rem, 3.15vw, 2.45rem)",
                 fontWeight: 400,
                 letterSpacing: "-0.01em",
                 color: "var(--text-dark)",
                 marginBottom: "1.5rem",
               }}
             >
-              And Then &mdash; A French Castle
+              And then: a French Castle
             </h2>
 
             <p
@@ -571,212 +829,70 @@ export default function HousesContent() {
               For those who wish to continue the story, an invitation awaits. The
               week immediately after Portugal, a curated festival in a stunning
               ch&acirc;teau in France. The same spirit. A grander stage. Optional.
-              Beautiful. And for the right person, inevitable.
             </p>
           </motion.section>
 
           <ThinRule />
 
-          {/* Economics */}
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
+          {/* Dream Dues */}
+          <DreamDuesSlider />
+
+          {/* Photo 5 — closing 2-photo strip */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            style={{ marginBottom: "3rem" }}
+            transition={{ duration: 0.9 }}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "1rem",
+              marginBottom: "3rem",
+            }}
           >
-            <h2
-              style={{
-                fontFamily: "var(--font-fraunces)",
-                fontSize: "clamp(2.2rem, 4.5vw, 3.5rem)",
-                fontWeight: 400,
-                letterSpacing: "-0.01em",
-                color: "var(--text-dark)",
-                textAlign: "center",
-                marginBottom: "2rem",
-              }}
-            >
-              The Economics of a
-              <br />
-              Month Well Lived
-            </h2>
-
-            <p style={{ fontSize: "clamp(1rem, 2vw, 1.15rem)", lineHeight: 1.85, color: "var(--text-mid)", marginBottom: "1.5rem" }}>
-              Here is some context before the numbers. People spend, on average:
-            </p>
-
-            <ul style={{ listStyle: "none", padding: 0, margin: "0 0 1.5rem", display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-              {[
-                { amount: "\u20AC5,000", desc: "on Burning Man \u2014 one week" },
-                { amount: "\u20AC3,000", desc: "on a mystery school \u2014 one week" },
-                { amount: "\u20AC3,000", desc: "on a retreat \u2014 one week" },
-                { amount: "\u20AC3,000", desc: "on a conference \u2014 a few days" },
-                { amount: "\u20AC4,000+", desc: "on an accelerator \u2014 an intensive week" },
-                { amount: "\u20AC2,000", desc: "on a festival \u2014 a long weekend" },
-              ].map((item, i) => (
-                <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: "1rem", fontSize: "clamp(1rem, 2vw, 1.1rem)" }}>
-                  <span style={{ color: "var(--gold)", fontSize: "0.65rem", marginTop: "0.45rem", flexShrink: 0 }}>✦</span>
-                  <span style={{ color: "var(--text-dark)" }}>
-                    <strong>{item.amount}</strong>{" "}
-                    <span style={{ color: "var(--text-mid)" }}>{item.desc}</span>
-                  </span>
-                </li>
-              ))}
-            </ul>
-
-            <p style={{ fontSize: "clamp(1rem, 2vw, 1.15rem)", lineHeight: 1.85, color: "var(--text-mid)", marginBottom: "1.5rem" }}>
-              Some of them are extraordinary. None of them are a month in a
-              private valley with a private chef, your own room, daily rituals,
-              deep work, genuine community, and a mystery school opening ceremony,
-              twenty minutes from the Atlantic.
-            </p>
-
-            <p
-              style={{
-                fontFamily: "var(--font-fraunces)",
-                fontStyle: "italic",
-                fontSize: "clamp(1.2rem, 2.5vw, 1.6rem)",
-                color: "var(--text-dark)",
-              }}
-            >
-              Dream House is a month. And it runs on a sliding scale.
-            </p>
-          </motion.section>
-
-          <ThinRule />
-
-          {/* Pricing */}
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            style={{ marginBottom: "3rem" }}
-          >
-            <h2
-              style={{
-                fontFamily: "var(--font-fraunces)",
-                fontSize: "clamp(2.2rem, 4.5vw, 3.5rem)",
-                fontWeight: 400,
-                letterSpacing: "-0.01em",
-                color: "var(--text-dark)",
-                textAlign: "center",
-                marginBottom: "0.75rem",
-              }}
-            >
-              Choose Your Investment
-            </h2>
-            <p
-              style={{
-                fontFamily: "var(--font-fraunces)",
-                fontSize: "clamp(1.3rem, 3vw, 2rem)",
-                color: "var(--text-soft)",
-                textAlign: "center",
-                marginBottom: "0.75rem",
-              }}
-            >
-              &euro;3,000 &ndash; &euro;10,000
-            </p>
-            <p
-              style={{
-                fontFamily: "var(--font-fraunces)",
-                fontStyle: "italic",
-                fontSize: "clamp(1.05rem, 2vw, 1.2rem)",
-                color: "var(--text-soft)",
-                textAlign: "center",
-                marginBottom: "2.5rem",
-              }}
-            >
-              You decide what you pay. Truly.
-            </p>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem", marginBottom: "2rem" }}>
-              {PRICING_TIERS.map((item) => (
-                <div
-                  key={item.tier}
-                  style={{
-                    backgroundColor: `${item.accent}0f`,
-                    borderTop: `3px solid ${item.accent}88`,
-                    borderRadius: "12px",
-                    padding: "1.5rem 1.75rem",
-                  }}
-                >
-                  <p
-                    style={{
-                      fontFamily: "var(--font-fraunces)",
-                      fontSize: "clamp(1.05rem, 2vw, 1.2rem)",
-                      fontWeight: 400,
-                      color: "var(--text-dark)",
-                      marginBottom: "0.4rem",
-                    }}
-                  >
-                    {item.tier}
-                  </p>
-                  <p
-                    style={{
-                      fontSize: "clamp(0.95rem, 1.8vw, 1.05rem)",
-                      lineHeight: 1.75,
-                      color: "var(--text-mid)",
-                    }}
-                  >
-                    {item.desc}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            <p
-              style={{
-                fontFamily: "var(--font-fraunces)",
-                fontSize: "clamp(1.05rem, 2vw, 1.15rem)",
-                fontWeight: 400,
-                color: "var(--text-dark)",
-                marginBottom: "0.4rem",
-              }}
-            >
-              Financial Aid Available
-            </p>
-            <p
-              style={{
-                fontSize: "clamp(0.95rem, 1.8vw, 1.05rem)",
-                lineHeight: 1.75,
-                color: "var(--text-mid)",
-                marginBottom: "2rem",
-              }}
-            >
-              Send Carolin a message. This is dependant on others paying above
-              the foundational tier.
-            </p>
-
             <div
+              onClick={() => openLightbox("/Dreamhouse/images/houses/fools-valley-5.jpg")}
               style={{
-                fontFamily: "var(--font-fraunces)",
-                fontStyle: "italic",
-                fontSize: "clamp(1rem, 1.8vw, 1.1rem)",
-                lineHeight: 1.85,
-                color: "var(--text-soft)",
-                display: "flex",
-                flexDirection: "column",
-                gap: "1rem",
+                position: "relative",
+                aspectRatio: "3/4",
+                borderRadius: "10px",
+                overflow: "hidden",
+                boxShadow: "0 4px 24px rgba(35,24,16,0.10)",
+                cursor: "zoom-in",
               }}
             >
-              <p>
-                This is a not-for-profit. There is no profit motive here. The
-                sliding scale exists because we believe the right people
-                shouldn&apos;t be kept away by money, and those who have more of
-                it can help make that possible. Pricing is honour-based. We trust
-                you to know which number feels right to you.
-              </p>
-              <p>
-                Any money left over goes to financial aid for future participants,
-                and to community work in the local environment.
-              </p>
+              <Image
+                src="/Dreamhouse/images/houses/fools-valley-5.jpg"
+                alt="Fools Valley — parting glimpse"
+                fill
+                style={{ objectFit: "cover", filter: "saturate(0.85)" }}
+                sizes="375px"
+              />
             </div>
-          </motion.section>
+            <div
+              onClick={() => openLightbox("/Dreamhouse/images/houses/fools-valley-1.jpg")}
+              style={{
+                position: "relative",
+                aspectRatio: "3/4",
+                borderRadius: "10px",
+                overflow: "hidden",
+                boxShadow: "0 4px 24px rgba(35,24,16,0.10)",
+                cursor: "zoom-in",
+              }}
+            >
+              <Image
+                src="/Dreamhouse/images/houses/fools-valley-1.jpg"
+                alt="Fools Valley — the valley at rest"
+                fill
+                style={{ objectFit: "cover", filter: "saturate(0.82)" }}
+                sizes="375px"
+              />
+            </div>
+          </motion.div>
 
           <ThinRule />
 
-          {/* Closing */}
+          {/* Closing CTA */}
           <motion.section
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -784,44 +900,26 @@ export default function HousesContent() {
             transition={{ duration: 0.9 }}
             style={{ marginBottom: "5rem", textAlign: "center" }}
           >
-            <div
+            <a
+              href="https://forms.gle/SPc8q7K1UsmV5iWF9"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
-                fontFamily: "var(--font-fraunces)",
-                fontStyle: "italic",
-                fontSize: "clamp(1.05rem, 2vw, 1.2rem)",
-                color: "var(--text-soft)",
-                lineHeight: 2,
-                marginBottom: "2rem",
+                display: "inline-block",
+                fontFamily: "var(--font-nunito)",
+                fontWeight: 700,
+                fontSize: "clamp(0.9rem, 1.8vw, 1rem)",
+                letterSpacing: "0.08em",
+                color: "#fdf8f0",
+                backgroundColor: "var(--coral)",
+                borderRadius: "999px",
+                padding: "0.85rem 2.5rem",
+                textDecoration: "none",
+                transition: "opacity 0.2s",
               }}
             >
-              <p>The valley is waiting.</p>
-              <p>The chef is sharpening their knives.</p>
-              <p>The pond is still.</p>
-              <p>The sauna is warm.</p>
-            </div>
-
-            <div
-              style={{
-                fontSize: "clamp(1.05rem, 2vw, 1.2rem)",
-                lineHeight: 1.85,
-                color: "var(--text-mid)",
-                marginBottom: "2rem",
-              }}
-            >
-              <p>The masks are ready to dissolve.</p>
-              <p>The magic is ready to sparkle.</p>
-            </div>
-
-            <p
-              style={{
-                fontFamily: "var(--font-fraunces)",
-                fontSize: "clamp(1.5rem, 3.5vw, 2.5rem)",
-                fontWeight: 400,
-                color: "var(--text-dark)",
-              }}
-            >
-              All that&apos;s missing is you.
-            </p>
+              If you&apos;re interested, apply here.
+            </a>
           </motion.section>
         </div>
       </div>
