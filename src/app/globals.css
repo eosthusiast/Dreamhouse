@@ -48,6 +48,13 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  /* Pre-hide scroll canvas elements until GSAP initializes */
+  [data-scroll-image],
+  [data-scroll-content] {
+    visibility: hidden;
+    opacity: 0;
+  }
 }
 
 /* Blinking cursor for dream input */
