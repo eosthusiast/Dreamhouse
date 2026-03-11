@@ -1,10 +1,11 @@
 "use client";
 
-import { motion } from "motion/react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import Image from "next/image";
 import Navigation from "@/components/layout/Navigation";
 import PageBackground from "@/components/PageBackground";
-import { Fraunces, Nunito } from "next/font/google";
+import { Fraunces, Nunito, Playfair_Display } from "next/font/google";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -16,6 +17,12 @@ const fraunces = Fraunces({
 const nunito = Nunito({
   subsets: ["latin"],
   variable: "--font-nunito",
+  display: "swap",
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
   display: "swap",
 });
 
@@ -56,14 +63,6 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Tag color configs
-const TAG_STYLES: Record<string, { bg: string; color: string; border: string }> = {
-  tc: { bg: "rgba(232,128,106,0.12)", color: "var(--coral)", border: "rgba(232,128,106,0.35)" },
-  tg: { bg: "rgba(232,184,75,0.12)", color: "#b08018", border: "rgba(232,184,75,0.4)" },
-  ts: { bg: "rgba(140,184,154,0.15)", color: "#3a8055", border: "rgba(140,184,154,0.4)" },
-  tl: { bg: "rgba(184,168,212,0.15)", color: "#6048a0", border: "rgba(184,168,212,0.4)" },
-  tk: { bg: "rgba(158,200,224,0.15)", color: "#2878a0", border: "rgba(158,200,224,0.4)" },
-};
 
 const TAGS = [
   { label: "The Kind", type: "tc" },
@@ -76,11 +75,15 @@ const TAGS = [
   { label: "The Dreamers", type: "tl" },
 ];
 
-const BULLET_COLORS = ["var(--coral)", "#3a8055", "#b08018", "#6048a0", "#2878a0"];
 
 // ── Main component ─────────────────────────────────────────────────────
 export default function WhoContent() {
-  const wrapperClass = `${fraunces.variable} ${nunito.variable}`;
+  const wrapperClass = `${fraunces.variable} ${nunito.variable} ${playfair.variable}`;
+  const [tagIndex, setTagIndex] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setTagIndex((i) => (i + 1) % TAGS.length), 2500);
+    return () => clearInterval(id);
+  }, []);
 
   return (
     <div
@@ -118,7 +121,7 @@ export default function WhoContent() {
             alignItems: "center",
             justifyContent: "center",
             minHeight: "40vh",
-            padding: "6rem 1.5rem 3rem",
+            padding: "6rem 1.5rem 1rem",
             textAlign: "center",
           }}
         >
@@ -145,8 +148,8 @@ export default function WhoContent() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
             style={{
-              fontFamily: "var(--font-fraunces)",
-              fontSize: "clamp(4rem, 9vw, 8rem)",
+              fontFamily: "var(--font-playfair)",
+              fontSize: "clamp(2.8rem, 6.3vw, 5.6rem)",
               fontWeight: 500,
               letterSpacing: "-0.02em",
               lineHeight: 1.05,
@@ -154,8 +157,8 @@ export default function WhoContent() {
               marginBottom: "1.25rem",
             }}
           >
-            Who Is This{" "}
-            <em style={{ color: "var(--coral)", fontStyle: "italic" }}>For?</em>
+            Who is this{" "}
+            <em style={{ color: "var(--coral)", fontStyle: "italic" }}>for?</em>
           </motion.h1>
 
           <motion.p
@@ -164,165 +167,129 @@ export default function WhoContent() {
             transition={{ delay: 0.5, duration: 1 }}
             style={{
               fontFamily: "var(--font-fraunces)",
-              fontSize: "clamp(1.4rem, 2.8vw, 2.1rem)",
+              fontSize: "clamp(0.89rem, 1.79vw, 1.34rem)",
               fontWeight: 300,
               fontStyle: "italic",
               color: "var(--text-soft)",
-              maxWidth: "480px",
-              marginBottom: "6rem",
+              maxWidth: "clamp(280px, 56vw, 560px)",
+              marginBottom: "1.6rem",
             }}
           >
-            You already know.
+            You already know. This is for the ambitious weirdos. The Genuinely Good Eggs.
           </motion.p>
         </section>
 
-        {/* ── CTA (top) ── */}
-        <div style={{ textAlign: "center", padding: "0 2rem 6rem", position: "relative" }}>
-          <div
-            aria-hidden
-            style={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "radial-gradient(ellipse 60% 80% at 50% 50%, rgba(232,128,106,0.10) 0%, transparent 70%)",
-              pointerEvents: "none",
-            }}
-          />
-          <motion.a
-            href="https://forms.gle/SPc8q7K1UsmV5iWF9"
-            target="_blank"
-            rel="noopener noreferrer"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.75, duration: 0.7 }}
-            whileHover={{ y: -2, boxShadow: "0 8px 32px rgba(232,128,106,0.45)" }}
-            style={{
-              display: "inline-block",
-              fontFamily: "var(--font-nunito)",
-              fontWeight: 700,
-              fontSize: "0.95rem",
-              letterSpacing: "0.06em",
-              textTransform: "uppercase",
-              color: "#fdf8f0",
-              background: "linear-gradient(135deg, var(--coral), var(--terra))",
-              padding: "0.85rem 2.5rem",
-              borderRadius: "999px",
-              textDecoration: "none",
-              position: "relative",
-              boxShadow: "0 4px 24px rgba(232,128,106,0.35)",
-            }}
-          >
-            Apply here
-          </motion.a>
-        </div>
-
-        {/* ── Content container ── */}
-        <div style={{ maxWidth: "760px", margin: "0 auto", padding: "0 2rem 6rem" }}>
-
-          <ThinRule />
-
-          {/* ── Ambitious Weirdos / Yes section ── */}
-          <motion.section
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.8 }}
-            style={{ marginBottom: "4rem", textAlign: "center" }}
-          >
-            {/* intro-lead: not a display heading — large body paragraph */}
-            <p
+        {/* ── Rotator ── */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.9, duration: 0.8 }}
+          style={{ textAlign: "center", padding: "1rem 2rem 6.3rem" }}
+        >
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={tagIndex}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.5 }}
               style={{
                 fontFamily: "var(--font-fraunces)",
-                fontSize: "clamp(1.7rem, 3.2vw, 2.5rem)",
-                fontWeight: 400,
-                lineHeight: 1.45,
-                color: "var(--text-mid)",
-                marginBottom: "1.5rem",
+                fontSize: "clamp(1.26rem, 2.52vw, 1.89rem)",
+                fontWeight: 500,
+                fontStyle: "italic",
+                color: "var(--coral)",
+                margin: 0,
               }}
             >
-              This is for the{" "}
-              <em style={{ color: "var(--coral)", fontStyle: "italic" }}>ambitious weirdos.</em>
-              <br />
-              The Genuinely Good Eggs.
-            </p>
+              {TAGS[tagIndex].label}
+            </motion.p>
+          </AnimatePresence>
+        </motion.div>
 
-            {/* Type tags */}
+        {/* ── Yes-list + CTA ── */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 3.2, duration: 0.8 }}
+          style={{ maxWidth: "760px", margin: "0 auto", padding: "0 2rem 6rem" }}
+        >
+
+          {/* Yes-list */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+            {[
+              "You accidentally inspire people constantly",
+              "You believe joy and ambition belong in the same room",
+              "You sharing your gifts, and being of service, energise you",
+              "You have something you're building that means something to you",
+              "You miss the kind of community that was just around you earlier in life",
+              "You get genuinely energised by people who think differently to you",
+              "You are willing to be fully seen and see others honestly",
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.5, delay: i * 0.07 }}
+                whileHover={{ x: 6, borderColor: "var(--coral)" }}
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: "1rem",
+                  padding: "1.4rem 1.8rem",
+                  borderRadius: "14px",
+                  border: "1.5px solid rgba(232,196,176,0.35)",
+                  backgroundColor: "rgba(253,248,240,0.55)",
+                  backdropFilter: "blur(8px)",
+                  WebkitBackdropFilter: "blur(8px)",
+                }}
+              >
+                <span style={{ color: ["var(--coral)", "#3a8055", "#b08018", "#6048a0", "#2878a0"][i % 5], fontSize: "0.75rem", marginTop: "0.3rem", flexShrink: 0 }}>✦</span>
+                <span style={{ fontSize: "1.26rem", lineHeight: 1.7, color: "var(--text-mid)" }}>{item}</span>
+              </motion.div>
+            ))}
+          </div>
+
+          <div style={{ textAlign: "center", paddingTop: "3rem", position: "relative" }}>
             <div
+              aria-hidden
               style={{
-                display: "flex",
-                flexWrap: "wrap",
-                justifyContent: "center",
-                gap: "0.5rem",
-                marginBottom: "2rem",
+                position: "absolute",
+                inset: 0,
+                background: "radial-gradient(ellipse 60% 80% at 50% 50%, rgba(232,128,106,0.10) 0%, transparent 70%)",
+                pointerEvents: "none",
+              }}
+            />
+            <motion.a
+              href="https://forms.gle/SPc8q7K1UsmV5iWF9"
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              whileHover={{ y: -2, boxShadow: "0 8px 32px rgba(232,128,106,0.45)" }}
+              style={{
+                display: "inline-block",
+                fontFamily: "var(--font-nunito)",
+                fontWeight: 700,
+                fontSize: "0.95rem",
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                color: "#fdf8f0",
+                background: "linear-gradient(135deg, var(--coral), var(--terra))",
+                padding: "0.85rem 2.5rem",
+                borderRadius: "999px",
+                textDecoration: "none",
+                position: "relative",
+                boxShadow: "0 4px 24px rgba(232,128,106,0.35)",
               }}
             >
-              {TAGS.map((tag) => {
-                const s = TAG_STYLES[tag.type];
-                return (
-                  <span
-                    key={tag.label}
-                    style={{
-                      fontFamily: "var(--font-nunito)",
-                      fontSize: "0.78rem",
-                      fontWeight: 600,
-                      padding: "0.55rem 1.3rem",
-                      borderRadius: "999px",
-                      border: `1.5px solid ${s.border}`,
-                      backgroundColor: s.bg,
-                      color: s.color,
-                      letterSpacing: "0.1em",
-                    }}
-                  >
-                    {tag.label}
-                  </span>
-                );
-              })}
-            </div>
-
-            {/* Frosted glass yes-list */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", textAlign: "left" }}>
-              {[
-                "You accidentally inspire people constantly",
-                "You believe joy and ambition belong in the same room",
-                "You sharing your gifts, and being of service, energise you",
-                "You have something you're building that means something to you",
-                "You miss the kind of community that was just around you earlier in life",
-                "You get genuinely energised by people who think differently to you",
-                "You are willing to be fully seen and see others honestly",
-              ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  whileHover={{ x: 6, borderColor: "var(--coral)" }}
-                  transition={{ duration: 0.2 }}
-                  style={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: "1rem",
-                    padding: "1.4rem 1.8rem",
-                    borderRadius: "14px",
-                    border: "1.5px solid rgba(232,196,176,0.35)",
-                    backgroundColor: "rgba(253,248,240,0.55)",
-                    backdropFilter: "blur(8px)",
-                    WebkitBackdropFilter: "blur(8px)",
-                  }}
-                >
-                  <span
-                    style={{
-                      color: BULLET_COLORS[i % BULLET_COLORS.length],
-                      fontSize: "0.75rem",
-                      marginTop: "0.3rem",
-                      flexShrink: 0,
-                    }}
-                  >
-                    ✦
-                  </span>
-                  <span style={{ fontSize: "1.26rem", lineHeight: 1.7, color: "var(--text-mid)" }}>{item}</span>
-                </motion.div>
-              ))}
-            </div>
-          </motion.section>
-
-        </div>
+              Apply here
+            </motion.a>
+          </div>
+        </motion.div>
 
         {/* ── Dark "not for you" section ── */}
         <section
@@ -368,8 +335,8 @@ export default function WhoContent() {
 
               <h2
                 style={{
-                  fontFamily: "var(--font-fraunces)",
-                  fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)",
+                  fontFamily: "var(--font-playfair)",
+                  fontSize: "clamp(1.54rem, 3.15vw, 2.52rem)",
                   fontWeight: 400,
                   letterSpacing: "-0.01em",
                   lineHeight: 1.15,
@@ -450,8 +417,8 @@ export default function WhoContent() {
             >
               <h2
                 style={{
-                  fontFamily: "var(--font-fraunces)",
-                  fontSize: "clamp(1.8rem, 4vw, 2.8rem)",
+                  fontFamily: "var(--font-playfair)",
+                  fontSize: "clamp(1.26rem, 2.8vw, 1.96rem)",
                   fontWeight: 400,
                   letterSpacing: "-0.01em",
                   color: "var(--text-dark)",
@@ -580,8 +547,8 @@ export default function WhoContent() {
 
             <h2
               style={{
-                fontFamily: "var(--font-fraunces)",
-                fontSize: "clamp(2.2rem, 4.5vw, 3.6rem)",
+                fontFamily: "var(--font-playfair)",
+                fontSize: "clamp(1.54rem, 3.15vw, 2.52rem)",
                 fontWeight: 400,
                 letterSpacing: "-0.01em",
                 lineHeight: 1.15,

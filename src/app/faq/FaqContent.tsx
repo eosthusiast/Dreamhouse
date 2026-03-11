@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import Navigation from "@/components/layout/Navigation";
 import PageBackground from "@/components/PageBackground";
-import { Fraunces, Nunito } from "next/font/google";
+import { Fraunces, Nunito, Playfair_Display } from "next/font/google";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -16,6 +16,12 @@ const fraunces = Fraunces({
 const nunito = Nunito({
   subsets: ["latin"],
   variable: "--font-nunito",
+  display: "swap",
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
   display: "swap",
 });
 
@@ -56,7 +62,7 @@ const QUESTIONS = [
 
 export default function FaqContent() {
   const [open, setOpen] = useState<number | null>(null);
-  const wrapperClass = `${fraunces.variable} ${nunito.variable}`;
+  const wrapperClass = `${fraunces.variable} ${nunito.variable} ${playfair.variable}`;
 
   return (
     <div
@@ -117,8 +123,8 @@ export default function FaqContent() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
             style={{
-              fontFamily: "var(--font-fraunces)",
-              fontSize: "clamp(4rem, 9vw, 8rem)",
+              fontFamily: "var(--font-playfair)",
+              fontSize: "clamp(2.8rem, 6.3vw, 5.6rem)",
               fontWeight: 500,
               letterSpacing: "-0.02em",
               lineHeight: 1.05,
@@ -126,7 +132,7 @@ export default function FaqContent() {
               marginBottom: "1.25rem",
             }}
           >
-            <em style={{ fontStyle: "italic" }}>Questions</em>
+            Questions
           </motion.h1>
         </section>
 

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useState, useEffect, useCallback } from "react";
 import Navigation from "@/components/layout/Navigation";
 import PageBackground from "@/components/PageBackground";
-import { Fraunces, Nunito } from "next/font/google";
+import { Fraunces, Nunito, Playfair_Display } from "next/font/google";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -17,6 +17,12 @@ const fraunces = Fraunces({
 const nunito = Nunito({
   subsets: ["latin"],
   variable: "--font-nunito",
+  display: "swap",
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
   display: "swap",
 });
 
@@ -143,8 +149,8 @@ function DreamDuesSlider() {
       {/* Heading */}
       <h2
         style={{
-          fontFamily: "var(--font-fraunces)",
-          fontSize: "clamp(1.54rem, 3.15vw, 2.45rem)",
+          fontFamily: "var(--font-playfair)",
+          fontSize: "clamp(1.08rem, 2.21vw, 1.72rem)",
           fontWeight: 400,
           letterSpacing: "-0.01em",
           lineHeight: 1.15,
@@ -347,7 +353,7 @@ function ThinRule() {
 }
 
 export default function HousesContent() {
-  const wrapperClass = `${fraunces.variable} ${nunito.variable}`;
+  const wrapperClass = `${fraunces.variable} ${nunito.variable} ${playfair.variable}`;
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const openLightbox = useCallback((src: string) => setLightboxSrc(src), []);
 
@@ -416,8 +422,8 @@ export default function HousesContent() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
             style={{
-              fontFamily: "var(--font-fraunces)",
-              fontSize: "clamp(4rem, 9vw, 8rem)",
+              fontFamily: "var(--font-playfair)",
+              fontSize: "clamp(2.8rem, 6.3vw, 5.6rem)",
               fontWeight: 500,
               letterSpacing: "-0.02em",
               lineHeight: 1.05,
@@ -425,7 +431,7 @@ export default function HousesContent() {
               marginBottom: "1.25rem",
             }}
           >
-            <em style={{ color: "var(--coral)", fontStyle: "italic" }}>Houses</em>
+            Houses
           </motion.h1>
 
           <motion.div
@@ -472,8 +478,8 @@ export default function HousesContent() {
           >
             <h2
               style={{
-                fontFamily: "var(--font-fraunces)",
-                fontSize: "clamp(1.54rem, 3.15vw, 2.45rem)",
+                fontFamily: "var(--font-playfair)",
+                fontSize: "clamp(1.08rem, 2.21vw, 1.72rem)",
                 fontWeight: 400,
                 letterSpacing: "-0.01em",
                 color: "var(--text-dark)",
@@ -555,8 +561,8 @@ export default function HousesContent() {
           >
             <h2
               style={{
-                fontFamily: "var(--font-fraunces)",
-                fontSize: "clamp(2.2rem, 4.5vw, 3.5rem)",
+                fontFamily: "var(--font-playfair)",
+                fontSize: "clamp(1.54rem, 3.15vw, 2.45rem)",
                 fontWeight: 400,
                 letterSpacing: "-0.01em",
                 color: "var(--text-dark)",
@@ -670,8 +676,8 @@ export default function HousesContent() {
           >
             <h2
               style={{
-                fontFamily: "var(--font-fraunces)",
-                fontSize: "clamp(1.54rem, 3.15vw, 2.45rem)",
+                fontFamily: "var(--font-playfair)",
+                fontSize: "clamp(1.08rem, 2.21vw, 1.72rem)",
                 fontWeight: 400,
                 letterSpacing: "-0.01em",
                 color: "var(--text-dark)",
@@ -808,15 +814,15 @@ export default function HousesContent() {
           >
             <h2
               style={{
-                fontFamily: "var(--font-fraunces)",
-                fontSize: "clamp(1.54rem, 3.15vw, 2.45rem)",
+                fontFamily: "var(--font-playfair)",
+                fontSize: "clamp(1.08rem, 2.21vw, 1.72rem)",
                 fontWeight: 400,
                 letterSpacing: "-0.01em",
                 color: "var(--text-dark)",
                 marginBottom: "1.5rem",
               }}
             >
-              And then: a French Castle
+              And then: a French castle
             </h2>
 
             <p
