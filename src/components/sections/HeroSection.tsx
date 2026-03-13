@@ -19,6 +19,15 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
   const headingRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
 
+  // Skip gate if already completed this session
+  useGSAP(() => {
+    if (typeof window !== "undefined" && sessionStorage.getItem("dream1")) {
+      setPhase("done");
+      onGateComplete();
+      return;
+    }
+  }, [onGateComplete]);
+
   // 3-second delayed entrance animation
   useGSAP(() => {
     if (!headingRef.current || !inputRef.current) return;
@@ -81,6 +90,11 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
 
     if (typeof window !== "undefined") {
       sessionStorage.setItem("dream1", dream);
+      fetch("/Dreamhouse/api/dreams", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dream }),
+      }).catch(() => {});
     }
   }, []);
 
@@ -88,6 +102,11 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
     (dream: string) => {
       if (typeof window !== "undefined") {
         sessionStorage.setItem("dream2", dream);
+        fetch("/Dreamhouse/api/dreams", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ dream }),
+        }).catch(() => {});
       }
       // Disable input immediately but keep it rendered (no layout shift)
       setPhase("done");
@@ -109,9 +128,10 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
 
         // 2. Animated scroll — drives the ScrollCanvas crossfade from galaxy to beach
         const N = 8;
-        const scrollPerSectionVh = 225;
-        const vh = window.innerHeight / 100;
-        const scrollRange = N * scrollPerSectionVh * vh - window.innerHeight;
+        const scrollPerSectionVh = 265;
+        const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+        const vh = viewportHeight / 100;
+        const scrollRange = N * scrollPerSectionVh * vh - viewportHeight;
         // Target: 44% into section 2 — "You've felt it" visible, line about to start
         const targetProgress = (2 + 0.44) / N;
         const targetScroll = targetProgress * scrollRange;
@@ -151,7 +171,7 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
         <div ref={inputRef}>
           <DreamInput
             onSubmit={handleHero1Submit}
-            ctaText="I dare to dream"
+            ctaText="Submit your dream"
             autoFocus
             visible={phase === "hero1" || phase === "loading"}
           />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import ScrollCanvas from "@/components/scroll/ScrollCanvas";
 import HeroSection from "@/components/sections/HeroSection";
 import StorySection from "@/components/sections/StorySection";
@@ -15,10 +15,19 @@ import Navigation from "@/components/layout/Navigation";
 export default function Home() {
   const [gateComplete, setGateComplete] = useState(false);
   const [navVariant, setNavVariant] = useState<"dark" | "light">("dark");
+  const [isIOSSafari, setIsIOSSafari] = useState(false);
   const lastActiveRef = useRef(-1);
 
   const galleryRef = useRef<HTMLDivElement>(null);
   const inGalleryRef = useRef(false);
+
+  useEffect(() => {
+    const ua = navigator.userAgent;
+    setIsIOSSafari(
+      /iPad|iPhone|iPod/.test(ua) ||
+      (ua.includes("Mac") && "ontouchend" in document)
+    );
+  }, []);
 
   // Sections with light backgrounds where nav needs dark text
   const LIGHT_SECTIONS = new Set([4]); // welcome
@@ -104,7 +113,7 @@ export default function Home() {
     },
   ];
 
-  const heroVideo = (
+  const heroVideo = useMemo(() => (
     <>
       <div className="absolute inset-0 w-full h-full" style={{ background: "#050a1a" }} />
       <video
@@ -112,17 +121,23 @@ export default function Home() {
         loop
         muted
         playsInline
+        poster="/Dreamhouse/videos/hero-bg-2-poster.jpg"
         className="absolute inset-0 w-full h-full object-cover"
         aria-hidden="true"
+        onError={(e) => { (e.currentTarget as HTMLVideoElement).style.display = "none"; }}
       >
         <source src="/Dreamhouse/videos/hero-bg-2.webm" type="video/webm" />
+        <source src="/Dreamhouse/videos/hero-bg-2.mp4" type="video/mp4" />
       </video>
       <div
         className="absolute inset-0 w-full h-full pointer-events-none"
-        style={{ background: "rgba(88, 44, 131, 0.30)", mixBlendMode: "color" }}
+        style={{
+          background: "rgba(88, 44, 131, 0.30)",
+          ...(isIOSSafari ? {} : { mixBlendMode: "color" as const }),
+        }}
       />
     </>
-  );
+  ), [isIOSSafari]);
 
   return (
     <main>
@@ -132,7 +147,7 @@ export default function Home() {
         <ScrollCanvas
           sections={sections}
           heroVideo={heroVideo}
-          scrollPerSection={225}
+          scrollPerSection={265}
           onActiveSection={handleActiveSection}
         />
       </div>

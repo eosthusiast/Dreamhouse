@@ -41,12 +41,33 @@ export default function ScrollCanvas({
   const containerRef = useRef<HTMLDivElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [isIOSSafari, setIsIOSSafari] = useState(false);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
     check();
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
+  }, []);
+
+  useEffect(() => {
+    const ua = navigator.userAgent;
+    setIsIOSSafari(
+      /iPad|iPhone|iPod/.test(ua) ||
+      (ua.includes("Mac") && "ontouchend" in document)
+    );
+  }, []);
+
+  // Safety fallback: if GSAP fails to init, reveal first section after 3s
+  useEffect(() => {
+    const fallback = setTimeout(() => {
+      if (!stickyRef.current) return;
+      const images = stickyRef.current.querySelectorAll("[data-scroll-image]");
+      const contents = stickyRef.current.querySelectorAll("[data-scroll-content]");
+      if (images[0]) (images[0] as HTMLElement).style.cssText += "visibility:visible;opacity:1;";
+      if (contents[0]) (contents[0] as HTMLElement).style.cssText += "visibility:visible;opacity:1;";
+    }, 3000);
+    return () => clearTimeout(fallback);
   }, []);
 
   useGSAP(
@@ -135,7 +156,8 @@ export default function ScrollCanvas({
           onActiveSection?.(activeIndex);
 
           // --- Crossfade logic ---
-          const FADE_ZONE = 0.25; // Normal crossfade for non-hero sections
+          const FADE_ZONE = 0.15; // Normal crossfade for non-hero sections
+          const DEAD_ZONE = 0.11; // ~30vh hold after text before crossfade starts
 
           // Galaxy fade: slow dissolve from 50% of section 0 to 75% into section 2
           const galaxyFadeStart = sectionNormStarts[0] + 0.5 * sectionNormWidths[0];
@@ -154,7 +176,7 @@ export default function ScrollCanvas({
                 const t = (progress - galaxyFadeStart) / (galaxyFadeEnd - galaxyFadeStart);
                 alpha = (1 - t) * (1 - t);
               }
-              blendMode = alpha > 0 ? "screen" : "normal";
+              blendMode = (!isIOSSafari && alpha > 0) ? "screen" : "normal";
               if (images[i]) {
                 (images[i] as HTMLElement).style.zIndex = alpha > 0 ? "10" : "1";
               }
@@ -178,12 +200,23 @@ export default function ScrollCanvas({
               alpha = (progress - galaxyFadeEnd) / 0.02;
             } else {
               // Normal crossfade for all other sections
+              // DEAD_ZONE delays the crossfade start, creating a hold after text reveals
               if (i === activeIndex) {
-                alpha = sectionProgress < FADE_ZONE
-                  ? smoothstep(sectionProgress / FADE_ZONE)
-                  : 1.0;
-              } else if (i === activeIndex - 1 && sectionProgress < FADE_ZONE) {
-                alpha = 1.0 - smoothstep(sectionProgress / FADE_ZONE);
+                if (sectionProgress < DEAD_ZONE) {
+                  alpha = 0; // Hold — previous section still showing
+                } else {
+                  const fadeProgress = sectionProgress - DEAD_ZONE;
+                  alpha = fadeProgress < FADE_ZONE
+                    ? smoothstep(fadeProgress / FADE_ZONE)
+                    : 1.0;
+                }
+              } else if (i === activeIndex - 1 && sectionProgress < DEAD_ZONE + FADE_ZONE) {
+                if (sectionProgress < DEAD_ZONE) {
+                  alpha = 1.0; // Hold at full opacity during dead zone
+                } else {
+                  const fadeProgress = sectionProgress - DEAD_ZONE;
+                  alpha = 1.0 - smoothstep(fadeProgress / FADE_ZONE);
+                }
               }
             }
 
@@ -327,52 +360,55 @@ export default function ScrollCanvas({
     >
       <div
         ref={stickyRef}
-        className="sticky top-0 h-[100lvh] w-full overflow-hidden"
-        style={{ height: "100lvh" }}
+        className="sticky top-0 w-full"
+        data-sticky-viewport
+        style={{ height: "100dvh" }}
       >
-        {/* Background layers */}
-        {sections.map((section, i) => (
-          <div
-            key={section.id}
-            data-scroll-image
-            data-section-index={i}
-            className="absolute inset-0 w-full h-full"
-            style={{ zIndex: i + 1 }}
-          >
-            {section.image ? (
-              <Image
-                src={section.image}
-                alt=""
-                fill
-                className="object-cover"
-                style={{
-                  objectPosition:
-                    isMobile && section.mobileImagePosition
-                      ? section.mobileImagePosition
-                      : section.imagePosition ?? undefined,
-                }}
-                sizes="100vw"
-                priority={i < 2}
-                quality={85}
-              />
-            ) : i === 0 || i === 1 ? (
-              i === 0 ? heroVideo : null
-            ) : null}
-          </div>
-        ))}
+        <div className="relative w-full h-full overflow-hidden">
+          {/* Background layers */}
+          {sections.map((section, i) => (
+            <div
+              key={section.id}
+              data-scroll-image
+              data-section-index={i}
+              className="absolute inset-0 w-full h-full"
+              style={{ zIndex: i + 1 }}
+            >
+              {section.image ? (
+                <Image
+                  src={section.image}
+                  alt=""
+                  fill
+                  className="object-cover"
+                  style={{
+                    objectPosition:
+                      isMobile && section.mobileImagePosition
+                        ? section.mobileImagePosition
+                        : section.imagePosition ?? undefined,
+                  }}
+                  sizes="100vw"
+                  priority={i < 2}
+                  quality={85}
+                />
+              ) : i === 0 || i === 1 ? (
+                i === 0 ? heroVideo : null
+              ) : null}
+            </div>
+          ))}
 
-        {/* Content overlays */}
-        {sections.map((section, i) => (
-          <div
-            key={`content-${section.id}`}
-            data-scroll-content
-            data-section-index={i}
-            className="absolute inset-0 w-full h-full flex items-center justify-center"
-            style={{ zIndex: sections.length + i + 1 }}
-          >
-            {section.content}
-          </div>
-        ))}
+          {/* Content overlays */}
+          {sections.map((section, i) => (
+            <div
+              key={`content-${section.id}`}
+              data-scroll-content
+              data-section-index={i}
+              className="absolute inset-0 w-full h-full flex items-center justify-center"
+              style={{ zIndex: sections.length + i + 1 }}
+            >
+              {section.content}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

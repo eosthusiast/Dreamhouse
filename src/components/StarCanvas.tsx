@@ -52,9 +52,11 @@ export default function StarCanvas() {
 
     function resize() {
       if (!canvas) return;
-      canvas.width = window.innerWidth * dpr;
-      canvas.height = window.innerHeight * dpr;
-      contentHalf = window.innerWidth > 760 ? 380 / window.innerWidth : 0;
+      const vw = window.innerWidth;
+      const vh = window.visualViewport?.height ?? window.innerHeight;
+      canvas.width = vw * dpr;
+      canvas.height = vh * dpr;
+      contentHalf = vw > 760 ? 380 / vw : 0;
     }
 
     let raf: number;
@@ -91,10 +93,12 @@ export default function StarCanvas() {
     draw();
 
     window.addEventListener("resize", resize);
+    window.visualViewport?.addEventListener("resize", resize);
 
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
+      window.visualViewport?.removeEventListener("resize", resize);
     };
   }, []);
 

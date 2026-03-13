@@ -55,15 +55,23 @@ export function LenisProvider({ children }: { children: ReactNode }) {
     if (isHomepage) {
       lenis.stop();
 
+      // iOS: overflow:hidden doesn't prevent touch scroll
+      // Target only the scroll canvas container, not the whole page
+      const scrollCanvas = document.getElementById("scroll-canvas");
+      const preventTouch = (e: TouchEvent) => e.preventDefault();
+      scrollCanvas?.addEventListener("touchmove", preventTouch, { passive: false });
+
       // Listen for unlock event from the dream gate
       const handleUnlock = () => {
         lenis.start();
+        scrollCanvas?.removeEventListener("touchmove", preventTouch);
       };
 
       window.addEventListener("dreamhouse:unlock-scroll", handleUnlock);
 
       return () => {
         window.removeEventListener("dreamhouse:unlock-scroll", handleUnlock);
+        scrollCanvas?.removeEventListener("touchmove", preventTouch);
         lenis.destroy();
         lenisRef.current = null;
       };

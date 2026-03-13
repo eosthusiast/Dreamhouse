@@ -116,3 +116,10 @@ html.lenis body {
 .lenis.lenis-stopped {
   overflow: hidden;
 }
+
+/* Fallback for browsers that don't support dvh */
+@supports not (height: 100dvh) {
+  [data-sticky-viewport] {
+    height: 100vh !important;
+  }
+}
