@@ -28,40 +28,45 @@ const playfair = Playfair_Display({
 const QUESTIONS = [
   {
     q: "Do I need to be working on something specific to apply?",
-    a: "Not in the sense of a formal project or business. But you should be in an active creative or professional season \u2014 making something, building something, figuring something out. Dream House works best for people who have something they want to move forward, even if that thing is still taking shape.",
+    a: "Creative energy will be high, and you\u2019ll be surrounded by a bunch of inspiring people who may just have the missing ideas, or skills you\u2019ve been waiting for. So whilst you do not need a formal project or business, it\u2019s a super fun place to be in an active creative, designing the next chapter, building a business, learning something, etc. Dream House works best for people who have something they want to move forward, even if that thing is still taking shape.",
   },
   {
     q: "What does a typical day look like?",
-    a: "There\u2019s a gentle daily rhythm: mornings dedicated to focused work, afternoons more open for collaboration or exploration, evenings for communal meals and connection. We have a light facilitation structure \u2014 morning check-ins, occasional shared practices \u2014 but we protect your autonomy. This is not a bootcamp.",
+    a: "The collective group will bring together their gifts and preferences and design this. Typically it could include mornings intention setting, time dedicated to focused work, lunch and learns, group workouts, collaboration & brainstorming, discussing the world\u2019s problems and how we could be of service, playing, exploring spirituality, evenings for communal meals, connection and workshops. Everyone participating only in what they want to.",
   },
   {
     q: "How much alone time will I have?",
-    a: "As much as you need. The house is designed with communal and private spaces. You won\u2019t be expected to be \u201con\u201d at all times. Introverts thrive here; in fact, some of our most enthusiastic early interest has come from people who identify as introverted and crave meaningful social connection rather than constant social activity.",
+    a: "As much as you need. The house is designed with communal and private spaces. You won\u2019t be expected to be \u201con\u201d at all times. We all have say in how the space is designed, functions and activated. We all have private rooms, and a lot of land to explore to be alone too.",
   },
   {
     q: "What\u2019s the gender and background composition of the cohort?",
-    a: "We\u2019re intentional about cohort composition, including gender balance and professional diversity. We don\u2019t publish specific targets, but community dynamics are something we think carefully about in the selection process.",
+    a: "We\u2019re intentional about cohort composition, including gender balance and professional diversity. We don\u2019t publish specific targets, but community dynamics are something we think carefully about in the selection process. We design this believing you will be genuinely excited to meet everyone, and have a deep connection with at least 3 people.",
   },
   {
     q: "Can I bring my partner or a friend?",
-    a: "Dream House is designed as a community experience where relationships form organically from scratch. Bringing a pre-existing partner or close friend can change the group dynamics in ways that diminish the experience for everyone. We ask that each participant apply individually.",
+    a: "Dream House is designed as a community experience where relationships form organically from scratch. Bringing a pre-existing partner or close friend can change the group dynamics in ways that diminish the experience for everyone. We ask that each participant apply individually, so that they come on their own merit, and will add to the experience. Couples are welcome as long as they have both individually been approved.",
   },
   {
     q: "What if I need to leave early or arrive late?",
-    a: "We ask for a full-month commitment. The community experience compounds over time \u2014 the magic of week four is built on weeks one through three. If there are extenuating circumstances, reach out and we\u2019ll talk.",
+    a: "We ask everyone to arrive for the opening weekend. We will only be allowing those who can commit to the whole time, though if you have some trips during the day that may take you away for a few days that is allowed. The community experience compounds over time, the magic of week four is built on weeks one through three.",
   },
   {
     q: "Is this a business networking event?",
-    a: "No \u2014 though many residents do find that professional relationships emerge organically. We\u2019re not building LinkedIn connections; we\u2019re building relationships. If those relationships turn into collaborations, referrals, or business, that\u2019s a natural byproduct of genuine connection, not the goal.",
+    a: "No, though many residents do find that professional relationships emerge organically. We\u2019re not building LinkedIn connections; we\u2019re building relationships. If those relationships turn into collaborations, referrals, or business, that\u2019s a natural byproduct of genuine connection, not the goal. Many businesses, collaborations and advisorships have formed from past Dream Houses based on deep care, respect and friendship.",
   },
   {
     q: "What happens after Dream House?",
-    a: "The cohort becomes a lifelong community. Many alumni report that the relationships formed during their month in residence remain among the most important of their professional and personal lives. We facilitate ongoing connection after the experience ends.",
+    a: "Hopefully you leave inspired and expanded in some way, and you are encouraged to bring that into your life in whatever unique shape or form it needs to for you. You have ongoing support from Carolin, including an integration coaching session, should you desire it. You leave deeply connected with those that you met and let those relationships take form in the way that it most makes sense for your life. Or maybe, you end up at another Dream House together ;)",
+  },
+  {
+    q: "How do I apply?",
+    a: 'Fill in our short <a href="https://forms.gle/SPc8q7K1UsmV5iWF9" target="_blank" rel="noopener noreferrer" style="color:#e8806a;text-decoration:none">application form</a> — it takes about 5 minutes. We review every application personally and will be in touch.',
+    html: true,
   },
 ];
 
 export default function FaqContent() {
-  const [open, setOpen] = useState<number | null>(null);
+  const [open, setOpen] = useState<number | null>(QUESTIONS.length - 1);
   const wrapperClass = `${fraunces.variable} ${nunito.variable} ${playfair.variable}`;
 
   return (
@@ -100,24 +105,6 @@ export default function FaqContent() {
             textAlign: "center",
           }}
         >
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            style={{
-              fontFamily: "var(--font-nunito)",
-              fontSize: "0.72rem",
-              fontWeight: 700,
-              letterSpacing: "0.32em",
-              textTransform: "uppercase",
-              color: "var(--coral)",
-              marginBottom: "1.25rem",
-              opacity: 0.9,
-            }}
-          >
-            Dream House
-          </motion.div>
-
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -214,16 +201,28 @@ export default function FaqContent() {
                       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                       style={{ overflow: "hidden" }}
                     >
-                      <p
-                        style={{
-                          fontSize: "clamp(1rem, 1.8vw, 1.1rem)",
-                          lineHeight: 1.85,
-                          color: "var(--text-mid)",
-                          padding: "1.25rem 0 1.75rem 2rem",
-                        }}
-                      >
-                        {item.a}
-                      </p>
+                      {"html" in item && item.html ? (
+                        <p
+                          dangerouslySetInnerHTML={{ __html: item.a }}
+                          style={{
+                            fontSize: "clamp(1rem, 1.8vw, 1.1rem)",
+                            lineHeight: 1.85,
+                            color: "var(--text-mid)",
+                            padding: "1.25rem 0 1.75rem 2rem",
+                          }}
+                        />
+                      ) : (
+                        <p
+                          style={{
+                            fontSize: "clamp(1rem, 1.8vw, 1.1rem)",
+                            lineHeight: 1.85,
+                            color: "var(--text-mid)",
+                            padding: "1.25rem 0 1.75rem 2rem",
+                          }}
+                        >
+                          {item.a}
+                        </p>
+                      )}
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -231,7 +230,45 @@ export default function FaqContent() {
             ))}
           </div>
 
-          <div style={{ paddingBottom: "2rem" }} />
+          {/* Apply CTA */}
+          <div style={{ textAlign: "center", paddingTop: "3rem", paddingBottom: "5rem", position: "relative" }}>
+            <div
+              aria-hidden
+              style={{
+                position: "absolute",
+                inset: 0,
+                background: "radial-gradient(ellipse 60% 80% at 50% 50%, rgba(232,128,106,0.10) 0%, transparent 70%)",
+                pointerEvents: "none",
+              }}
+            />
+            <motion.a
+              href="https://forms.gle/SPc8q7K1UsmV5iWF9"
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              whileHover={{ y: -2, boxShadow: "0 8px 32px rgba(232,128,106,0.45)" }}
+              style={{
+                display: "inline-block",
+                fontFamily: "var(--font-nunito)",
+                fontWeight: 700,
+                fontSize: "0.95rem",
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                color: "#fdf8f0",
+                background: "linear-gradient(135deg, #e8806a, #c95f45)",
+                padding: "0.85rem 2.5rem",
+                borderRadius: "999px",
+                textDecoration: "none",
+                position: "relative",
+                boxShadow: "0 4px 24px rgba(232,128,106,0.35)",
+              }}
+            >
+              Apply here
+            </motion.a>
+          </div>
         </div>
       </div>
     </div>

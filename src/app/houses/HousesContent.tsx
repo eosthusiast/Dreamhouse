@@ -32,7 +32,7 @@ const SLIDER_TIERS = [
   { value: 3000,  label: "€3,000",  name: "covering costs",                                        accent: PHASE_COLORS[0] },
   { value: 5000,  label: "€5,000",  name: "covering true costs of 1 person",                       accent: PHASE_COLORS[1] },
   { value: 8000,  label: "€8,000",  name: "supporting others in experiencing this",                 accent: PHASE_COLORS[2] },
-  { value: 10000, label: "€10,000", name: "you want Caro to get paid something for creating this",  accent: PHASE_COLORS[3] },
+  { value: 9000, label: "€9,000", name: "you want Caro to get paid something for creating this",  accent: PHASE_COLORS[3] },
 ];
 
 function Lightbox({ src, onClose }: { src: string; onClose: () => void }) {
@@ -119,7 +119,7 @@ function DreamDuesSlider() {
     Math.abs(curr.value - sliderVal) < Math.abs(prev.value - sliderVal) ? curr : prev
   );
 
-  const pct = ((sliderVal - 3000) / (10000 - 3000)) * 100;
+  const pct = ((sliderVal - 3000) / (9000 - 3000)) * 100;
 
   return (
     <motion.section
@@ -242,7 +242,7 @@ function DreamDuesSlider() {
         <input
           type="range"
           min={3000}
-          max={10000}
+          max={9000}
           step={100}
           value={sliderVal}
           onChange={(e) => setSliderVal(Number(e.target.value))}
@@ -251,9 +251,9 @@ function DreamDuesSlider() {
 
         {/* Tick labels — positioned at true % along the 3k–10k range */}
         <div style={{ position: "relative", height: "1.5rem", marginTop: "0.75rem" }}>
-          {[3000, 5000, 8000, 10000].map((v) => {
+          {[3000, 5000, 8000, 9000].map((v) => {
             const nudge: Record<number, number> = { 5000: 1.25, 8000: -1.25 };
-            const pos = ((v - 3000) / (10000 - 3000)) * 100 + (nudge[v] ?? 0);
+            const pos = ((v - 3000) / (9000 - 3000)) * 100 + (nudge[v] ?? 0);
             return (
               <span
                 key={v}
@@ -399,24 +399,6 @@ export default function HousesContent() {
             textAlign: "center",
           }}
         >
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            style={{
-              fontFamily: "var(--font-nunito)",
-              fontSize: "0.72rem",
-              fontWeight: 700,
-              letterSpacing: "0.32em",
-              textTransform: "uppercase",
-              color: "var(--coral)",
-              marginBottom: "1.25rem",
-              opacity: 0.9,
-            }}
-          >
-            Dream House
-          </motion.div>
-
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -519,26 +501,26 @@ export default function HousesContent() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 1 }}
-            onClick={() => openLightbox("/Dreamhouse/images/houses/fools-valley-0.jpg")}
+            onClick={() => openLightbox("/Dreamhouse/images/houses/fools-valley-8.jpg")}
             style={{
               position: "relative",
-              width: "100%",
+              width: "100vw",
+              marginLeft: "calc(-50vw + 50%)",
               height: "55vh",
-              borderRadius: "12px",
               overflow: "hidden",
               marginBottom: "3rem",
               cursor: "zoom-in",
             }}
           >
             <Image
-              src="/Dreamhouse/images/houses/fools-valley-0.jpg"
+              src="/Dreamhouse/images/houses/fools-valley-8.jpg"
               alt="Fools Valley, Portugal"
               fill
               style={{
                 objectFit: "cover",
                 filter: "saturate(0.82)",
               }}
-              sizes="750px"
+              sizes="100vw"
             />
             {/* Dreamy cream overlay */}
             <div
@@ -570,11 +552,27 @@ export default function HousesContent() {
                 marginBottom: "2rem",
               }}
             >
-              Fools Valley
+              <a
+                href="https://maps.app.goo.gl/2i8Y1mDy1rbo8vun6"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "var(--coral)", textDecoration: "none" }}
+              >
+                Fools Valley
+              </a>
             </h2>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem", fontSize: "clamp(1rem, 2vw, 1.15rem)", lineHeight: 1.85, color: "var(--text-mid)" }}>
-              <p>Deep in Portugal, there is a place called Fools Valley.</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem", fontSize: "clamp(1rem, 2vw, 1.15rem)", lineHeight: 1.85, color: "var(--text-mid)", textAlign: "center" }}>
+              <p>Deep in Portugal, there is a place called{" "}
+                <a
+                  href="https://maps.app.goo.gl/2i8Y1mDy1rbo8vun6"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "var(--coral)", textDecoration: "none" }}
+                >
+                  Fools Valley
+                </a>.
+              </p>
               <p>
                 Down a road that feels like it&apos;s keeping a secret. Past the
                 olive groves. Into a private valley that somehow manages to be
@@ -623,7 +621,52 @@ export default function HousesContent() {
             </div>
           </motion.section>
 
-          {/* Photo 2+3 — 2-column grid */}
+          {/* Photo grid — 3-column: 6 (vertical) | 2 (center) | 7 (vertical) */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9 }}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr 1fr",
+              gap: "1rem",
+              width: "100vw",
+              marginLeft: "calc(-50vw + 50%)",
+              marginBottom: "1.5rem",
+              padding: "0 1rem",
+              boxSizing: "border-box",
+            }}
+          >
+            {[
+              { src: "/Dreamhouse/images/houses/fools-valley-6.jpg", alt: "Fools Valley — the estate" },
+              { src: "/Dreamhouse/images/houses/fools-valley-2.jpg", alt: "Fools Valley — the valley" },
+              { src: "/Dreamhouse/images/houses/fools-valley-7.jpg", alt: "Fools Valley — the gardens" },
+            ].map((img) => (
+              <div
+                key={img.src}
+                onClick={() => openLightbox(img.src)}
+                style={{
+                  position: "relative",
+                  aspectRatio: "3/4",
+                  borderRadius: "10px",
+                  overflow: "hidden",
+                  boxShadow: "0 4px 24px rgba(35,24,16,0.10)",
+                  cursor: "zoom-in",
+                }}
+              >
+                <Image
+                  src={img.src}
+                  alt={img.alt}
+                  fill
+                  style={{ objectFit: "cover", filter: "saturate(0.88)" }}
+                  sizes="33vw"
+                />
+              </div>
+            ))}
+          </motion.div>
+
+          {/* Second row — 2-column */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -633,13 +676,16 @@ export default function HousesContent() {
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
               gap: "1rem",
-              maxWidth: "760px",
-              margin: "0 auto 3rem",
+              width: "100vw",
+              marginLeft: "calc(-50vw + 50%)",
+              marginBottom: "3rem",
+              padding: "0 1rem",
+              boxSizing: "border-box",
             }}
           >
             {[
-              { src: "/Dreamhouse/images/houses/fools-valley-2.jpg", alt: "Fools Valley — the valley" },
-              { src: "/Dreamhouse/images/houses/fools-valley-3.jpg", alt: "Fools Valley — the grounds" },
+              { src: "/Dreamhouse/images/houses/fools-valley-0.jpg", alt: "Fools Valley — overview" },
+              { src: "/Dreamhouse/images/houses/fools-valley-9.jpg", alt: "Fools Valley — evening light" },
             ].map((img) => (
               <div
                 key={img.src}
@@ -658,7 +704,7 @@ export default function HousesContent() {
                   alt={img.alt}
                   fill
                   style={{ objectFit: "cover", filter: "saturate(0.88)" }}
-                  sizes="375px"
+                  sizes="50vw"
                 />
               </div>
             ))}
@@ -775,30 +821,29 @@ export default function HousesContent() {
             </div>
           </motion.section>
 
-          {/* Photo 4 — wide single */}
+          {/* Photo 4 — wide single, full-width */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.9 }}
-            onClick={() => openLightbox("/Dreamhouse/images/houses/fools-valley-4.jpg")}
+            onClick={() => openLightbox("/Dreamhouse/images/houses/fools-valley-3.jpg")}
             style={{
               position: "relative",
-              width: "100%",
+              width: "100vw",
+              marginLeft: "calc(-50vw + 50%)",
               aspectRatio: "16/7",
-              borderRadius: "12px",
               overflow: "hidden",
               marginBottom: "3rem",
-              boxShadow: "0 4px 24px rgba(35,24,16,0.10)",
               cursor: "zoom-in",
             }}
           >
             <Image
-              src="/Dreamhouse/images/houses/fools-valley-4.jpg"
+              src="/Dreamhouse/images/houses/fools-valley-3.jpg"
               alt="Fools Valley — a quiet corner"
               fill
               style={{ objectFit: "cover", filter: "saturate(0.85)" }}
-              sizes="750px"
+              sizes="100vw"
             />
           </motion.div>
 
@@ -830,8 +875,35 @@ export default function HousesContent() {
                 fontSize: "clamp(1rem, 2vw, 1.15rem)",
                 lineHeight: 1.85,
                 color: "var(--text-mid)",
+                textAlign: "center",
               }}
             >
+              <span
+                onClick={() => openLightbox("/Dreamhouse/images/houses/french-castle.jpg")}
+                style={{
+                  position: "relative",
+                  display: "inline-block",
+                  width: "auto",
+                  height: "8em",
+                  aspectRatio: "3/4",
+                  borderRadius: "6px",
+                  overflow: "hidden",
+                  float: "right",
+                  marginLeft: "1rem",
+                  marginBottom: "0.25rem",
+                  flexShrink: 0,
+                  verticalAlign: "middle",
+                  cursor: "zoom-in",
+                }}
+              >
+                <Image
+                  src="/Dreamhouse/images/houses/french-castle.jpg"
+                  alt="A French castle"
+                  fill
+                  className="object-cover"
+                  sizes="200px"
+                />
+              </span>
               For those who wish to continue the story, an invitation awaits. The
               week immediately after Portugal, a curated festival in a stunning
               ch&acirc;teau in France. The same spirit. A grander stage. Optional.
@@ -843,7 +915,7 @@ export default function HousesContent() {
           {/* Dream Dues */}
           <DreamDuesSlider />
 
-          {/* Photo 5 — closing 2-photo strip */}
+          {/* Photo 5 — closing 2-photo strip, full-width */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -854,6 +926,10 @@ export default function HousesContent() {
               gridTemplateColumns: "1fr 1fr",
               gap: "1rem",
               marginBottom: "3rem",
+              width: "100vw",
+              marginLeft: "calc(-50vw + 50%)",
+              padding: "0 1rem",
+              boxSizing: "border-box",
             }}
           >
             <div
