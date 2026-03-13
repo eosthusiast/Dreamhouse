@@ -45,11 +45,11 @@ export default function DreamInput({
 
   return (
     <div
-      className="flex flex-col items-center w-full max-w-xl mx-auto px-4"
+      className="flex flex-col items-center w-full max-w-2xl mx-auto px-4"
       style={{ gap: "1.25rem", pointerEvents: visible ? "auto" : "none" }}
     >
       {/* Dream input — real visible input, styled to look minimal */}
-      <div className="relative w-full max-w-sm">
+      <div className="relative w-full max-w-full">
         <input
           ref={inputRef}
           type="text"
@@ -61,11 +61,11 @@ export default function DreamInput({
           autoComplete="off"
           autoCapitalize="off"
           autoFocus={autoFocus && visible}
-          placeholder=""
+          placeholder="Share a dream of yours"
           className="
             w-full bg-transparent border-0 border-b border-turquoise/30
             text-center font-playfair italic font-bold text-2xl md:text-3xl
-            text-turquoise placeholder:text-turquoise/20
+            text-turquoise placeholder:text-[rgba(200,220,218,0.7)] placeholder:font-normal
             focus:outline-none focus:border-turquoise/60
             caret-turquoise py-2 transition-colors duration-300
           "
@@ -89,14 +89,17 @@ export default function DreamInput({
           transition-all duration-500 cursor-pointer
           ${
             value.trim()
-              ? "opacity-100 hover:scale-[1.03] hover:shadow-lg hover:shadow-coral-start/20"
-              : "opacity-30 cursor-not-allowed"
+              ? "hover:scale-[1.03] hover:shadow-lg hover:shadow-coral-start/20"
+              : "cursor-not-allowed"
           }
         `}
         style={{
           padding: "1.05rem 3.6rem",
-          background: "linear-gradient(135deg, #e8a87c 0%, #d4a0c0 50%, #b8a9c9 100%)",
+          background: value.trim()
+            ? "linear-gradient(135deg, #e8a87c 0%, #d4a0c0 50%, #b8a9c9 100%)"
+            : "rgba(255,255,255,0.12)",
           color: "rgba(255, 255, 255, 0.95)",
+          border: value.trim() ? "none" : "1px solid rgba(255,255,255,0.2)",
           boxShadow: value.trim()
             ? "0 4px 20px rgba(232, 168, 124, 0.25)"
             : "none",

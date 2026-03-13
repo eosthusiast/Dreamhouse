@@ -6,7 +6,7 @@ const INSPIRED_ITEMS = [
   { text: "The aliveness of festivals.", column: 1 },
   { text: "The ambition of accelerators.", column: 1 },
   { text: "The surrender of Vision Quests.", column: 1 },
-  { text: "The inspiration of a TED Talk.", column: 2 },
+  { text: "The spark of a TED Talk.", column: 2 },
   { text: "The pure grounding of nature.", column: 2 },
   { text: "The belonging of sitting in circle.", column: 2 },
   { text: "The playfulness of childhood.", column: 2 },

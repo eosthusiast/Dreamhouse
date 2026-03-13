@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { NAV_ITEMS } from "@/lib/constants";
 
 interface NavigationProps {
@@ -31,10 +32,28 @@ export default function Navigation({ visible = true, variant = "dark" }: Navigat
               : "translate-y-0 opacity-100"
             : "-translate-y-full opacity-0 pointer-events-none"
         }`}
+        style={{ visibility: visible ? "visible" : "hidden" }}
       >
-        <div className="flex items-center justify-end py-4 md:py-6" style={{ paddingLeft: "2rem", paddingRight: "3rem" }}>
+        <div className="flex items-center justify-between py-4 md:py-6" style={{ paddingLeft: "2rem", paddingRight: "3rem" }}>
+          {/* Logo left */}
+          <a href="/Dreamhouse/" aria-label="Dream House home">
+            <Image
+              src="/Dreamhouse/images/logo/eye-icon.png"
+              alt="Dream House"
+              width={84}
+              height={84}
+              style={{
+                height: "84px",
+                width: "auto",
+                filter: isDark
+                  ? "brightness(0) saturate(100%) invert(97%) sepia(8%) saturate(500%) hue-rotate(330deg) brightness(105%)"
+                  : "brightness(0) saturate(100%) invert(20%) sepia(30%) saturate(600%) hue-rotate(340deg)",
+              }}
+            />
+          </a>
+
           {/* Nav items - desktop */}
-          <ul className="hidden md:flex items-center gap-8 ml-auto">
+          <ul className="hidden md:flex items-center gap-8">
             {NAV_ITEMS.map((item) => (
               <li key={item.label}>
                 <a
@@ -49,7 +68,7 @@ export default function Navigation({ visible = true, variant = "dark" }: Navigat
 
           {/* Mobile hamburger */}
           <button
-            className={`md:hidden ml-auto p-2 ${isDark ? "text-cream" : "text-galaxy-deep"}`}
+            className={`md:hidden p-2 ${isDark ? "text-cream" : "text-galaxy-deep"}`}
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle menu"
           >

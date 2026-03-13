@@ -80,9 +80,15 @@ const TAGS = [
 export default function WhoContent() {
   const wrapperClass = `${fraunces.variable} ${nunito.variable} ${playfair.variable}`;
   const [tagIndex, setTagIndex] = useState(0);
+  const [showBullets, setShowBullets] = useState(false);
   useEffect(() => {
     const id = setInterval(() => setTagIndex((i) => (i + 1) % TAGS.length), 2500);
     return () => clearInterval(id);
+  }, []);
+  // Show bullets after 3 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => setShowBullets(true), 3000);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -125,24 +131,6 @@ export default function WhoContent() {
             textAlign: "center",
           }}
         >
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            style={{
-              fontFamily: "var(--font-nunito)",
-              fontSize: "0.72rem",
-              fontWeight: 700,
-              letterSpacing: "0.32em",
-              textTransform: "uppercase",
-              color: "var(--coral)",
-              marginBottom: "1.25rem",
-              opacity: 0.9,
-            }}
-          >
-            Dream House
-          </motion.div>
-
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -175,7 +163,7 @@ export default function WhoContent() {
               marginBottom: "1.6rem",
             }}
           >
-            You already know. This is for the ambitious weirdos. The Genuinely Good Eggs.
+            This is for the ambitious weirdos &amp; genuinely good eggs.
           </motion.p>
         </section>
 
@@ -195,8 +183,8 @@ export default function WhoContent() {
               transition={{ duration: 0.5 }}
               style={{
                 fontFamily: "var(--font-fraunces)",
-                fontSize: "clamp(1.26rem, 2.52vw, 1.89rem)",
-                fontWeight: 500,
+                fontSize: "clamp(2.5rem, 5vw, 4rem)",
+                fontWeight: 700,
                 fontStyle: "italic",
                 color: "var(--coral)",
                 margin: 0,
@@ -208,19 +196,14 @@ export default function WhoContent() {
         </motion.div>
 
         {/* ── Yes-list + CTA ── */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 3.2, duration: 0.8 }}
-          style={{ maxWidth: "760px", margin: "0 auto", padding: "0 2rem 6rem" }}
-        >
+        <div style={{ maxWidth: "760px", margin: "0 auto", padding: "0 2rem 6rem" }}>
 
-          {/* Yes-list */}
+          {/* Yes-list — each item reveals individually on scroll */}
           <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
             {[
-              "You accidentally inspire people constantly",
+              "You accidentally inspire people, constantly",
               "You believe joy and ambition belong in the same room",
-              "You sharing your gifts, and being of service, energise you",
+              "You sharing your gifts and being of service energises you",
               "You have something you're building that means something to you",
               "You miss the kind of community that was just around you earlier in life",
               "You get genuinely energised by people who think differently to you",
@@ -229,9 +212,8 @@ export default function WhoContent() {
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.5, delay: i * 0.07 }}
+                animate={showBullets ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+                transition={{ duration: 0.5, delay: showBullets ? i * 0.5 : 0 }}
                 whileHover={{ x: 6, borderColor: "var(--coral)" }}
                 style={{
                   display: "flex",
@@ -289,7 +271,7 @@ export default function WhoContent() {
               Apply here
             </motion.a>
           </div>
-        </motion.div>
+        </div>
 
         {/* ── Dark "not for you" section ── */}
         <section
@@ -645,8 +627,45 @@ export default function WhoContent() {
 
           <ThinRule />
 
-          {/* ── Bottom spacer ── */}
-          <div style={{ paddingBottom: "4rem" }} />
+          {/* ── Bottom CTA ── */}
+          <div style={{ textAlign: "center", paddingBottom: "5rem", position: "relative" }}>
+            <div
+              aria-hidden
+              style={{
+                position: "absolute",
+                inset: 0,
+                background: "radial-gradient(ellipse 60% 80% at 50% 50%, rgba(232,128,106,0.10) 0%, transparent 70%)",
+                pointerEvents: "none",
+              }}
+            />
+            <motion.a
+              href="https://forms.gle/SPc8q7K1UsmV5iWF9"
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              whileHover={{ y: -2, boxShadow: "0 8px 32px rgba(232,128,106,0.45)" }}
+              style={{
+                display: "inline-block",
+                fontFamily: "var(--font-nunito)",
+                fontWeight: 700,
+                fontSize: "0.95rem",
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                color: "#fdf8f0",
+                background: "linear-gradient(135deg, var(--coral), var(--terra))",
+                padding: "0.85rem 2.5rem",
+                borderRadius: "999px",
+                textDecoration: "none",
+                position: "relative",
+                boxShadow: "0 4px 24px rgba(232,128,106,0.35)",
+              }}
+            >
+              Apply here
+            </motion.a>
+          </div>
         </div>
       </div>
     </div>

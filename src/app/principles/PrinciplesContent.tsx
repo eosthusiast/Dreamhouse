@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "motion/react";
+import Image from "next/image";
 import Navigation from "@/components/layout/Navigation";
 import PageBackground from "@/components/PageBackground";
 import { Fraunces, Nunito, Playfair_Display } from "next/font/google";
@@ -23,6 +25,87 @@ const playfair = Playfair_Display({
   variable: "--font-playfair",
   display: "swap",
 });
+
+function TarotCard({ principleColor, title }: { principleColor: string; title: string }) {
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  return (
+    <div
+      style={{ perspective: "800px", width: "200px", height: "300px", flexShrink: 0 }}
+      onMouseEnter={() => setIsFlipped(true)}
+      onMouseLeave={() => setIsFlipped(false)}
+      onClick={() => setIsFlipped((f) => !f)}
+    >
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          height: "100%",
+          transformStyle: "preserve-3d",
+          transition: "transform 0.6s cubic-bezier(0.22, 1, 0.36, 1)",
+          transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
+          cursor: "pointer",
+        }}
+      >
+        {/* Back face (tarot image) — shown by default */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
+            borderRadius: "12px",
+            overflow: "hidden",
+            boxShadow: "0 8px 32px rgba(35,24,16,0.18)",
+          }}
+        >
+          <Image
+            src="/Dreamhouse/images/principles/tarot-back.jpg"
+            alt="Tarot card back"
+            fill
+            style={{ objectFit: "cover" }}
+            sizes="200px"
+          />
+        </div>
+
+        {/* Front face (colored side) — revealed on flip */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
+            transform: "rotateY(180deg)",
+            borderRadius: "12px",
+            overflow: "hidden",
+            boxShadow: "0 8px 32px rgba(35,24,16,0.18)",
+            backgroundColor: "#1a1a4e",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "1rem",
+          }}
+        >
+          <span style={{ fontSize: "2.5rem" }}>✦</span>
+          <span
+            style={{
+              fontFamily: "var(--font-playfair)",
+              fontSize: "0.85rem",
+              fontStyle: "italic",
+              color: principleColor,
+              textAlign: "center",
+              padding: "0 1rem",
+              lineHeight: 1.4,
+            }}
+          >
+            {title}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const PRINCIPLES = [
   {
@@ -91,24 +174,6 @@ export default function PrinciplesContent() {
             textAlign: "center",
           }}
         >
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            style={{
-              fontFamily: "var(--font-nunito)",
-              fontSize: "0.72rem",
-              fontWeight: 700,
-              letterSpacing: "0.32em",
-              textTransform: "uppercase",
-              color: "var(--coral)",
-              marginBottom: "1.25rem",
-              opacity: 0.9,
-            }}
-          >
-            Dream House
-          </motion.div>
-
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -131,18 +196,29 @@ export default function PrinciplesContent() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 1 }}
             style={{
-              fontFamily: "var(--font-fraunces)",
-              fontSize: "clamp(0.89rem, 1.79vw, 1.34rem)",
-              fontWeight: 300,
-              fontStyle: "italic",
-              color: "var(--text-soft)",
               maxWidth: "520px",
               marginBottom: "3rem",
             }}
           >
-            Where inspiring people go to get inspired.
-            <br />
-            A detox from the modern world and its limiting beliefs.
+            <span style={{
+              fontFamily: "var(--font-fraunces)",
+              fontSize: "clamp(0.89rem, 1.79vw, 1.34rem)",
+              fontWeight: 400,
+              color: "var(--text-soft)",
+              display: "block",
+              marginBottom: "0.3rem",
+            }}>
+              Where inspiring people go to get inspired.
+            </span>
+            <span style={{
+              fontFamily: "var(--font-fraunces)",
+              fontSize: "clamp(0.75rem, 1.4vw, 1.05rem)",
+              fontWeight: 300,
+              fontStyle: "italic",
+              color: "var(--text-soft)",
+            }}>
+              A detox from the modern world and its limiting beliefs.
+            </span>
           </motion.p>
         </section>
 
@@ -158,7 +234,7 @@ export default function PrinciplesContent() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            style={{ marginBottom: "3rem" }}
+            style={{ marginBottom: "3rem", textAlign: "center" }}
           >
             <p
               style={{
@@ -181,52 +257,78 @@ export default function PrinciplesContent() {
           </motion.section>
 
           {/* Principles */}
-          {PRINCIPLES.map((principle, idx) => (
-            <div key={principle.title}>
-              {/* Coloured rule divider */}
-              {idx > 0 && (
-                <div style={{ display: "flex", justifyContent: "center", margin: "3rem auto" }}>
-                  <div style={{ width: "80px", height: "1px", backgroundColor: `${principle.color}66` }} />
-                </div>
-              )}
+          {PRINCIPLES.map((principle, idx) => {
+            const cardLeft = idx % 2 === 0;
+            return (
+              <div key={principle.title}>
+                {/* Coloured rule divider */}
+                {idx > 0 && (
+                  <div style={{ display: "flex", justifyContent: "center", margin: "3rem auto" }}>
+                    <div style={{ width: "80px", height: "1px", backgroundColor: `${principle.color}66` }} />
+                  </div>
+                )}
 
-              <motion.section
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
-                style={{ marginBottom: 0 }}
-              >
-                <h2
-                  style={{
-                    fontFamily: "var(--font-playfair)",
-                    fontSize: "clamp(1.4rem, 3.5vw, 2.24rem)",
-                    fontWeight: 400,
-                    letterSpacing: "-0.01em",
-                    lineHeight: 1.15,
-                    color: "var(--text-dark)",
-                    borderLeft: `4px solid ${principle.color}`,
-                    paddingLeft: "1rem",
-                    marginBottom: "1.5rem",
-                  }}
+                <motion.section
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8 }}
+                  style={{ marginBottom: 0 }}
                 >
-                  {principle.title}
-                </h2>
+                  {/* Mobile: stack card above text; Desktop: side-by-side */}
+                  <style>{`
+                    @media (max-width: 767px) {
+                      .tarot-row { flex-direction: column !important; align-items: center !important; }
+                      .tarot-card-wrap { width: 60% !important; margin-bottom: 1.5rem; }
+                    }
+                  `}</style>
+                  <div
+                    className="tarot-row"
+                    style={{
+                      display: "flex",
+                      flexDirection: cardLeft ? "row" : "row-reverse",
+                      alignItems: "center",
+                      gap: "2.5rem",
+                    } as React.CSSProperties}
+                  >
+                    <div className="tarot-card-wrap" style={{ flexShrink: 0 }}>
+                      <TarotCard principleColor={principle.color} title={principle.title} />
+                    </div>
 
-                <p
-                  style={{
-                    fontFamily: "var(--font-fraunces)",
-                    fontSize: "clamp(1rem, 2vw, 1.15rem)",
-                    fontWeight: 300,
-                    lineHeight: 1.85,
-                    color: "var(--text-mid)",
-                  }}
-                >
-                  {principle.body}
-                </p>
-              </motion.section>
-            </div>
-          ))}
+                    <div style={{ flex: 1, textAlign: "center" }}>
+                      <h2
+                        style={{
+                          fontFamily: "var(--font-playfair)",
+                          fontSize: "clamp(1.4rem, 3.5vw, 2.24rem)",
+                          fontWeight: 400,
+                          letterSpacing: "-0.01em",
+                          lineHeight: 1.15,
+                          color: "var(--text-dark)",
+                          marginBottom: "1.5rem",
+                        }}
+                      >
+                        <span style={{ borderBottom: `3px solid ${principle.color}`, paddingBottom: "0.2rem" }}>
+                          {principle.title}
+                        </span>
+                      </h2>
+
+                      <p
+                        style={{
+                          fontFamily: "var(--font-fraunces)",
+                          fontSize: "clamp(1rem, 2vw, 1.15rem)",
+                          fontWeight: 300,
+                          lineHeight: 1.85,
+                          color: "var(--text-mid)",
+                        }}
+                      >
+                        {principle.body}
+                      </p>
+                    </div>
+                  </div>
+                </motion.section>
+              </div>
+            );
+          })}
 
           {/* Final divider */}
           <div style={{ display: "flex", justifyContent: "center", margin: "3rem auto" }}>
