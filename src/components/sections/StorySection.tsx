@@ -185,7 +185,9 @@ export default function StorySection({ variant }: StorySectionProps) {
         <div
           key={i}
           ref={(el) => { textRefs.current[i] = el; }}
-          {...(variant === "ocean" && i >= 1 ? { "data-reveal-after-line": true } : { "data-reveal": true })}
+          {...((variant === "ocean" && i >= 1) || (variant === "beach" && i >= 1)
+            ? { "data-reveal-after-line": true }
+            : { "data-reveal": true })}
           className={`absolute font-playfair italic text-cream text-lg md:text-xl lg:text-2xl ${
             variant === "beach" && i === 1
               ? "max-w-[85%] md:max-w-md lg:max-w-lg"

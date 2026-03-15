@@ -32,16 +32,17 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
     if (hero2Ref.current) gsap.set(hero2Ref.current, { autoAlpha: 0 });
     onGateComplete();
 
-    // Auto-scroll to the beach section so user doesn't land on empty hero
+    // Auto-scroll to just before the first text in the beach section
     requestAnimationFrame(() => {
-      const sectionVhs = [530, 530, 530, 530, 530, 530, 530, 100];
+      const sectionVhs = [530, 530, 325, 315, 330, 340, 315, 235];
       const totalVh = sectionVhs.reduce((a, b) => a + b, 0);
       const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
       const vh = viewportHeight / 100;
       const scrollRange = totalVh * vh - viewportHeight;
-      const section2Start = (sectionVhs[0] + sectionVhs[1]) / totalVh;
-      const section2Width = sectionVhs[2] / totalVh;
-      const targetProgress = section2Start + 0.20 * section2Width;
+      // Target: 40vh into section 2 (text starts at 52vh, land just before)
+      const section2StartVh = sectionVhs[0] + sectionVhs[1];
+      const targetVh = section2StartVh + 40;
+      const targetProgress = targetVh / totalVh;
       const targetScroll = targetProgress * scrollRange;
       window.scrollTo(0, targetScroll);
       onScrollComplete?.();
@@ -148,14 +149,15 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
         }
 
         // 2. Animated scroll — drives the ScrollCanvas crossfade from galaxy to beach
-        const sectionVhs = [530, 530, 530, 530, 530, 530, 530, 100];
+        const sectionVhs = [530, 530, 325, 315, 330, 340, 315, 235];
         const totalVh = sectionVhs.reduce((a, b) => a + b, 0);
         const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
         const vh = viewportHeight / 100;
         const scrollRange = totalVh * vh - viewportHeight;
-        const section2Start = (sectionVhs[0] + sectionVhs[1]) / totalVh;
-        const section2Width = sectionVhs[2] / totalVh;
-        const targetProgress = section2Start + 0.20 * section2Width;
+        // Target: 40vh into section 2 (beach at full opacity, just before text starts)
+        const section2StartVh = sectionVhs[0] + sectionVhs[1];
+        const targetVh = section2StartVh + 40;
+        const targetProgress = targetVh / totalVh;
         const targetScroll = targetProgress * scrollRange;
 
         const scrollProxy = { y: window.scrollY };

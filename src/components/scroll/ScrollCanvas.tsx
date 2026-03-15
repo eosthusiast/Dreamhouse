@@ -148,7 +148,7 @@ export default function ScrollCanvas({
 
       // Absolute vh values for reveal timing — anchored so they don't scale with scrollVh.
       // Increasing a section's scrollVh adds buffer at the end, not stretching reveals.
-      const TEXT_START_VH = (idx: number) => idx === 2 ? 52 : idx === 4 ? 72.8 : 26;
+      const TEXT_START_VH = (idx: number) => idx === 2 ? 52 : (idx === 4 || idx === N - 1) ? 72.8 : 26;
       const TEXT_SPAN_VH = 182;
       const LINE_START_VH = (idx: number) => idx === 2 ? 78 : 39;
       const LINE_SPAN_VH = (idx: number) => idx === 2 ? 143 : 169;
@@ -157,7 +157,7 @@ export default function ScrollCanvas({
       // Pre-compute per-section fadeOut timing
       // fadeOutStart = when last element reaches full opacity + 50vh hold
       // fadeOutSpan = ~34vh normalized to each section's scrollVh
-      const HOLD_VH = 50;
+      const HOLD_VH = (idx: number) => idx === 5 ? 100 : 50;
       const FADEOUT_VH = 34;
       const fadeOutStartPerSection: number[] = [];
       const fadeOutSpanPerSection: number[] = [];
@@ -170,7 +170,7 @@ export default function ScrollCanvas({
         let lastFullVh = -1;
         if (reveals.length > 0) {
           const M = reveals.length;
-          const fadeFraction = i === 4 ? 0.4 : 0.3;
+          const fadeFraction = (i === 4 || i === N - 1) ? 0.4 : 0.3;
           const lastSliceEnd = ((M - 1) + fadeFraction) / M;
           lastFullVh = TEXT_START_VH(i) + lastSliceEnd * TEXT_SPAN_VH;
         }
@@ -178,14 +178,34 @@ export default function ScrollCanvas({
         // Compute when last data-reveal-after-line element reaches full opacity
         if (afterLineReveals.length > 0) {
           const M = afterLineReveals.length;
+          const lineCount = contents[i]?.querySelectorAll("[data-line]").length ?? 0;
           const lineEndVh = LINE_START_VH(i) + LINE_SPAN_VH(i);
-          const lastSliceEnd = ((M - 1) + 0.3) / M;
-          const afterLineFullVh = lineEndVh + lastSliceEnd * AFTER_LINE_SPAN_VH;
+          let afterLineFullVh: number;
+          if (lineCount > 1 && lineCount === M) {
+            // Per-line stagger: last element starts at last line's finish point
+            // and fades in over AFTER_LINE_SPAN_VH / M
+            afterLineFullVh = lineEndVh + AFTER_LINE_SPAN_VH / M;
+          } else {
+            const lastSliceEnd = ((M - 1) + 0.3) / M;
+            afterLineFullVh = lineEndVh + lastSliceEnd * AFTER_LINE_SPAN_VH;
+          }
           lastFullVh = Math.max(lastFullVh, afterLineFullVh);
         }
 
         if (lastFullVh > 0) {
-          fadeOutStartPerSection[i] = (lastFullVh + HOLD_VH) / sVh;
+          // Push fade-out to end near section boundary so text and background
+          // fade out around the same time (background crossfade starts in next section)
+          const fadeOutEndVh = sVh - 5;
+          const fadeOutStartVh = fadeOutEndVh - FADEOUT_VH;
+          // Ensure minimum hold time
+          const holdVh = fadeOutStartVh - lastFullVh;
+          const minHold = HOLD_VH(i);
+          if (holdVh >= minHold) {
+            fadeOutStartPerSection[i] = fadeOutStartVh / sVh;
+          } else {
+            // Not enough room — use minimum hold (section may need scrollVh increase)
+            fadeOutStartPerSection[i] = (lastFullVh + minHold) / sVh;
+          }
           fadeOutSpanPerSection[i] = FADEOUT_VH / sVh;
         } else {
           // No reveals — use defaults (won't be used)
@@ -235,12 +255,12 @@ export default function ScrollCanvas({
 
           // --- Crossfade logic ---
           const FADE_ZONE = 0.15; // Normal crossfade for non-hero sections
-          const DEAD_ZONE = 0.11; // ~30vh hold after text before crossfade starts
+          const DEAD_ZONE = 0.02; // minimal hold — background crossfade starts soon after text fades
 
-          // Galaxy fade: slow dissolve from 50% of section 0 to 20% into section 2
-          // Beach must be at full opacity by section 2 progress 0.20 (gate skip landing point)
+          // Galaxy fade: slow dissolve from 50% of section 0 to 40vh into section 2
+          // Beach must be at full opacity by gate skip landing point (40vh into section 2)
           const galaxyFadeStart = sectionNormStarts[0] + 0.5 * sectionNormWidths[0];
-          const galaxyFadeEnd = sectionNormStarts[2] + 0.20 * sectionNormWidths[2];
+          const galaxyFadeEnd = sectionNormStarts[2] + (40 / sectionVhs[2]) * sectionNormWidths[2];
 
           for (let i = 0; i < N; i++) {
             let alpha = 0;
@@ -334,15 +354,15 @@ export default function ScrollCanvas({
               // Each element gets an equal slice of the progress bar
               // Element j occupies [j/M, (j+1)/M] — fade in over the first 30% of its slice
               // Welcome section (4): 0.5x speed = fade over 15% of slice instead of 30%
-              const fadeFraction = i === 4 ? 0.4 : 0.3;
-              const yOffset = i === 4 ? 50 : 12;
+              const isSlowReveal = i === 4 || i === N - 1;
+              const fadeFraction = isSlowReveal ? 0.4 : 0.3;
+              const yOffset = isSlowReveal ? 50 : 12;
 
-              // Fade-out zone: after reveals complete, fade out with upward drift (skip last section)
+              // Fade-out zone: after reveals complete, fade out with upward drift
               const fadeOutStart = fadeOutStartPerSection[i];
               const fadeOutSpan = fadeOutSpanPerSection[i];
-              const isLastSection = i === N - 1;
 
-              if (!isLastSection && sectionProgress > fadeOutStart) {
+              if (sectionProgress > fadeOutStart) {
                 const fadeOutProgress = clamp((sectionProgress - fadeOutStart) / fadeOutSpan, 0, 1);
                 reveals.forEach((el) => {
                   gsap.set(el, {
@@ -353,7 +373,9 @@ export default function ScrollCanvas({
               } else {
                 reveals.forEach((el, j) => {
                   const sliceStart = j / M;
-                  const sliceEnd = (j + fadeFraction) / M;
+                  // Welcome PNG (section 4, element 0): 30vh fade-in instead of default
+                  const elFade = (i === 4 && j === 0) ? (30 / TEXT_SPAN_VH * M) : fadeFraction;
+                  const sliceEnd = (j + elFade) / M;
                   const elementAlpha = clamp(
                     (revealProgress - sliceStart) / (sliceEnd - sliceStart),
                     0,
@@ -365,35 +387,53 @@ export default function ScrollCanvas({
                   });
                 });
               }
-            } else {
+            } else if (i !== activeIndex - 1) {
               // Reset non-active sections' reveals to hidden
+              // (skip previous section — content wrapper handles its fade during crossfade)
               gsap.set(reveals, { autoAlpha: 0, y: 12 });
             }
           }
 
           // --- Reveals that appear only after the line is fully drawn ---
+          const linesForAfterReveal = getLinesPerSection();
           for (let i = 0; i < N; i++) {
             const reveals = revealsAfterLinePerSection[i];
             if (reveals.length === 0) continue;
 
             if (i === activeIndex) {
               const sVh = sectionVhs[i];
-              const lineEnd = (LINE_START_VH(i) + LINE_SPAN_VH(i)) / sVh;
+              const lineStartVh = LINE_START_VH(i);
+              const lineSpanVh = LINE_SPAN_VH(i);
+              const lineEnd = (lineStartVh + lineSpanVh) / sVh;
               const afterLineSpan = AFTER_LINE_SPAN_VH / sVh;
-              const revealProgress = clamp((sectionProgress - lineEnd) / afterLineSpan, 0, 1);
               const M = reveals.length;
+              const L = (linesForAfterReveal[i] || []).length;
 
-              // Fade-out zone (skip last section)
+              // Fade-out zone
               const fadeOutStart = fadeOutStartPerSection[i];
               const fadeOutSpan = fadeOutSpanPerSection[i];
-              const isLastSection = i === N - 1;
 
-              if (!isLastSection && sectionProgress > fadeOutStart) {
+              if (sectionProgress > fadeOutStart) {
                 const fadeOutProgress = clamp((sectionProgress - fadeOutStart) / fadeOutSpan, 0, 1);
                 reveals.forEach((el) => {
                   gsap.set(el, { autoAlpha: 1 - fadeOutProgress, y: -12 * fadeOutProgress });
                 });
+              } else if (L > 1 && L === M) {
+                // Per-line stagger: each reveal appears after its corresponding line finishes
+                // Each line k finishes at lineStart + lineSpan * (k+1)/L
+                reveals.forEach((el, j) => {
+                  const lineFinishVh = (lineStartVh + lineSpanVh * (j + 1) / L) / sVh;
+                  const fadeInSpan = AFTER_LINE_SPAN_VH / (M * sVh); // each gets its own fade-in
+                  const elementAlpha = clamp(
+                    (sectionProgress - lineFinishVh) / fadeInSpan,
+                    0,
+                    1
+                  );
+                  gsap.set(el, { autoAlpha: elementAlpha, y: 12 * (1 - elementAlpha) });
+                });
               } else {
+                // All reveals start after all lines finish, staggered within afterLineSpan
+                const revealProgress = clamp((sectionProgress - lineEnd) / afterLineSpan, 0, 1);
                 reveals.forEach((el, j) => {
                   const sliceStart = j / M;
                   const sliceEnd = (j + 0.3) / M;
@@ -405,7 +445,7 @@ export default function ScrollCanvas({
                   gsap.set(el, { autoAlpha: elementAlpha, y: 12 * (1 - elementAlpha) });
                 });
               }
-            } else {
+            } else if (i !== activeIndex - 1) {
               gsap.set(reveals, { autoAlpha: 0, y: 12 });
             }
           }
@@ -428,25 +468,36 @@ export default function ScrollCanvas({
               );
               const L = lines.length;
 
-              // Fade-out zone (skip last section)
+              // Fade-out zone
               const fadeOutStart = fadeOutStartPerSection[i];
               const fadeOutSpan = fadeOutSpanPerSection[i];
-              const isLastSection = i === N - 1;
 
-              if (!isLastSection && sectionProgress > fadeOutStart) {
+              if (sectionProgress > fadeOutStart) {
+                // Just fade opacity — keep line fully drawn, no reverse draw
                 const fadeOutProgress = clamp((sectionProgress - fadeOutStart) / fadeOutSpan, 0, 1);
                 lines.forEach(({ el, length }) => {
                   gsap.set(el, {
                     strokeDasharray: length,
-                    strokeDashoffset: length * fadeOutProgress,
+                    strokeDashoffset: 0,
                     autoAlpha: 1 - fadeOutProgress,
                   });
                 });
               } else {
+                const afterLineM = (revealsAfterLinePerSection[i] || []).length;
                 lines.forEach(({ el, length }, k) => {
                   // Each line draws during its own slice of the progress
-                  const sliceStart = k / L;
-                  const sliceEnd = (k + 1) / L;
+                  let sliceStart = k / L;
+                  let sliceEnd = (k + 1) / L;
+
+                  // Per-line stagger: delay line k>0 until after-line text k-1
+                  // has fully appeared + 10vh hold
+                  if (L > 1 && L === afterLineM && k > 0) {
+                    const prevLineEndVh = LINE_START_VH(i) + LINE_SPAN_VH(i) * k / L;
+                    const textFadeInVh = AFTER_LINE_SPAN_VH / afterLineM;
+                    const delayedStartVh = prevLineEndVh + textFadeInVh + 10;
+                    sliceStart = (delayedStartVh - LINE_START_VH(i)) / LINE_SPAN_VH(i);
+                  }
+
                   const lineProgress = clamp(
                     (overallProgress - sliceStart) / (sliceEnd - sliceStart),
                     0,
@@ -463,8 +514,8 @@ export default function ScrollCanvas({
                   }
                 });
               }
-            } else {
-              // Reset — fully hidden
+            } else if (i !== activeIndex - 1) {
+              // Reset — fully hidden (skip previous section during crossfade)
               lines.forEach(({ el, length }) => {
                 gsap.set(el, {
                   strokeDasharray: length,

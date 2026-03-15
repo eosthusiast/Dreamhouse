@@ -26,7 +26,7 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
-function TarotCard({ principleColor, title }: { principleColor: string; title: string }) {
+function TarotCard({ principleColor, title, frontImage }: { principleColor: string; title: string; frontImage: string }) {
   const [isFlipped, setIsFlipped] = useState(false);
 
   return (
@@ -60,7 +60,7 @@ function TarotCard({ principleColor, title }: { principleColor: string; title: s
           }}
         >
           <Image
-            src="/images/principles/tarot-back.jpg"
+            src="/images/principles/card-back.jpeg"
             alt="Tarot card back"
             fill
             style={{ objectFit: "cover" }}
@@ -68,7 +68,7 @@ function TarotCard({ principleColor, title }: { principleColor: string; title: s
           />
         </div>
 
-        {/* Front face (colored side) — revealed on flip */}
+        {/* Front face (illustration) — revealed on flip */}
         <div
           style={{
             position: "absolute",
@@ -79,28 +79,15 @@ function TarotCard({ principleColor, title }: { principleColor: string; title: s
             borderRadius: "12px",
             overflow: "hidden",
             boxShadow: "0 8px 32px rgba(35,24,16,0.18)",
-            backgroundColor: "#1a1a4e",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "1rem",
           }}
         >
-          <span style={{ fontSize: "2.5rem" }}>✦</span>
-          <span
-            style={{
-              fontFamily: "var(--font-playfair)",
-              fontSize: "0.85rem",
-              fontStyle: "italic",
-              color: principleColor,
-              textAlign: "center",
-              padding: "0 1rem",
-              lineHeight: 1.4,
-            }}
-          >
-            {title}
-          </span>
+          <Image
+            src={frontImage}
+            alt={title}
+            fill
+            style={{ objectFit: "cover" }}
+            sizes="200px"
+          />
         </div>
       </div>
     </div>
@@ -112,26 +99,31 @@ const PRINCIPLES = [
     title: "Be a dreamer",
     body: "Everything IS possible. Question the limiting belief, not the dream.",
     color: "#e8806a",
+    frontImage: "/images/principles/dreamer.jpeg",
   },
   {
     title: "Be ridiculous",
     body: "Play. Be silly. Take your masks off. No need for performing here. Fail. Take risks. Just try, and laugh at yourself when it doesn't work out, knowing that you are one step closer to brilliance.",
     color: "#e8b84b",
+    frontImage: "/images/principles/ridiculous.jpeg",
   },
   {
     title: "Be embodied",
     body: "We move, rest, eat, and breathe with intention. We live in rhythm with nature. Your body knows things your mind talks you out of. This is the place where you get to listen.",
     color: "#8cb89a",
+    frontImage: "/images/principles/embodied.jpeg",
   },
   {
     title: "Be abundant",
     body: "We are generous with our gifts. We trust that everything we need, we already have. And we give freely — in time, in energy, in kindness.",
     color: "#b8a8d4",
+    frontImage: "/images/principles/abundant.jpeg",
   },
   {
     title: "Be a maverick",
     body: "Do it your way. Be authentic, be bold. There's no template here, just you, doing the thing only you can do.",
     color: "#9ec8e0",
+    frontImage: "/images/principles/maverick.jpeg",
   },
 ];
 
@@ -292,7 +284,7 @@ export default function PrinciplesContent() {
                     } as React.CSSProperties}
                   >
                     <div className="tarot-card-wrap" style={{ flexShrink: 0 }}>
-                      <TarotCard principleColor={principle.color} title={principle.title} />
+                      <TarotCard principleColor={principle.color} title={principle.title} frontImage={principle.frontImage} />
                     </div>
 
                     <div style={{ flex: 1, textAlign: "center" }}>

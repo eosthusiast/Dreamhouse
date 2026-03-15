@@ -214,20 +214,22 @@ export default function WhoContent() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={showBullets ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
                 transition={{ duration: 0.5, delay: showBullets ? i * 0.5 : 0 }}
-                whileHover={{ x: 6, borderColor: "var(--coral)" }}
+                whileHover={{ borderColor: "var(--coral)" }}
                 style={{
                   display: "flex",
-                  alignItems: "flex-start",
-                  gap: "1rem",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: "0.5rem",
                   padding: "1.4rem 1.8rem",
                   borderRadius: "14px",
                   border: "1.5px solid rgba(232,196,176,0.35)",
                   backgroundColor: "rgba(253,248,240,0.55)",
                   backdropFilter: "blur(8px)",
                   WebkitBackdropFilter: "blur(8px)",
+                  textAlign: "center",
                 }}
               >
-                <span style={{ color: ["var(--coral)", "#3a8055", "#b08018", "#6048a0", "#2878a0"][i % 5], fontSize: "0.75rem", marginTop: "0.3rem", flexShrink: 0 }}>✦</span>
+                <span style={{ color: ["var(--coral)", "#3a8055", "#b08018", "#6048a0", "#2878a0"][i % 5], fontSize: "0.75rem" }}>✦</span>
                 <span style={{ fontSize: "1.26rem", lineHeight: 1.7, color: "var(--text-mid)" }}>{item}</span>
               </motion.div>
             ))}
@@ -268,7 +270,7 @@ export default function WhoContent() {
                 boxShadow: "0 4px 24px rgba(232,128,106,0.35)",
               }}
             >
-              Apply here
+              Apply for next Dream House (July 4th – August 2nd '26)
             </motion.a>
           </div>
         </div>
@@ -344,11 +346,13 @@ export default function WhoContent() {
                     viewport={{ once: true, margin: "-60px" }}
                     transition={{ duration: 0.6, delay: i * 0.1 }}
                     style={{
-                      display: "grid",
-                      gridTemplateColumns: "1.8rem 1fr",
-                      gap: "0 1rem",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: "0.5rem",
                       padding: "2rem 0",
                       borderBottom: "1px solid rgba(253,220,200,0.08)",
+                      textAlign: "center",
                     }}
                   >
                     <span
@@ -357,7 +361,6 @@ export default function WhoContent() {
                         fontSize: "1.1rem",
                         color: "rgba(232,128,106,0.7)",
                         fontWeight: 700,
-                        paddingTop: "0.15rem",
                       }}
                     >
                       ✕
@@ -434,7 +437,7 @@ export default function WhoContent() {
 
               <div
                 style={{
-                  textAlign: "left",
+                  textAlign: "center",
                   fontSize: "clamp(1rem, 2vw, 1.1rem)",
                   lineHeight: 2,
                   color: "var(--text-mid)",
@@ -474,7 +477,7 @@ export default function WhoContent() {
                   backdropFilter: "blur(8px)",
                   WebkitBackdropFilter: "blur(8px)",
                   margin: "3.5rem 0",
-                  textAlign: "left",
+                  textAlign: "center",
                 }}
               >
                 This is my passionate project. A gift. I join the experiment
@@ -663,7 +666,7 @@ export default function WhoContent() {
                 boxShadow: "0 4px 24px rgba(232,128,106,0.35)",
               }}
             >
-              Apply here
+              Apply for next Dream House (July 4th – August 2nd '26)
             </motion.a>
           </div>
         </div>

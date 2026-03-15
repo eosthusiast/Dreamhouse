@@ -787,11 +787,10 @@ export default function HousesContent() {
               ].map((ritual) => (
                 <motion.div
                   key={ritual.title}
-                  whileHover={{ x: 4 }}
                   transition={{ duration: 0.2 }}
-                  style={{ display: "flex", alignItems: "flex-start", gap: "1rem" }}
+                  style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem", textAlign: "center" }}
                 >
-                  <span style={{ fontSize: "1.5rem", flexShrink: 0, marginTop: "0.1rem" }}>
+                  <span style={{ fontSize: "1.5rem" }}>
                     {ritual.icon}
                   </span>
                   <div>

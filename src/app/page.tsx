@@ -116,7 +116,7 @@ export default function Home() {
       image: "/images/sections/beach-sunset.jpg",
       imagePosition: "center 33%",
       content: <StorySection variant="beach" />,
-      scrollVh: 280,
+      scrollVh: 325,
     },
     {
       id: "story-ocean",
@@ -137,6 +137,7 @@ export default function Home() {
       image: "/images/sections/inspired-dancing.jpg",
       mobileImagePosition: "40% 35%",
       content: <InspiredBySection />,
+      scrollVh: 340,
     },
     {
       id: "intelligent",
@@ -148,7 +149,7 @@ export default function Home() {
       id: "portal",
       image: "/images/sections/portal-waterfall.jpg",
       content: <PortalSection />,
-      scrollVh: 100,
+      scrollVh: 235,
     },
   ];
 
