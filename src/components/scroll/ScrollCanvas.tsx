@@ -35,7 +35,7 @@ function smoothstep(t: number) {
 export default function ScrollCanvas({
   sections,
   heroVideo,
-  scrollPerSection = 225,
+  scrollPerSection = 260,
   onActiveSection,
 }: ScrollCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -285,20 +285,37 @@ export default function ScrollCanvas({
               // Each element gets an equal slice of the progress bar
               // Element j occupies [j/M, (j+1)/M] — fade in over the first 30% of its slice
               // Welcome section (4): 0.5x speed = fade over 15% of slice instead of 30%
-              const fadeFraction = i === 4 ? 0.15 : 0.3;
-              reveals.forEach((el, j) => {
-                const sliceStart = j / M;
-                const sliceEnd = (j + fadeFraction) / M;
-                const elementAlpha = clamp(
-                  (revealProgress - sliceStart) / (sliceEnd - sliceStart),
-                  0,
-                  1
-                );
-                gsap.set(el, {
-                  autoAlpha: elementAlpha,
-                  y: 12 * (1 - elementAlpha),
+              const fadeFraction = i === 4 ? 0.4 : 0.3;
+              const yOffset = i === 4 ? 50 : 12;
+
+              // Fade-out zone: after reveals complete, fade out with upward drift (skip last section)
+              const fadeOutStart = 0.82;
+              const fadeOutSpan = 0.13;
+              const isLastSection = i === N - 1;
+
+              if (!isLastSection && sectionProgress > fadeOutStart) {
+                const fadeOutProgress = clamp((sectionProgress - fadeOutStart) / fadeOutSpan, 0, 1);
+                reveals.forEach((el) => {
+                  gsap.set(el, {
+                    autoAlpha: 1 - fadeOutProgress,
+                    y: -yOffset * fadeOutProgress,
+                  });
                 });
-              });
+              } else {
+                reveals.forEach((el, j) => {
+                  const sliceStart = j / M;
+                  const sliceEnd = (j + fadeFraction) / M;
+                  const elementAlpha = clamp(
+                    (revealProgress - sliceStart) / (sliceEnd - sliceStart),
+                    0,
+                    1
+                  );
+                  gsap.set(el, {
+                    autoAlpha: elementAlpha,
+                    y: yOffset * (1 - elementAlpha),
+                  });
+                });
+              }
             } else {
               // Reset non-active sections' reveals to hidden
               gsap.set(reveals, { autoAlpha: 0, y: 12 });
@@ -315,16 +332,29 @@ export default function ScrollCanvas({
               const afterLineSpan = 0.10;
               const revealProgress = clamp((sectionProgress - lineEnd) / afterLineSpan, 0, 1);
               const M = reveals.length;
-              reveals.forEach((el, j) => {
-                const sliceStart = j / M;
-                const sliceEnd = (j + 0.3) / M;
-                const elementAlpha = clamp(
-                  (revealProgress - sliceStart) / (sliceEnd - sliceStart),
-                  0,
-                  1
-                );
-                gsap.set(el, { autoAlpha: elementAlpha, y: 12 * (1 - elementAlpha) });
-              });
+
+              // Fade-out zone (skip last section)
+              const fadeOutStart = 0.82;
+              const fadeOutSpan = 0.13;
+              const isLastSection = i === N - 1;
+
+              if (!isLastSection && sectionProgress > fadeOutStart) {
+                const fadeOutProgress = clamp((sectionProgress - fadeOutStart) / fadeOutSpan, 0, 1);
+                reveals.forEach((el) => {
+                  gsap.set(el, { autoAlpha: 1 - fadeOutProgress, y: -12 * fadeOutProgress });
+                });
+              } else {
+                reveals.forEach((el, j) => {
+                  const sliceStart = j / M;
+                  const sliceEnd = (j + 0.3) / M;
+                  const elementAlpha = clamp(
+                    (revealProgress - sliceStart) / (sliceEnd - sliceStart),
+                    0,
+                    1
+                  );
+                  gsap.set(el, { autoAlpha: elementAlpha, y: 12 * (1 - elementAlpha) });
+                });
+              }
             } else {
               gsap.set(reveals, { autoAlpha: 0, y: 12 });
             }
@@ -346,26 +376,42 @@ export default function ScrollCanvas({
                 1
               );
               const L = lines.length;
-              lines.forEach(({ el, length }, k) => {
-                // Each line draws during its own slice of the progress
-                const sliceStart = k / L;
-                const sliceEnd = (k + 1) / L;
-                const lineProgress = clamp(
-                  (overallProgress - sliceStart) / (sliceEnd - sliceStart),
-                  0,
-                  1
-                );
-                if (length > 0) {
+
+              // Fade-out zone (skip last section)
+              const fadeOutStart = 0.82;
+              const fadeOutSpan = 0.13;
+              const isLastSection = i === N - 1;
+
+              if (!isLastSection && sectionProgress > fadeOutStart) {
+                const fadeOutProgress = clamp((sectionProgress - fadeOutStart) / fadeOutSpan, 0, 1);
+                lines.forEach(({ el, length }) => {
                   gsap.set(el, {
                     strokeDasharray: length,
-                    strokeDashoffset: length * (1 - lineProgress),
-                    autoAlpha: lineProgress > 0 ? 1 : 0,
+                    strokeDashoffset: length * fadeOutProgress,
+                    autoAlpha: 1 - fadeOutProgress,
                   });
-                } else {
-                  // Fallback: if getTotalLength returned 0, use opacity only
-                  gsap.set(el, { autoAlpha: lineProgress > 0 ? 1 : 0 });
-                }
-              });
+                });
+              } else {
+                lines.forEach(({ el, length }, k) => {
+                  // Each line draws during its own slice of the progress
+                  const sliceStart = k / L;
+                  const sliceEnd = (k + 1) / L;
+                  const lineProgress = clamp(
+                    (overallProgress - sliceStart) / (sliceEnd - sliceStart),
+                    0,
+                    1
+                  );
+                  if (length > 0) {
+                    gsap.set(el, {
+                      strokeDasharray: length,
+                      strokeDashoffset: length * (1 - lineProgress),
+                      autoAlpha: lineProgress > 0 ? 1 : 0,
+                    });
+                  } else {
+                    gsap.set(el, { autoAlpha: lineProgress > 0 ? 1 : 0 });
+                  }
+                });
+              }
             } else {
               // Reset — fully hidden
               lines.forEach(({ el, length }) => {
