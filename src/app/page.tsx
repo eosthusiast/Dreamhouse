@@ -15,18 +15,40 @@ import Navigation from "@/components/layout/Navigation";
 export default function Home() {
   const [gateComplete, setGateComplete] = useState(false);
   const [navVariant, setNavVariant] = useState<"dark" | "light">("dark");
-  const [isIOSSafari, setIsIOSSafari] = useState(false);
+  const [canBlend, setCanBlend] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const lastActiveRef = useRef(-1);
 
   const galleryRef = useRef<HTMLDivElement>(null);
   const inGalleryRef = useRef(false);
 
+  // Detect iOS Safari, configure video playback, set blend mode
   useEffect(() => {
     const ua = navigator.userAgent;
-    setIsIOSSafari(
+    const isIOS =
       /iPad|iPhone|iPod/.test(ua) ||
-      (ua.includes("Mac") && "ontouchend" in document)
-    );
+      (ua.includes("Mac") && "ontouchend" in document);
+
+    // mix-blend-mode over <video> renders black on iOS Safari
+    if (!isIOS) setCanBlend(true);
+
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Use smaller video on mobile (1MB vs 12MB)
+    if (window.innerWidth < 768) {
+      video.src = "/Dreamhouse/videos/hero-bg-2-mobile.mp4";
+    }
+
+    // Fix React muted attribute hydration bug — iOS checks DOM property, not attribute
+    video.muted = true;
+
+    // Programmatic play for iOS (autoPlay attribute alone is unreliable)
+    const tryPlay = () => { video.play().catch(() => {}); };
+    tryPlay();
+    video.addEventListener("canplay", tryPlay, { once: true });
+
+    return () => video.removeEventListener("canplay", tryPlay);
   }, []);
 
   // Sections with light backgrounds where nav needs dark text
@@ -117,6 +139,7 @@ export default function Home() {
     <>
       <div className="absolute inset-0 w-full h-full" style={{ background: "#050a1a" }} />
       <video
+        ref={videoRef}
         autoPlay
         loop
         muted
@@ -126,18 +149,21 @@ export default function Home() {
         aria-hidden="true"
         onError={(e) => { (e.currentTarget as HTMLVideoElement).style.display = "none"; }}
       >
-        <source src="/Dreamhouse/videos/hero-bg-2.webm" type="video/webm" />
+        {/* MP4 first — Safari can't play WebM and must skip to next source */}
         <source src="/Dreamhouse/videos/hero-bg-2.mp4" type="video/mp4" />
+        <source src="/Dreamhouse/videos/hero-bg-2.webm" type="video/webm" />
       </video>
       <div
         className="absolute inset-0 w-full h-full pointer-events-none"
         style={{
           background: "rgba(88, 44, 131, 0.30)",
-          ...(isIOSSafari ? {} : { mixBlendMode: "color" as const }),
+          // Only apply after confirming non-iOS — SSR ships without it
+          // to prevent the black-rectangle bug (mix-blend-mode over <video> on iOS)
+          ...(canBlend ? { mixBlendMode: "color" as const } : {}),
         }}
       />
     </>
-  ), [isIOSSafari]);
+  ), [canBlend]);
 
   return (
     <main>

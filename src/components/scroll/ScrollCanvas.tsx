@@ -52,10 +52,32 @@ export default function ScrollCanvas({
 
   useEffect(() => {
     const ua = navigator.userAgent;
-    setIsIOSSafari(
+    const isIOS =
       /iPad|iPhone|iPod/.test(ua) ||
-      (ua.includes("Mac") && "ontouchend" in document)
-    );
+      (ua.includes("Mac") && "ontouchend" in document);
+    setIsIOSSafari(isIOS);
+
+    // On iOS, 100dvh doesn't track toolbar show/hide for sticky elements.
+    // Use visualViewport.height instead for accurate sizing.
+    if (isIOS && window.visualViewport && stickyRef.current) {
+      const sticky = stickyRef.current;
+      const vp = window.visualViewport;
+      let rafId: number;
+
+      const updateHeight = () => {
+        cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(() => {
+          sticky.style.height = `${vp.height}px`;
+        });
+      };
+
+      updateHeight();
+      vp.addEventListener("resize", updateHeight);
+      return () => {
+        vp.removeEventListener("resize", updateHeight);
+        cancelAnimationFrame(rafId);
+      };
+    }
   }, []);
 
   // Safety fallback: if GSAP fails to init, reveal first section after 3s
