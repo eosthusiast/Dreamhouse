@@ -42,7 +42,6 @@ export default function Navigation({ visible = true, variant = "dark" }: Navigat
               alt="Dream House"
               width={84}
               height={84}
-              priority
               style={{
                 height: "84px",
                 width: "auto",
