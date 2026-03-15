@@ -44,9 +44,11 @@ export default function DreamInput({
   };
 
   return (
-    <div
+    <form
       className="flex flex-col items-center w-full max-w-2xl mx-auto px-4"
       style={{ gap: "1.25rem", pointerEvents: visible ? "auto" : "none" }}
+      onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}
+      action="javascript:void(0)"
     >
       {/* Dream input — real visible input, styled to look minimal */}
       <div className="relative w-full max-w-full">
@@ -58,6 +60,7 @@ export default function DreamInput({
           onKeyDown={handleKeyDown}
           aria-label="Type your dream"
           inputMode="text"
+          enterKeyHint="go"
           autoComplete="off"
           autoCapitalize="off"
           autoFocus={autoFocus && visible}
@@ -81,8 +84,16 @@ export default function DreamInput({
 
       {/* CTA Button — matching the mockup: soft gradient pill */}
       <button
-        onClick={handleSubmit}
+        type="submit"
         disabled={!value.trim()}
+        onTouchEnd={(e) => {
+          // iOS: first tap on a button while keyboard is open dismisses keyboard
+          // without firing click. touchend fires before keyboard dismissal.
+          if (value.trim()) {
+            e.preventDefault();
+            handleSubmit();
+          }
+        }}
         className={`
           relative rounded-full
           font-playfair italic text-base md:text-lg tracking-wide
@@ -107,6 +118,6 @@ export default function DreamInput({
       >
         <span className="relative z-10">{ctaText}</span>
       </button>
-    </div>
+    </form>
   );
 }

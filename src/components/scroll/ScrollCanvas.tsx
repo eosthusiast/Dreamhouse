@@ -58,23 +58,31 @@ export default function ScrollCanvas({
     setIsIOSSafari(isIOS);
 
     // On iOS, 100dvh doesn't track toolbar show/hide for sticky elements.
-    // Use visualViewport.height instead for accurate sizing.
-    if (isIOS && window.visualViewport && stickyRef.current) {
+    // Use visualViewport.height (iOS 13+) or innerHeight (older) instead.
+    if (isIOS && stickyRef.current) {
       const sticky = stickyRef.current;
-      const vp = window.visualViewport;
       let rafId: number;
 
       const updateHeight = () => {
         cancelAnimationFrame(rafId);
         rafId = requestAnimationFrame(() => {
-          sticky.style.height = `${vp.height}px`;
+          const h = window.visualViewport?.height ?? window.innerHeight;
+          sticky.style.height = `${h}px`;
         });
       };
 
       updateHeight();
-      vp.addEventListener("resize", updateHeight);
+
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", updateHeight);
+      }
+      window.addEventListener("orientationchange", updateHeight);
+      window.addEventListener("resize", updateHeight);
+
       return () => {
-        vp.removeEventListener("resize", updateHeight);
+        window.visualViewport?.removeEventListener("resize", updateHeight);
+        window.removeEventListener("orientationchange", updateHeight);
+        window.removeEventListener("resize", updateHeight);
         cancelAnimationFrame(rafId);
       };
     }

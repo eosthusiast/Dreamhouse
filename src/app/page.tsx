@@ -35,11 +35,6 @@ export default function Home() {
     const video = videoRef.current;
     if (!video) return;
 
-    // Use smaller video on mobile (1MB vs 12MB)
-    if (window.innerWidth < 768) {
-      video.src = "/Dreamhouse/videos/hero-bg-2-mobile.mp4";
-    }
-
     // Fix React muted attribute hydration bug — iOS checks DOM property, not attribute
     video.muted = true;
 
