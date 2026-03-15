@@ -42,7 +42,7 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
       y: 0,
       duration: 2.7,
       ease: "power2.out",
-      delay: 3,
+      delay: 2,
     }).to(
       inputRef.current,
       {
