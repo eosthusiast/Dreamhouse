@@ -423,7 +423,7 @@ export default function WhoContent() {
                 }}
               >
                 <Image
-                  src="/Dreamhouse/images/who/carolin-beach-1.png"
+                  src="/images/who/carolin-beach-1.png"
                   alt="Carolin Fleissner"
                   fill
                   className="object-cover"
@@ -485,8 +485,8 @@ export default function WhoContent() {
               {/* Additional photos */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
                 {[
-                  { src: "/Dreamhouse/images/who/carolin-beach-2.png", alt: "Carolin at the beach" },
-                  { src: "/Dreamhouse/images/who/carolin-singing.png", alt: "Carolin singing" },
+                  { src: "/images/who/carolin-beach-2.png", alt: "Carolin at the beach" },
+                  { src: "/images/who/carolin-singing.png", alt: "Carolin singing" },
                 ].map((img) => (
                   <div
                     key={img.src}

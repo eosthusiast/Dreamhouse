@@ -36,11 +36,11 @@ export const SECTIONS = [
 ] as const;
 
 export const NAV_ITEMS = [
-  { label: "Home", href: "/Dreamhouse/" },
-  { label: "Houses", href: "/Dreamhouse/houses" },
-  { label: "Principles", href: "/Dreamhouse/principles" },
-  { label: "Who", href: "/Dreamhouse/who" },
-  { label: "FAQ", href: "/Dreamhouse/faq" },
+  { label: "Home", href: "/" },
+  { label: "Houses", href: "/houses" },
+  { label: "Principles", href: "/principles" },
+  { label: "Who", href: "/who" },
+  { label: "FAQ", href: "/faq" },
 ] as const;
 
 export const COLORS = {

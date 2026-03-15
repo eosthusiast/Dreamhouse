@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const GALLERY_IMAGES = [
   {
-    src: "/Dreamhouse/images/gallery/surfer-girl.jpg",
+    src: "/images/gallery/surfer-girl.jpg",
     alt: "Surfer watching the waves",
     width: "40%",
     marginLeft: "auto",
@@ -19,7 +19,7 @@ const GALLERY_IMAGES = [
     marginTop: "0",
   },
   {
-    src: "/Dreamhouse/images/gallery/dancing-light.jpg",
+    src: "/images/gallery/dancing-light.jpg",
     alt: "Dancing indoors in golden light",
     width: "45%",
     marginLeft: "auto",
@@ -28,7 +28,7 @@ const GALLERY_IMAGES = [
     marginTop: "-4rem",
   },
   {
-    src: "/Dreamhouse/images/gallery/deck-guitar.jpg",
+    src: "/images/gallery/deck-guitar.jpg",
     alt: "Relaxing on deck chairs with guitar",
     width: "40%",
     marginLeft: "5%",
@@ -37,7 +37,7 @@ const GALLERY_IMAGES = [
     marginTop: "-3rem",
   },
   {
-    src: "/Dreamhouse/images/gallery/meditation-circle.jpg",
+    src: "/images/gallery/meditation-circle.jpg",
     alt: "Meditation circle at sunset",
     width: "40%",
     marginLeft: "25%",
@@ -46,7 +46,7 @@ const GALLERY_IMAGES = [
     marginTop: "-6rem",
   },
   {
-    src: "/Dreamhouse/images/gallery/surfer-wave.jpg",
+    src: "/images/gallery/surfer-wave.jpg",
     alt: "Surfer riding a wave",
     width: "45%",
     marginLeft: "45%",
@@ -55,7 +55,7 @@ const GALLERY_IMAGES = [
     marginTop: "-4rem",
   },
   {
-    src: "/Dreamhouse/images/gallery/links-gathering.jpg",
+    src: "/images/gallery/links-gathering.jpg",
     alt: "Community gathering",
     width: "40%",
     marginLeft: "16%",
@@ -141,7 +141,7 @@ export default function GallerySection() {
     <section className="bg-cream relative z-10" style={{ padding: "4rem 0 6rem" }}>
       <div className="flex justify-center" style={{ marginBottom: "3rem" }}>
         <a
-          href="/Dreamhouse/who"
+          href="/who"
           className="font-playfair italic text-lg md:text-xl tracking-wide transition-all duration-500 hover:shadow-lg"
           style={{
             padding: "1.05rem 3.6rem",

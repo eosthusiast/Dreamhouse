@@ -501,7 +501,7 @@ export default function HousesContent() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 1 }}
-            onClick={() => openLightbox("/Dreamhouse/images/houses/fools-valley-8.jpg")}
+            onClick={() => openLightbox("/images/houses/fools-valley-8.jpg")}
             style={{
               position: "relative",
               width: "100vw",
@@ -513,7 +513,7 @@ export default function HousesContent() {
             }}
           >
             <Image
-              src="/Dreamhouse/images/houses/fools-valley-8.jpg"
+              src="/images/houses/fools-valley-8.jpg"
               alt="Fools Valley, Portugal"
               fill
               style={{
@@ -639,9 +639,9 @@ export default function HousesContent() {
             }}
           >
             {[
-              { src: "/Dreamhouse/images/houses/fools-valley-6.jpg", alt: "Fools Valley — the estate" },
-              { src: "/Dreamhouse/images/houses/fools-valley-2.jpg", alt: "Fools Valley — the valley" },
-              { src: "/Dreamhouse/images/houses/fools-valley-7.jpg", alt: "Fools Valley — the gardens" },
+              { src: "/images/houses/fools-valley-6.jpg", alt: "Fools Valley — the estate" },
+              { src: "/images/houses/fools-valley-2.jpg", alt: "Fools Valley — the valley" },
+              { src: "/images/houses/fools-valley-7.jpg", alt: "Fools Valley — the gardens" },
             ].map((img) => (
               <div
                 key={img.src}
@@ -684,8 +684,8 @@ export default function HousesContent() {
             }}
           >
             {[
-              { src: "/Dreamhouse/images/houses/fools-valley-0.jpg", alt: "Fools Valley — overview" },
-              { src: "/Dreamhouse/images/houses/fools-valley-9.jpg", alt: "Fools Valley — evening light" },
+              { src: "/images/houses/fools-valley-0.jpg", alt: "Fools Valley — overview" },
+              { src: "/images/houses/fools-valley-9.jpg", alt: "Fools Valley — evening light" },
             ].map((img) => (
               <div
                 key={img.src}
@@ -827,7 +827,7 @@ export default function HousesContent() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.9 }}
-            onClick={() => openLightbox("/Dreamhouse/images/houses/fools-valley-3.jpg")}
+            onClick={() => openLightbox("/images/houses/fools-valley-3.jpg")}
             style={{
               position: "relative",
               width: "100vw",
@@ -839,7 +839,7 @@ export default function HousesContent() {
             }}
           >
             <Image
-              src="/Dreamhouse/images/houses/fools-valley-3.jpg"
+              src="/images/houses/fools-valley-3.jpg"
               alt="Fools Valley — a quiet corner"
               fill
               style={{ objectFit: "cover", filter: "saturate(0.85)" }}
@@ -879,7 +879,7 @@ export default function HousesContent() {
               }}
             >
               <span
-                onClick={() => openLightbox("/Dreamhouse/images/houses/french-castle.jpg")}
+                onClick={() => openLightbox("/images/houses/french-castle.jpg")}
                 style={{
                   position: "relative",
                   display: "inline-block",
@@ -897,7 +897,7 @@ export default function HousesContent() {
                 }}
               >
                 <Image
-                  src="/Dreamhouse/images/houses/french-castle.jpg"
+                  src="/images/houses/french-castle.jpg"
                   alt="A French castle"
                   fill
                   className="object-cover"
@@ -933,7 +933,7 @@ export default function HousesContent() {
             }}
           >
             <div
-              onClick={() => openLightbox("/Dreamhouse/images/houses/fools-valley-5.jpg")}
+              onClick={() => openLightbox("/images/houses/fools-valley-5.jpg")}
               style={{
                 position: "relative",
                 aspectRatio: "3/4",
@@ -944,7 +944,7 @@ export default function HousesContent() {
               }}
             >
               <Image
-                src="/Dreamhouse/images/houses/fools-valley-5.jpg"
+                src="/images/houses/fools-valley-5.jpg"
                 alt="Fools Valley — parting glimpse"
                 fill
                 style={{ objectFit: "cover", filter: "saturate(0.85)" }}
@@ -952,7 +952,7 @@ export default function HousesContent() {
               />
             </div>
             <div
-              onClick={() => openLightbox("/Dreamhouse/images/houses/fools-valley-1.jpg")}
+              onClick={() => openLightbox("/images/houses/fools-valley-1.jpg")}
               style={{
                 position: "relative",
                 aspectRatio: "3/4",
@@ -963,7 +963,7 @@ export default function HousesContent() {
               }}
             >
               <Image
-                src="/Dreamhouse/images/houses/fools-valley-1.jpg"
+                src="/images/houses/fools-valley-1.jpg"
                 alt="Fools Valley — the valley at rest"
                 fill
                 style={{ objectFit: "cover", filter: "saturate(0.82)" }}

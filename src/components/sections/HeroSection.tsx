@@ -90,7 +90,7 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
 
     if (typeof window !== "undefined") {
       sessionStorage.setItem("dream1", dream);
-      fetch("/Dreamhouse/api/dreams", {
+      fetch("/api/dreams", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ dream }),
@@ -102,7 +102,7 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
     (dream: string) => {
       if (typeof window !== "undefined") {
         sessionStorage.setItem("dream2", dream);
-        fetch("/Dreamhouse/api/dreams", {
+        fetch("/api/dreams", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ dream }),
@@ -158,7 +158,7 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
         {/* Ornate PNG heading */}
         <div ref={headingRef} className="text-center" style={{ marginBottom: "1.5rem", overflow: "hidden" }}>
           <Image
-            src="/Dreamhouse/images/typography/dream-your-way-in.png"
+            src="/images/typography/dream-your-way-in.png"
             alt="Dream your way in"
             width={800}
             height={160}
@@ -186,7 +186,7 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
       >
         <div className="text-center" style={{ marginBottom: "1.5rem", overflow: "hidden" }}>
           <Image
-            src="/Dreamhouse/images/typography/what-will-that-dream.png"
+            src="/images/typography/what-will-that-dream.png"
             alt="What would that dream dare to become with the right community by your side?"
             width={1200}
             height={400}

@@ -36,9 +36,9 @@ export default function Navigation({ visible = true, variant = "dark" }: Navigat
       >
         <div className="flex items-center justify-between py-4 md:py-6" style={{ paddingLeft: "2rem", paddingRight: "3rem" }}>
           {/* Logo left */}
-          <a href="/Dreamhouse/" aria-label="Dream House home">
+          <a href="/" aria-label="Dream House home">
             <Image
-              src="/Dreamhouse/images/logo/eye-icon.png"
+              src="/images/logo/eye-icon.png"
               alt="Dream House"
               width={84}
               height={84}

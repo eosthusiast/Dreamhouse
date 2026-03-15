@@ -60,7 +60,7 @@ function TarotCard({ principleColor, title }: { principleColor: string; title: s
           }}
         >
           <Image
-            src="/Dreamhouse/images/principles/tarot-back.jpg"
+            src="/images/principles/tarot-back.jpg"
             alt="Tarot card back"
             fill
             style={{ objectFit: "cover" }}

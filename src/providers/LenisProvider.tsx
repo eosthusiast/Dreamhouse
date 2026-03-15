@@ -51,7 +51,7 @@ export function LenisProvider({ children }: { children: ReactNode }) {
     gsap.ticker.lagSmoothing(0);
 
     // Only lock scroll on the homepage (hero gate)
-    const isHomepage = pathname === "/" || pathname === "/Dreamhouse" || pathname === "/Dreamhouse/";
+    const isHomepage = pathname === "/";
     if (isHomepage) {
       lenis.stop();
 

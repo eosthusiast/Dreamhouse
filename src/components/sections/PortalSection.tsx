@@ -14,7 +14,7 @@ export default function PortalSection() {
         }}
       />
       <Image
-        src="/Dreamhouse/images/typography/every-so-often.png"
+        src="/images/typography/every-so-often.png"
         alt="Every so often, life offers you a portal. Will you accept the invitation?"
         width={950}
         height={500}

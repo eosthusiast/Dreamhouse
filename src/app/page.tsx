@@ -90,41 +90,41 @@ export default function Home() {
     },
     {
       id: "hero-2",
-      image: "/Dreamhouse/images/sections/beach-sunset.jpg",
+      image: "/images/sections/beach-sunset.jpg",
       imagePosition: "center 33%",
       content: null, // Hero content handled internally by HeroSection
     },
     {
       id: "story-beach",
-      image: "/Dreamhouse/images/sections/beach-sunset.jpg",
+      image: "/images/sections/beach-sunset.jpg",
       imagePosition: "center 33%",
       content: <StorySection variant="beach" />,
     },
     {
       id: "story-ocean",
-      image: "/Dreamhouse/images/sections/ocean-sparkle.jpg",
+      image: "/images/sections/ocean-sparkle.jpg",
       mobileImagePosition: "20% 10%",
       content: <StorySection variant="ocean" />,
     },
     {
       id: "welcome",
-      image: "/Dreamhouse/images/sections/welcome-silhouettes.jpg",
+      image: "/images/sections/welcome-silhouettes.jpg",
       imagePosition: "center 72%",
       content: <WelcomeSection />,
     },
     {
       id: "inspired",
-      image: "/Dreamhouse/images/sections/inspired-dancing.jpg",
+      image: "/images/sections/inspired-dancing.jpg",
       content: <InspiredBySection />,
     },
     {
       id: "intelligent",
-      image: "/Dreamhouse/images/sections/intelligent-ocean.jpg",
+      image: "/images/sections/intelligent-ocean.jpg",
       content: <IntelligentSection />,
     },
     {
       id: "portal",
-      image: "/Dreamhouse/images/sections/portal-waterfall.jpg",
+      image: "/images/sections/portal-waterfall.jpg",
       content: <PortalSection />,
       scrollVh: 100,
     },
@@ -139,14 +139,14 @@ export default function Home() {
         loop
         muted
         playsInline
-        poster="/Dreamhouse/videos/hero-bg-2-poster.jpg"
+        poster="/videos/hero-bg-2-poster.jpg"
         className="absolute inset-0 w-full h-full object-cover"
         aria-hidden="true"
         onError={(e) => { (e.currentTarget as HTMLVideoElement).style.display = "none"; }}
       >
         {/* MP4 first — Safari can't play WebM and must skip to next source */}
-        <source src="/Dreamhouse/videos/hero-bg-2.mp4" type="video/mp4" />
-        <source src="/Dreamhouse/videos/hero-bg-2.webm" type="video/webm" />
+        <source src="/videos/hero-bg-2.mp4" type="video/mp4" />
+        <source src="/videos/hero-bg-2.webm" type="video/webm" />
       </video>
       <div
         className="absolute inset-0 w-full h-full pointer-events-none"

@@ -25,7 +25,7 @@ export default function WelcomeSection() {
           }}
         />
         <Image
-          src="/Dreamhouse/images/typography/welcome-to-the-dream-house.png"
+          src="/images/typography/welcome-to-the-dream-house.png"
           alt="Welcome to The Dream House"
           width={900}
           height={500}
