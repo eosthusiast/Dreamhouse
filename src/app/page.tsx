@@ -116,18 +116,21 @@ export default function Home() {
       image: "/images/sections/beach-sunset.jpg",
       imagePosition: "center 33%",
       content: <StorySection variant="beach" />,
+      scrollVh: 280,
     },
     {
       id: "story-ocean",
       image: "/images/sections/ocean-sparkle.jpg",
       mobileImagePosition: "20% 10%",
       content: <StorySection variant="ocean" />,
+      scrollVh: 315,
     },
     {
       id: "welcome",
       image: "/images/sections/welcome-silhouettes.jpg",
       imagePosition: "center 72%",
       content: <WelcomeSection />,
+      scrollVh: 330,
     },
     {
       id: "inspired",
@@ -139,6 +142,7 @@ export default function Home() {
       id: "intelligent",
       image: "/images/sections/intelligent-ocean.jpg",
       content: <IntelligentSection />,
+      scrollVh: 315,
     },
     {
       id: "portal",

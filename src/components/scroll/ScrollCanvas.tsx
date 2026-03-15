@@ -146,6 +146,54 @@ export default function ScrollCanvas({
         return result;
       }
 
+      // Absolute vh values for reveal timing — anchored so they don't scale with scrollVh.
+      // Increasing a section's scrollVh adds buffer at the end, not stretching reveals.
+      const TEXT_START_VH = (idx: number) => idx === 2 ? 52 : idx === 4 ? 72.8 : 26;
+      const TEXT_SPAN_VH = 182;
+      const LINE_START_VH = (idx: number) => idx === 2 ? 78 : 39;
+      const LINE_SPAN_VH = (idx: number) => idx === 2 ? 143 : 169;
+      const AFTER_LINE_SPAN_VH = 26;
+
+      // Pre-compute per-section fadeOut timing
+      // fadeOutStart = when last element reaches full opacity + 50vh hold
+      // fadeOutSpan = ~34vh normalized to each section's scrollVh
+      const HOLD_VH = 50;
+      const FADEOUT_VH = 34;
+      const fadeOutStartPerSection: number[] = [];
+      const fadeOutSpanPerSection: number[] = [];
+      for (let i = 0; i < N; i++) {
+        const sVh = sectionVhs[i];
+        const reveals = revealsPerSection[i];
+        const afterLineReveals = revealsAfterLinePerSection[i];
+
+        // Compute when last data-reveal element reaches full opacity (absolute vh)
+        let lastFullVh = -1;
+        if (reveals.length > 0) {
+          const M = reveals.length;
+          const fadeFraction = i === 4 ? 0.4 : 0.3;
+          const lastSliceEnd = ((M - 1) + fadeFraction) / M;
+          lastFullVh = TEXT_START_VH(i) + lastSliceEnd * TEXT_SPAN_VH;
+        }
+
+        // Compute when last data-reveal-after-line element reaches full opacity
+        if (afterLineReveals.length > 0) {
+          const M = afterLineReveals.length;
+          const lineEndVh = LINE_START_VH(i) + LINE_SPAN_VH(i);
+          const lastSliceEnd = ((M - 1) + 0.3) / M;
+          const afterLineFullVh = lineEndVh + lastSliceEnd * AFTER_LINE_SPAN_VH;
+          lastFullVh = Math.max(lastFullVh, afterLineFullVh);
+        }
+
+        if (lastFullVh > 0) {
+          fadeOutStartPerSection[i] = (lastFullVh + HOLD_VH) / sVh;
+          fadeOutSpanPerSection[i] = FADEOUT_VH / sVh;
+        } else {
+          // No reveals — use defaults (won't be used)
+          fadeOutStartPerSection[i] = 0.90;
+          fadeOutSpanPerSection[i] = FADEOUT_VH / sVh;
+        }
+      }
+
       // Set initial states — everything hidden except section 0
       images.forEach((img, i) => {
         gsap.set(img, { autoAlpha: i === 0 ? 1 : 0 });
@@ -272,9 +320,10 @@ export default function ScrollCanvas({
             if (reveals.length === 0) continue;
 
             if (i === activeIndex) {
-              // Beach section: text after galaxy fade; welcome: after crossfade settles; others: standard
-              const textStart = i === 2 ? 0.20 : i === 4 ? 0.28 : 0.10;
-              const textSpan = i === 2 ? 0.70 : 0.70;
+              // Timing anchored in absolute vh, normalized to this section's scrollVh
+              const sVh = sectionVhs[i];
+              const textStart = TEXT_START_VH(i) / sVh;
+              const textSpan = TEXT_SPAN_VH / sVh;
               const revealProgress = clamp(
                 (sectionProgress - textStart) / textSpan,
                 0,
@@ -289,8 +338,8 @@ export default function ScrollCanvas({
               const yOffset = i === 4 ? 50 : 12;
 
               // Fade-out zone: after reveals complete, fade out with upward drift (skip last section)
-              const fadeOutStart = 0.82;
-              const fadeOutSpan = 0.13;
+              const fadeOutStart = fadeOutStartPerSection[i];
+              const fadeOutSpan = fadeOutSpanPerSection[i];
               const isLastSection = i === N - 1;
 
               if (!isLastSection && sectionProgress > fadeOutStart) {
@@ -328,14 +377,15 @@ export default function ScrollCanvas({
             if (reveals.length === 0) continue;
 
             if (i === activeIndex) {
-              const lineEnd = (i === 2 ? 0.30 : 0.15) + (i === 2 ? 0.55 : 0.65); // 0.85 for beach
-              const afterLineSpan = 0.10;
+              const sVh = sectionVhs[i];
+              const lineEnd = (LINE_START_VH(i) + LINE_SPAN_VH(i)) / sVh;
+              const afterLineSpan = AFTER_LINE_SPAN_VH / sVh;
               const revealProgress = clamp((sectionProgress - lineEnd) / afterLineSpan, 0, 1);
               const M = reveals.length;
 
               // Fade-out zone (skip last section)
-              const fadeOutStart = 0.82;
-              const fadeOutSpan = 0.13;
+              const fadeOutStart = fadeOutStartPerSection[i];
+              const fadeOutSpan = fadeOutSpanPerSection[i];
               const isLastSection = i === N - 1;
 
               if (!isLastSection && sectionProgress > fadeOutStart) {
@@ -368,8 +418,9 @@ export default function ScrollCanvas({
             if (lines.length === 0) continue;
 
             if (i === activeIndex) {
-              const lineStart = i === 2 ? 0.30 : 0.15;
-              const lineSpan = i === 2 ? 0.55 : 0.65;
+              const sVh = sectionVhs[i];
+              const lineStart = LINE_START_VH(i) / sVh;
+              const lineSpan = LINE_SPAN_VH(i) / sVh;
               const overallProgress = clamp(
                 (sectionProgress - lineStart) / lineSpan,
                 0,
@@ -378,8 +429,8 @@ export default function ScrollCanvas({
               const L = lines.length;
 
               // Fade-out zone (skip last section)
-              const fadeOutStart = 0.82;
-              const fadeOutSpan = 0.13;
+              const fadeOutStart = fadeOutStartPerSection[i];
+              const fadeOutSpan = fadeOutSpanPerSection[i];
               const isLastSection = i === N - 1;
 
               if (!isLastSection && sectionProgress > fadeOutStart) {
