@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -10,17 +10,31 @@ interface HeroSectionProps {
   onGateComplete: () => void;
   onScrollComplete?: () => void;
   skipGate?: boolean;
+  isMobile?: boolean;
 }
 
-export default function HeroSection({ onGateComplete, onScrollComplete, skipGate }: HeroSectionProps) {
+export default function HeroSection({ onGateComplete, onScrollComplete, skipGate, isMobile }: HeroSectionProps) {
   const [phase, setPhase] = useState<"loading" | "hero1" | "hero2" | "done">(
     "loading"
   );
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
   const hero1Ref = useRef<HTMLDivElement>(null);
   const hero2Ref = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
   const skipRef = useRef<HTMLAnchorElement>(null);
+
+  // Detect keyboard open/close on mobile
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const initialHeight = vv.height;
+    const onResize = () => {
+      setKeyboardOpen(vv.height < initialHeight * 0.75);
+    };
+    vv.addEventListener("resize", onResize);
+    return () => vv.removeEventListener("resize", onResize);
+  }, []);
 
   // Skip gate when navigating back from sub-pages (skipGate prop)
   useGSAP(() => {
@@ -34,7 +48,9 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
 
     // Auto-scroll to just before the first text in the beach section
     requestAnimationFrame(() => {
-      const sectionVhs = [530, 530, 325, 315, 330, 340, 315, 235];
+      const baseSectionVhs = [530, 530, 325, 315, 330, 340, 315, 235];
+      const mobile = window.innerWidth < 768;
+      const sectionVhs = baseSectionVhs.map(v => mobile ? Math.round(v * 0.85) : v);
       const totalVh = sectionVhs.reduce((a, b) => a + b, 0);
       const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
       const vh = viewportHeight / 100;
@@ -149,7 +165,9 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
         }
 
         // 2. Animated scroll — drives the ScrollCanvas crossfade from galaxy to beach
-        const sectionVhs = [530, 530, 325, 315, 330, 340, 315, 235];
+        const baseSectionVhs = [530, 530, 325, 315, 330, 340, 315, 235];
+      const mobile = window.innerWidth < 768;
+      const sectionVhs = baseSectionVhs.map(v => mobile ? Math.round(v * 0.85) : v);
         const totalVh = sectionVhs.reduce((a, b) => a + b, 0);
         const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
         const vh = viewportHeight / 100;
@@ -179,6 +197,7 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
       <div
         ref={hero1Ref}
         className="flex flex-col items-center justify-center h-full w-full px-4"
+        style={keyboardOpen ? { transform: "translateY(-15vh)" } : undefined}
       >
         {/* Ornate PNG heading */}
         <div ref={headingRef} data-hero-heading className="text-center" style={{ marginBottom: "1.5rem", overflow: "hidden" }}>
@@ -203,21 +222,27 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
           />
         </div>
 
-        <a
-          ref={skipRef}
-          href="/?home"
-          className="font-playfair italic text-xs tracking-wider absolute bottom-8 left-1/2 -translate-x-1/2"
-          style={{ color: "rgba(251, 240, 224, 0.55)" }}
-        >
-          done this before? skip ahead
-        </a>
+        {!keyboardOpen && (
+          <a
+            ref={skipRef}
+            href="/?home"
+            className="font-playfair italic text-xs tracking-wider absolute bottom-8 left-1/2 -translate-x-1/2"
+            style={{ color: "rgba(251, 240, 224, 0.55)" }}
+          >
+            done this before? skip ahead
+          </a>
+        )}
       </div>
 
       {/* Hero 2 Content (hidden initially) */}
       <div
         ref={hero2Ref}
         className="absolute inset-0 flex flex-col items-center justify-center h-full w-full px-6"
-        style={{ visibility: "hidden", opacity: 0 }}
+        style={{
+          visibility: "hidden",
+          opacity: 0,
+          ...(keyboardOpen ? { transform: "translateY(-15vh)" } : {}),
+        }}
       >
         <div className="text-center" style={{ marginBottom: "1.5rem", overflow: "hidden" }}>
           <Image

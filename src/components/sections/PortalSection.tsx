@@ -19,7 +19,8 @@ export default function PortalSection() {
           alt="Every so often, life offers you a portal. Will you accept the invitation?"
           width={950}
           height={500}
-          className="relative w-[85vw] max-w-[800px] h-auto mx-auto"
+          className="relative w-[92vw] md:w-[85vw] md:max-w-[800px] h-auto mx-auto"
+          style={{ minWidth: "280px" }}
         />
       </div>
     </div>

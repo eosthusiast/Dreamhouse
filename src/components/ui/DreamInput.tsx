@@ -18,7 +18,9 @@ export default function DreamInput({
   visible = true,
 }: DreamInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
   const [value, setValue] = useState("");
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
 
   useEffect(() => {
     if (autoFocus && visible && inputRef.current) {
@@ -32,6 +34,19 @@ export default function DreamInput({
       return () => timers.forEach(clearTimeout);
     }
   }, [autoFocus, visible]);
+
+  // Detect iOS keyboard open/close via visualViewport resize
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const initialHeight = vv.height;
+    const onResize = () => {
+      // Keyboard is open when viewport shrinks significantly
+      setKeyboardOpen(vv.height < initialHeight * 0.75);
+    };
+    vv.addEventListener("resize", onResize);
+    return () => vv.removeEventListener("resize", onResize);
+  }, []);
 
   const handleSubmit = () => {
     if (value.trim()) {
@@ -47,8 +62,13 @@ export default function DreamInput({
 
   return (
     <form
-      className="flex flex-col items-center w-full max-w-2xl mx-auto px-4"
-      style={{ gap: "1.25rem", pointerEvents: visible ? "auto" : "none" }}
+      ref={formRef}
+      className="flex flex-col items-center w-full max-w-2xl mx-auto px-4 safe-area-bottom"
+      style={{
+        gap: "1.25rem",
+        pointerEvents: visible ? "auto" : "none",
+        ...(keyboardOpen ? { paddingBottom: "1rem" } : {}),
+      }}
       onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}
       action="javascript:void(0)"
     >

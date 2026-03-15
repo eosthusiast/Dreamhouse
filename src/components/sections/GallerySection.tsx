@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -73,6 +73,14 @@ function GalleryGroup({
   images: GalleryImage[];
 }) {
   const groupRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   useGSAP(
     () => {
@@ -108,7 +116,19 @@ function GalleryGroup({
         <div
           key={i}
           data-gallery-img
-          style={{
+          style={isMobile ? {
+            position: "relative",
+            width: "85%",
+            aspectRatio: "4/3",
+            overflow: "hidden",
+            borderRadius: "0.25rem",
+            boxShadow: "0 10px 15px -3px rgba(0,0,0,0.1)",
+            marginLeft: "auto",
+            marginRight: "auto",
+            marginTop: i === 0 ? "0" : "1rem",
+            transform: `rotate(${i % 2 === 0 ? "-1deg" : "1deg"})`,
+            display: "block",
+          } : {
             position: "relative",
             width: img.width,
             aspectRatio: "4/3",
@@ -127,7 +147,7 @@ function GalleryGroup({
             alt={img.alt}
             fill
             className="object-cover"
-            sizes="(max-width: 768px) 60vw, 45vw"
+            sizes={isMobile ? "85vw" : "45vw"}
             loading="lazy"
           />
         </div>

@@ -24,6 +24,10 @@ export default function InspiredBySection() {
           .inspired-col2 { padding-top: 8rem; }
           .inspired-col3 { padding-top: 16rem; }
         }
+        @media (max-width: 767px) {
+          .inspired-col2 { margin-top: 1.5rem; margin-left: 1rem; }
+          .inspired-col3 { margin-top: 1.5rem; margin-left: 2rem; }
+        }
       `}</style>
       <div className="flex flex-col justify-between h-full md:h-auto md:grid md:grid-cols-3 md:gap-12 max-w-5xl w-full">
         {/* Column 1 - top left */}
@@ -55,7 +59,7 @@ export default function InspiredBySection() {
         </div>
 
         {/* Column 3 - bottom right */}
-        <div className="inspired-col3 space-y-3 text-right">
+        <div className="inspired-col3 space-y-3 md:text-right">
           {col2.map((item, i) => (
             <p
               key={i}

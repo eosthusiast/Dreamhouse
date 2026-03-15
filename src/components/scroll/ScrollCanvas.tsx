@@ -114,7 +114,12 @@ export default function ScrollCanvas({
       const N = sections.length;
 
       // Pre-compute per-section scroll heights and normalized boundaries
-      const sectionVhs = sections.map(s => s.scrollVh ?? scrollPerSection);
+      // On mobile, reduce scroll heights by 0.85x for snappier pacing
+      const MOBILE_SCALE = 0.85;
+      const sectionVhs = sections.map(s => {
+        const base = s.scrollVh ?? scrollPerSection;
+        return isMobile ? Math.round(base * MOBILE_SCALE) : base;
+      });
       const totalVh = sectionVhs.reduce((a, b) => a + b, 0);
       const sectionNormStarts = sectionVhs.map((_, i) =>
         sectionVhs.slice(0, i).reduce((a, b) => a + b, 0) / totalVh
@@ -157,7 +162,10 @@ export default function ScrollCanvas({
       // Pre-compute per-section fadeOut timing
       // fadeOutStart = when last element reaches full opacity + 50vh hold
       // fadeOutSpan = ~34vh normalized to each section's scrollVh
-      const HOLD_VH = (idx: number) => idx === 5 ? 100 : 50;
+      const HOLD_VH = (idx: number) => {
+        const base = idx === 5 ? 100 : 50;
+        return isMobile ? Math.round(base * 0.8) : base;
+      };
       const FADEOUT_VH = 34;
       const fadeOutStartPerSection: number[] = [];
       const fadeOutSpanPerSection: number[] = [];
@@ -528,10 +536,14 @@ export default function ScrollCanvas({
         },
       });
     },
-    { scope: containerRef, dependencies: [scrollPerSection, sections] }
+    { scope: containerRef, dependencies: [scrollPerSection, sections, isMobile] }
   );
 
-  const totalHeight = sections.reduce((sum, s) => sum + (s.scrollVh ?? scrollPerSection), 0);
+  const MOBILE_TOTAL_SCALE = 0.85;
+  const totalHeight = sections.reduce((sum, s) => {
+    const base = s.scrollVh ?? scrollPerSection;
+    return sum + (isMobile ? Math.round(base * MOBILE_TOTAL_SCALE) : base);
+  }, 0);
 
   return (
     <div

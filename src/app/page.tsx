@@ -19,13 +19,14 @@ export default function Home() {
   const [canBlend, setCanBlend] = useState(false);
   const [showScrollHint, setShowScrollHint] = useState(false);
   const [skipGate, setSkipGate] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const lastActiveRef = useRef(-1);
 
   const galleryRef = useRef<HTMLDivElement>(null);
   const inGalleryRef = useRef(false);
 
-  // Detect iOS Safari, configure video playback, set blend mode
+  // Detect iOS Safari, configure video playback, set blend mode, swap mobile video
   useEffect(() => {
     const ua = navigator.userAgent;
     const isIOS =
@@ -47,6 +48,14 @@ export default function Home() {
     video.addEventListener("canplay", tryPlay, { once: true });
 
     return () => video.removeEventListener("canplay", tryPlay);
+  }, []);
+
+  // Detect mobile
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
   }, []);
 
   // Detect ?home query param — skip gate and clean URL
@@ -103,7 +112,7 @@ export default function Home() {
     {
       id: "hero-1",
       image: null,
-      content: <HeroSection onGateComplete={handleGateComplete} onScrollComplete={handleScrollComplete} skipGate={skipGate} />,
+      content: <HeroSection onGateComplete={handleGateComplete} onScrollComplete={handleScrollComplete} skipGate={skipGate} isMobile={isMobile} />,
     },
     {
       id: "hero-2",
