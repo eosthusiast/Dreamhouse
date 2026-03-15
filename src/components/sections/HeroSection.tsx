@@ -8,9 +8,11 @@ import DreamInput from "@/components/ui/DreamInput";
 
 interface HeroSectionProps {
   onGateComplete: () => void;
+  onScrollComplete?: () => void;
+  skipGate?: boolean;
 }
 
-export default function HeroSection({ onGateComplete }: HeroSectionProps) {
+export default function HeroSection({ onGateComplete, onScrollComplete, skipGate }: HeroSectionProps) {
   const [phase, setPhase] = useState<"loading" | "hero1" | "hero2" | "done">(
     "loading"
   );
@@ -18,19 +20,38 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
   const hero2Ref = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
+  const skipRef = useRef<HTMLAnchorElement>(null);
 
-  // Skip gate if already completed this session
+  // Skip gate when navigating back from sub-pages (skipGate prop)
   useGSAP(() => {
-    if (typeof window !== "undefined" && sessionStorage.getItem("dream1")) {
-      setPhase("done");
-      onGateComplete();
-      return;
-    }
-  }, [onGateComplete]);
+    if (!skipGate) return;
 
-  // 3-second delayed entrance animation
+    setPhase("done");
+    // Hide hero content immediately
+    if (hero1Ref.current) gsap.set(hero1Ref.current, { autoAlpha: 0 });
+    if (hero2Ref.current) gsap.set(hero2Ref.current, { autoAlpha: 0 });
+    onGateComplete();
+
+    // Auto-scroll to the beach section so user doesn't land on empty hero
+    requestAnimationFrame(() => {
+      const sectionVhs = [530, 530, 530, 530, 530, 530, 530, 100];
+      const totalVh = sectionVhs.reduce((a, b) => a + b, 0);
+      const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+      const vh = viewportHeight / 100;
+      const scrollRange = totalVh * vh - viewportHeight;
+      const section2Start = (sectionVhs[0] + sectionVhs[1]) / totalVh;
+      const section2Width = sectionVhs[2] / totalVh;
+      const targetProgress = section2Start + 0.20 * section2Width;
+      const targetScroll = targetProgress * scrollRange;
+      window.scrollTo(0, targetScroll);
+      onScrollComplete?.();
+    });
+  }, [skipGate, onGateComplete, onScrollComplete]);
+
+  // 3-second delayed entrance animation (only if gate not skipped)
   useGSAP(() => {
     if (!headingRef.current || !inputRef.current) return;
+    if (skipGate) return;
 
     gsap.set(headingRef.current, { autoAlpha: 0, y: 20 });
     gsap.set(inputRef.current, { autoAlpha: 0, y: 10 });
@@ -60,7 +81,7 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
       const input = inputRef.current?.querySelector("input");
       input?.focus();
     });
-  }, []);
+  }, [skipGate]);
 
   const handleHero1Submit = useCallback((dream: string) => {
     if (!hero1Ref.current || !hero2Ref.current) return;
@@ -127,13 +148,14 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
         }
 
         // 2. Animated scroll — drives the ScrollCanvas crossfade from galaxy to beach
-        const N = 8;
-        const scrollPerSectionVh = 265;
+        const sectionVhs = [530, 530, 530, 530, 530, 530, 530, 100];
+        const totalVh = sectionVhs.reduce((a, b) => a + b, 0);
         const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
         const vh = viewportHeight / 100;
-        const scrollRange = N * scrollPerSectionVh * vh - viewportHeight;
-        // Target: 44% into section 2 — "You've felt it" visible, line about to start
-        const targetProgress = (2 + 0.44) / N;
+        const scrollRange = totalVh * vh - viewportHeight;
+        const section2Start = (sectionVhs[0] + sectionVhs[1]) / totalVh;
+        const section2Width = sectionVhs[2] / totalVh;
+        const targetProgress = section2Start + 0.20 * section2Width;
         const targetScroll = targetProgress * scrollRange;
 
         const scrollProxy = { y: window.scrollY };
@@ -142,10 +164,11 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
           duration: 3.5,
           ease: "power2.inOut",
           onUpdate: () => window.scrollTo(0, scrollProxy.y),
+          onComplete: () => onScrollComplete?.(),
         }, "-=0.3");
       }, 400);
     },
-    [onGateComplete]
+    [onGateComplete, onScrollComplete]
   );
 
   return (
@@ -156,7 +179,7 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
         className="flex flex-col items-center justify-center h-full w-full px-4"
       >
         {/* Ornate PNG heading */}
-        <div ref={headingRef} className="text-center" style={{ marginBottom: "1.5rem", overflow: "hidden" }}>
+        <div ref={headingRef} data-hero-heading className="text-center" style={{ marginBottom: "1.5rem", overflow: "hidden" }}>
           <Image
             src="/images/typography/dream-your-way-in.png"
             alt="Dream your way in"
@@ -168,14 +191,24 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
           />
         </div>
 
-        <div ref={inputRef}>
+        <div ref={inputRef} data-hero-input>
           <DreamInput
             onSubmit={handleHero1Submit}
             ctaText="Submit your dream"
+            placeholder="share a dream of yours"
             autoFocus
             visible={phase === "hero1" || phase === "loading"}
           />
         </div>
+
+        <a
+          ref={skipRef}
+          href="/?home"
+          className="font-playfair italic text-xs tracking-wider absolute bottom-8 left-1/2 -translate-x-1/2"
+          style={{ color: "rgba(251, 240, 224, 0.55)" }}
+        >
+          done this before? skip ahead
+        </a>
       </div>
 
       {/* Hero 2 Content (hidden initially) */}
@@ -198,6 +231,7 @@ export default function HeroSection({ onGateComplete }: HeroSectionProps) {
         <DreamInput
           onSubmit={handleHero2Submit}
           ctaText="Show me what&rsquo;s possible"
+          placeholder="imagine it here"
           autoFocus={phase === "hero2"}
           visible={phase === "hero2"}
         />

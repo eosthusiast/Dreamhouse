@@ -39,7 +39,7 @@ export default function WelcomeSection() {
         className="absolute"
         style={{ right: "10%", top: "65%", transform: "translateY(-30%)" }}
       >
-        <div className="welcome-details font-playfair italic text-lg md:text-xl lg:text-2xl" style={{ display: "flex", flexDirection: "column", gap: "1.25rem", color: "rgba(255,255,255,0.95)", textShadow: "0 2px 12px rgba(0,0,0,0.4)" }}>
+        <div className="welcome-details font-playfair italic text-lg md:text-xl lg:text-2xl" style={{ display: "flex", flexDirection: "column", gap: "1.25rem", color: "rgba(255,255,255,0.95)", textShadow: "0 2px 20px rgba(0,0,0,0.6), 0 0 40px rgba(0,0,0,0.3)" }}>
           <p data-reveal>1 month</p>
           <p data-reveal>10 &ndash; 16 people</p>
           <p data-reveal>Carefully curated.</p>

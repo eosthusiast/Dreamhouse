@@ -34,17 +34,16 @@ export default function Navigation({ visible = true, variant = "dark" }: Navigat
         }`}
         style={{ visibility: visible ? "visible" : "hidden" }}
       >
-        <div className="flex items-center justify-between py-4 md:py-6" style={{ paddingLeft: "2rem", paddingRight: "3rem" }}>
+        <div className="flex items-center justify-between flex-row-reverse md:flex-row py-4 md:py-6" style={{ paddingLeft: "2rem", paddingRight: "3rem" }}>
           {/* Logo left */}
-          <a href="/" aria-label="Dream House home">
+          <a href="/?home" aria-label="Dream House home">
             <Image
               src="/images/logo/eye-icon.png"
               alt="Dream House"
               width={84}
               height={84}
+              className="h-[63px] md:h-[84px] w-auto"
               style={{
-                height: "84px",
-                width: "auto",
                 filter: isDark
                   ? "brightness(0) saturate(100%) invert(97%) sepia(8%) saturate(500%) hue-rotate(330deg) brightness(105%)"
                   : "brightness(0) saturate(100%) invert(20%) sepia(30%) saturate(600%) hue-rotate(340deg)",

@@ -55,6 +55,13 @@
     visibility: hidden;
     opacity: 0;
   }
+
+  /* Pre-hide hero gate elements — GSAP entrance animation reveals them */
+  [data-hero-heading],
+  [data-hero-input] {
+    visibility: hidden;
+    opacity: 0;
+  }
 }
 
 /* Blinking cursor for dream input */
@@ -70,6 +77,16 @@
 
 .cursor-blink {
   animation: blink 1s ease-in-out infinite;
+}
+
+/* Scroll indicator bounce */
+@keyframes bounce-slow {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(6px); }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 2s ease-in-out infinite;
 }
 
 /* Gradient button shimmer */

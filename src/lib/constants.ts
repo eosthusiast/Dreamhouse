@@ -36,7 +36,7 @@ export const SECTIONS = [
 ] as const;
 
 export const NAV_ITEMS = [
-  { label: "Home", href: "/" },
+  { label: "Home", href: "/?home" },
   { label: "Houses", href: "/houses" },
   { label: "Principles", href: "/principles" },
   { label: "Who", href: "/who" },

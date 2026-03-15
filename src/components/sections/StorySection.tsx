@@ -18,7 +18,7 @@ interface TextConfig {
 }
 
 const BEACH_TEXTS: TextConfig[] = [
-  { text: "You\u2019ve felt it.", x: 6, y: 12, mobileY: 8, align: "left", topAlign: true },
+  { text: "You\u2019ve felt it.", x: 6, y: 12, mobileY: 15, align: "left", topAlign: true },
   {
     text: "That version of yourself that\u2019s lit up, inspired, in love with being alive.",
     x: 25,
@@ -35,7 +35,7 @@ const OCEAN_TEXTS: TextConfig[] = [
     text: "Where dancing with your dreams is just a Tuesday\u2026",
     x: 10,
     y: 18,
-    mobileY: 10,
+    mobileY: 15,
     align: "left",
   },
   {

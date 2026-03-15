@@ -5,6 +5,7 @@ import { useRef, useEffect, useState } from "react";
 interface DreamInputProps {
   onSubmit: (dream: string) => void;
   ctaText: string;
+  placeholder?: string;
   autoFocus?: boolean;
   visible?: boolean;
 }
@@ -12,6 +13,7 @@ interface DreamInputProps {
 export default function DreamInput({
   onSubmit,
   ctaText,
+  placeholder = "share a dream of yours",
   autoFocus = false,
   visible = true,
 }: DreamInputProps) {
@@ -64,7 +66,7 @@ export default function DreamInput({
           autoComplete="off"
           autoCapitalize="off"
           autoFocus={autoFocus && visible}
-          placeholder="Share a dream of yours"
+          placeholder={placeholder}
           className="
             w-full bg-transparent border-0 border-b border-turquoise/30
             text-center font-playfair italic font-bold text-2xl md:text-3xl

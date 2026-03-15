@@ -11,11 +11,14 @@ import PortalSection from "@/components/sections/PortalSection";
 import GallerySection from "@/components/sections/GallerySection";
 
 import Navigation from "@/components/layout/Navigation";
+import ScrollIndicator from "@/components/ui/ScrollIndicator";
 
 export default function Home() {
   const [gateComplete, setGateComplete] = useState(false);
   const [navVariant, setNavVariant] = useState<"dark" | "light">("dark");
   const [canBlend, setCanBlend] = useState(false);
+  const [showScrollHint, setShowScrollHint] = useState(false);
+  const [skipGate, setSkipGate] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const lastActiveRef = useRef(-1);
 
@@ -44,6 +47,16 @@ export default function Home() {
     video.addEventListener("canplay", tryPlay, { once: true });
 
     return () => video.removeEventListener("canplay", tryPlay);
+  }, []);
+
+  // Detect ?home query param — skip gate and clean URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("home")) {
+      setSkipGate(true);
+      // Clean the URL so a reload shows the gate again
+      history.replaceState(null, "", window.location.pathname);
+    }
   }, []);
 
   // Sections with light backgrounds where nav needs dark text
@@ -82,11 +95,15 @@ export default function Home() {
     window.dispatchEvent(new CustomEvent("dreamhouse:unlock-scroll"));
   }, []);
 
+  const handleScrollComplete = useCallback(() => {
+    setShowScrollHint(true);
+  }, []);
+
   const sections = [
     {
       id: "hero-1",
       image: null,
-      content: <HeroSection onGateComplete={handleGateComplete} />,
+      content: <HeroSection onGateComplete={handleGateComplete} onScrollComplete={handleScrollComplete} skipGate={skipGate} />,
     },
     {
       id: "hero-2",
@@ -115,6 +132,7 @@ export default function Home() {
     {
       id: "inspired",
       image: "/images/sections/inspired-dancing.jpg",
+      mobileImagePosition: "40% 35%",
       content: <InspiredBySection />,
     },
     {
@@ -163,12 +181,13 @@ export default function Home() {
   return (
     <main>
       <Navigation visible={gateComplete} variant={navVariant} />
+      <ScrollIndicator visible={showScrollHint} onHide={() => setShowScrollHint(false)} />
 
       <div id="scroll-canvas">
         <ScrollCanvas
           sections={sections}
           heroVideo={heroVideo}
-          scrollPerSection={265}
+          scrollPerSection={530}
           onActiveSection={handleActiveSection}
         />
       </div>

@@ -189,9 +189,10 @@ export default function ScrollCanvas({
           const FADE_ZONE = 0.15; // Normal crossfade for non-hero sections
           const DEAD_ZONE = 0.11; // ~30vh hold after text before crossfade starts
 
-          // Galaxy fade: slow dissolve from 50% of section 0 to 75% into section 2
+          // Galaxy fade: slow dissolve from 50% of section 0 to 20% into section 2
+          // Beach must be at full opacity by section 2 progress 0.20 (gate skip landing point)
           const galaxyFadeStart = sectionNormStarts[0] + 0.5 * sectionNormWidths[0];
-          const galaxyFadeEnd = sectionNormStarts[2] + 0.75 * sectionNormWidths[2];
+          const galaxyFadeEnd = sectionNormStarts[2] + 0.20 * sectionNormWidths[2];
 
           for (let i = 0; i < N; i++) {
             let alpha = 0;
@@ -271,9 +272,9 @@ export default function ScrollCanvas({
             if (reveals.length === 0) continue;
 
             if (i === activeIndex) {
-              // Beach section: text after galaxy fade; other sections: text after normal crossfade
-              const textStart = i === 2 ? 0.30 : 0.10;
-              const textSpan = i === 2 ? 0.55 : 0.70;
+              // Beach section: text after galaxy fade; welcome: after crossfade settles; others: standard
+              const textStart = i === 2 ? 0.20 : i === 4 ? 0.28 : 0.10;
+              const textSpan = i === 2 ? 0.70 : 0.70;
               const revealProgress = clamp(
                 (sectionProgress - textStart) / textSpan,
                 0,
@@ -283,9 +284,11 @@ export default function ScrollCanvas({
 
               // Each element gets an equal slice of the progress bar
               // Element j occupies [j/M, (j+1)/M] — fade in over the first 30% of its slice
+              // Welcome section (4): 0.5x speed = fade over 15% of slice instead of 30%
+              const fadeFraction = i === 4 ? 0.15 : 0.3;
               reveals.forEach((el, j) => {
                 const sliceStart = j / M;
-                const sliceEnd = (j + 0.3) / M; // fade in over 30% of its slice
+                const sliceEnd = (j + fadeFraction) / M;
                 const elementAlpha = clamp(
                   (revealProgress - sliceStart) / (sliceEnd - sliceStart),
                   0,
@@ -308,7 +311,7 @@ export default function ScrollCanvas({
             if (reveals.length === 0) continue;
 
             if (i === activeIndex) {
-              const lineEnd = (i === 2 ? 0.35 : 0.15) + (i === 2 ? 0.50 : 0.65); // 0.80
+              const lineEnd = (i === 2 ? 0.30 : 0.15) + (i === 2 ? 0.55 : 0.65); // 0.85 for beach
               const afterLineSpan = 0.10;
               const revealProgress = clamp((sectionProgress - lineEnd) / afterLineSpan, 0, 1);
               const M = reveals.length;
@@ -335,8 +338,8 @@ export default function ScrollCanvas({
             if (lines.length === 0) continue;
 
             if (i === activeIndex) {
-              const lineStart = i === 2 ? 0.35 : 0.15;
-              const lineSpan = i === 2 ? 0.50 : 0.65;
+              const lineStart = i === 2 ? 0.30 : 0.15;
+              const lineSpan = i === 2 ? 0.55 : 0.65;
               const overallProgress = clamp(
                 (sectionProgress - lineStart) / lineSpan,
                 0,
