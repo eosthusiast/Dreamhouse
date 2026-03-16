@@ -8,6 +8,7 @@ interface DreamInputProps {
   placeholder?: string;
   autoFocus?: boolean;
   visible?: boolean;
+  compact?: boolean;
 }
 
 export default function DreamInput({
@@ -16,6 +17,7 @@ export default function DreamInput({
   placeholder = "share a dream of yours",
   autoFocus = false,
   visible = true,
+  compact = false,
 }: DreamInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -58,8 +60,9 @@ export default function DreamInput({
       ref={formRef}
       className="flex flex-col items-center w-full max-w-2xl mx-auto px-4 safe-area-bottom"
       style={{
-        gap: "1.25rem",
+        gap: compact ? "0.75rem" : "1.25rem",
         pointerEvents: visible ? "auto" : "none",
+        transition: "gap 0.3s ease-out",
       }}
       onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}
       action="javascript:void(0)"
@@ -132,7 +135,8 @@ export default function DreamInput({
           }
         `}
         style={{
-          padding: "1.05rem 3.6rem",
+          padding: compact ? "0.7rem 2.4rem" : "1.05rem 3.6rem",
+          transition: "padding 0.3s ease-out",
           background: value.trim()
             ? "linear-gradient(135deg, #e8a87c 0%, #d4a0c0 50%, #b8a9c9 100%)"
             : "rgba(255,255,255,0.12)",

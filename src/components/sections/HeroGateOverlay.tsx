@@ -21,23 +21,27 @@ export default function HeroGateOverlay({
   const [phase, setPhase] = useState<"loading" | "hero1" | "hero2" | "done">(
     "loading"
   );
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
   const hero1Ref = useRef<HTMLDivElement>(null);
   const hero2Ref = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
+  const initialVpHeight = useRef(0);
 
-  // Track BOTH visualViewport.height AND offsetTop.
+  // Track visualViewport.height, offsetTop, AND keyboard state.
   // iOS shifts the visual viewport down when keyboard opens — offsetTop tracks this.
-  // Without it, content centers in the wrong (layout viewport) position.
+  // Keyboard detection enables compact layout for small viewports (iPhone SE etc).
   useEffect(() => {
     const vv = window.visualViewport;
     if (!vv) return;
     const el = overlayRef.current;
     if (!el) return;
+    initialVpHeight.current = vv.height;
     const update = () => {
       el.style.height = `${vv.height}px`;
       el.style.top = `${vv.offsetTop}px`;
+      setKeyboardOpen(vv.height < initialVpHeight.current * 0.75);
     };
     update();
     vv.addEventListener("resize", update);
@@ -195,7 +199,7 @@ export default function HeroGateOverlay({
   return (
     <div
       ref={overlayRef}
-      className="fixed left-0 right-0 z-[9999] flex flex-col items-center justify-center px-4"
+      className="fixed left-0 right-0 z-[9999] flex flex-col items-center px-4"
       style={{
         top: 0,
         height: "100dvh",
@@ -205,16 +209,16 @@ export default function HeroGateOverlay({
         overflow: "hidden",
       }}
     >
-      {/* Hero 1 Content */}
+      {/* Hero 1 Content — my-auto centers safely (no top-clipping on overflow) */}
       <div
         ref={hero1Ref}
-        className="flex flex-col items-center justify-center w-full"
+        className="flex flex-col items-center w-full my-auto"
       >
         <div
           ref={headingRef}
           data-hero-heading
           className="text-center"
-          style={{ marginBottom: "1.5rem", overflow: "hidden" }}
+          style={{ marginBottom: keyboardOpen ? "0.75rem" : "1.5rem", overflow: "hidden" }}
         >
           <Image
             src="/images/typography/dream-your-way-in.png"
@@ -222,8 +226,13 @@ export default function HeroGateOverlay({
             width={800}
             height={160}
             priority
-            className="w-[85vw] max-w-[700px] md:max-w-[800px] h-auto mx-auto"
-            style={{ marginTop: "-18%", marginBottom: "-22%" }}
+            className="h-auto mx-auto"
+            style={{
+              width: keyboardOpen ? "70vw" : "85vw",
+              maxWidth: keyboardOpen ? "600px" : "800px",
+              marginTop: keyboardOpen ? "-14%" : "-18%",
+              marginBottom: keyboardOpen ? "-18%" : "-22%",
+            }}
           />
         </div>
 
@@ -234,15 +243,16 @@ export default function HeroGateOverlay({
             placeholder="share a dream of yours"
             autoFocus
             visible={phase === "hero1" || phase === "loading"}
+            compact={keyboardOpen}
           />
         </div>
       </div>
 
-      {/* Skip link — in flex flow, pushed to bottom naturally */}
-      {phase !== "hero2" && phase !== "done" && (
+      {/* Skip link — hidden when keyboard open to save vertical space */}
+      {phase !== "hero2" && phase !== "done" && !keyboardOpen && (
         <a
           href="/?home"
-          className="font-playfair italic text-xs tracking-wider mt-auto pb-8"
+          className="font-playfair italic text-xs tracking-wider pb-8"
           style={{ color: "rgba(251, 240, 224, 0.55)" }}
         >
           done this before? skip ahead
@@ -250,34 +260,51 @@ export default function HeroGateOverlay({
       )}
 
       {/* Hero 2 Content (hidden initially by GSAP) */}
+      {/* Uses my-auto wrapper for safe centering — prevents top-clipping
+          that justify-center causes when content exceeds viewport height
+          (e.g. iPhone SE with keyboard open). Content aligns to top when
+          it overflows instead of clipping the heading. */}
       <div
         ref={hero2Ref}
         onClick={() => {
           hero2Ref.current?.querySelector("input")?.focus();
         }}
-        className="absolute inset-0 flex flex-col items-center justify-center w-full px-6"
+        className="absolute inset-0 flex flex-col items-center w-full px-6"
       >
-        <div
-          className="text-center"
-          style={{ marginBottom: "1.5rem", overflow: "hidden" }}
+        <div className="flex flex-col items-center w-full my-auto"
+          style={{ padding: keyboardOpen ? "0.5rem 0" : "1rem 0" }}
         >
-          <Image
-            src="/images/typography/how-can-others-support.png"
-            alt="How can others support your dream?"
-            width={1200}
-            height={400}
-            className="w-[90vw] max-w-[900px] h-auto mx-auto"
-            style={{ marginTop: "-15%", marginBottom: "-18%" }}
+          <div
+            className="text-center"
+            style={{
+              marginBottom: keyboardOpen ? "0.5rem" : "1.5rem",
+              overflow: "hidden",
+            }}
+          >
+            <Image
+              src="/images/typography/how-can-others-support.png"
+              alt="How can others support your dream?"
+              width={1200}
+              height={400}
+              className="h-auto mx-auto"
+              style={{
+                width: keyboardOpen ? "65vw" : "90vw",
+                maxWidth: "900px",
+                marginTop: keyboardOpen ? "-10%" : "-15%",
+                marginBottom: keyboardOpen ? "-12%" : "-18%",
+              }}
+            />
+          </div>
+
+          <DreamInput
+            onSubmit={handleHero2Submit}
+            ctaText="Show me what&rsquo;s possible"
+            placeholder="imagine it here"
+            autoFocus={phase === "hero2"}
+            visible={phase === "hero2"}
+            compact={keyboardOpen}
           />
         </div>
-
-        <DreamInput
-          onSubmit={handleHero2Submit}
-          ctaText="Show me what&rsquo;s possible"
-          placeholder="imagine it here"
-          autoFocus={phase === "hero2"}
-          visible={phase === "hero2"}
-        />
       </div>
     </div>
   );
