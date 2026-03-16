@@ -394,8 +394,8 @@ export default function HousesContent() {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            minHeight: "35vh",
-            padding: "6rem 1.5rem 3rem",
+            minHeight: "25vh",
+            padding: "6rem 1.5rem 1.5rem",
             textAlign: "center",
           }}
         >
@@ -416,41 +416,12 @@ export default function HousesContent() {
             Houses
           </motion.h1>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 1 }}
-            style={{
-              fontFamily: "var(--font-fraunces)",
-              fontSize: "clamp(1.1rem, 2.2vw, 1.5rem)",
-              fontWeight: 300,
-              fontStyle: "italic",
-              color: "var(--text-soft)",
-              display: "flex",
-              flexDirection: "column",
-              gap: "0.3rem",
-              textAlign: "center",
-              marginBottom: "3rem",
-            }}
-          >
-            <span>
-              Past:{" "}
-              <a
-                href="https://docs.google.com/presentation/d/1Mj1q4NIkL4EF7BFH0IJh_JKF-L6K33JQ98KiO-gWBgQ/edit?usp=sharing"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: "var(--coral)", textDecoration: "none" }}
-              >
-                El Salvador February 2025
-              </a>
-            </span>
-          </motion.div>
         </section>
 
         {/* Content container */}
         <div style={{ maxWidth: "750px", margin: "0 auto", padding: "0 2rem 6rem" }}>
 
-          {/* Portugal Chapter */}
+          {/* Chapter listings */}
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -471,10 +442,8 @@ export default function HousesContent() {
             >
               Next chapter:{" "}
               <a
-                href="https://maps.app.goo.gl/2i8Y1mDy1rbo8vun6"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: "var(--coral)", textDecoration: "none" }}
+                href="#fools-valley"
+                style={{ color: "var(--coral)", textDecoration: "underline", textUnderlineOffset: "3px", textDecorationThickness: "1px" }}
               >
                 Fools Valley, Portugal
               </a>
@@ -486,14 +455,68 @@ export default function HousesContent() {
                 fontStyle: "italic",
                 color: "var(--text-soft)",
                 textAlign: "center",
-                marginBottom: "0.5rem",
+                marginBottom: "1.5rem",
               }}
             >
               4th July &ndash; 2nd August 2026
             </p>
-          </motion.section>
 
-          <ThinRule />
+            <h2
+              style={{
+                fontFamily: "var(--font-playfair)",
+                fontSize: "clamp(1.08rem, 2.21vw, 1.72rem)",
+                fontWeight: 400,
+                letterSpacing: "-0.01em",
+                color: "var(--text-dark)",
+                textAlign: "center",
+                marginBottom: "1.5rem",
+              }}
+            >
+              Past chapter:{" "}
+              <a
+                href="https://docs.google.com/presentation/d/1Mj1q4NIkL4EF7BFH0IJh_JKF-L6K33JQ98KiO-gWBgQ/edit?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "var(--coral)", textDecoration: "underline", textUnderlineOffset: "3px", textDecorationThickness: "1px" }}
+              >
+                El Salvador
+              </a>
+            </h2>
+            <p
+              style={{
+                fontFamily: "var(--font-fraunces)",
+                fontSize: "clamp(1.05rem, 2vw, 1.25rem)",
+                fontStyle: "italic",
+                color: "var(--text-soft)",
+                textAlign: "center",
+                marginBottom: "1.5rem",
+              }}
+            >
+              February 2025
+            </p>
+
+            <p
+              style={{
+                fontFamily: "var(--font-fraunces)",
+                fontSize: "clamp(1.05rem, 2vw, 1.25rem)",
+                fontStyle: "italic",
+                color: "var(--text-soft)",
+                textAlign: "center",
+                marginBottom: "0.5rem",
+              }}
+            >
+              More chapters coming soon &mdash;{" "}
+              <a
+                href="https://forms.gle/SPc8q7K1UsmV5iWF9"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "var(--coral)", textDecoration: "underline", textUnderlineOffset: "3px", textDecorationThickness: "1px" }}
+              >
+                apply here
+              </a>{" "}
+              to register interest
+            </p>
+          </motion.section>
 
           {/* Photo 1 — full-width cinematic banner */}
           <motion.div
@@ -501,7 +524,7 @@ export default function HousesContent() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 1 }}
-            onClick={() => openLightbox("/images/houses/fools-valley-8.jpg")}
+            onClick={() => openLightbox("/images/houses/fools-valley-8_a.jpg")}
             style={{
               position: "relative",
               width: "100vw",
@@ -513,7 +536,7 @@ export default function HousesContent() {
             }}
           >
             <Image
-              src="/images/houses/fools-valley-8.jpg"
+              src="/images/houses/fools-valley-8_a.jpg"
               alt="Fools Valley, Portugal"
               fill
               style={{
@@ -532,185 +555,6 @@ export default function HousesContent() {
               }}
             />
           </motion.div>
-
-          {/* Fools Valley */}
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            style={{ marginBottom: "3rem" }}
-          >
-            <h2
-              style={{
-                fontFamily: "var(--font-playfair)",
-                fontSize: "clamp(1.54rem, 3.15vw, 2.45rem)",
-                fontWeight: 400,
-                letterSpacing: "-0.01em",
-                color: "var(--text-dark)",
-                textAlign: "center",
-                marginBottom: "2rem",
-              }}
-            >
-              <a
-                href="https://maps.app.goo.gl/2i8Y1mDy1rbo8vun6"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: "var(--coral)", textDecoration: "none" }}
-              >
-                Fools Valley
-              </a>
-            </h2>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem", fontSize: "clamp(1rem, 2vw, 1.15rem)", lineHeight: 1.85, color: "var(--text-mid)", textAlign: "center" }}>
-              <p>Deep in Portugal, there is a place called{" "}
-                <a
-                  href="https://maps.app.goo.gl/2i8Y1mDy1rbo8vun6"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ color: "var(--coral)", textDecoration: "none" }}
-                >
-                  Fools Valley
-                </a>.
-              </p>
-              <p>
-                Down a road that feels like it&apos;s keeping a secret. Past the
-                olive groves. Into a private valley that somehow manages to be
-                thirty minutes from Lisbon and twenty from the Atlantic and feel
-                like neither. Like something older. Something that was waiting.
-              </p>
-              <p>
-                This is your home for the month. Not a hotel. Not a venue. A home
-                with a pool, a pond, a sauna, a dance hall, a co-working space
-                where ideas arrive easily, and a private chef who conjures three
-                nourishing meals a day from things that grew nearby.
-              </p>
-              <p>
-                Everything here is designed, quietly and carefully, to bring you
-                back to yourself. Your circadian rhythm, the one the modern world
-                quietly broke slowly returns. You sleep deeply. Think clearly. Feel
-                more like yourself, or perhaps like the person you always suspected
-                you could be.
-              </p>
-            </div>
-
-            {/* Amenities */}
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: "0.5rem 1rem",
-                justifyContent: "center",
-                marginTop: "2.5rem",
-                color: "var(--text-soft)",
-                fontSize: "clamp(0.9rem, 1.8vw, 1rem)",
-              }}
-            >
-              {[
-                "Private bedrooms", "Co-working space", "Sauna & pool",
-                "Private pond", "Dance hall", "Private chef",
-                "3 meals daily", "Workshop spaces",
-                "30 min from Lisbon", "20 min from the Ocean",
-                "Alcohol & Cigarette free",
-              ].map((item, i) => (
-                <span key={item} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                  {i > 0 && <span style={{ color: "var(--gold)", fontSize: "0.6rem" }}>·</span>}
-                  {item}
-                </span>
-              ))}
-            </div>
-          </motion.section>
-
-          {/* Photo grid — 3-column: 6 (vertical) | 2 (center) | 7 (vertical) */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.9 }}
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr",
-              gap: "1rem",
-              width: "100vw",
-              marginLeft: "calc(-50vw + 50%)",
-              marginBottom: "1.5rem",
-              padding: "0 1rem",
-              boxSizing: "border-box",
-            }}
-          >
-            {[
-              { src: "/images/houses/fools-valley-6.jpg", alt: "Fools Valley — the estate" },
-              { src: "/images/houses/fools-valley-2.jpg", alt: "Fools Valley — the valley" },
-              { src: "/images/houses/fools-valley-7.jpg", alt: "Fools Valley — the gardens" },
-            ].map((img) => (
-              <div
-                key={img.src}
-                onClick={() => openLightbox(img.src)}
-                style={{
-                  position: "relative",
-                  aspectRatio: "3/4",
-                  borderRadius: "10px",
-                  overflow: "hidden",
-                  boxShadow: "0 4px 24px rgba(35,24,16,0.10)",
-                  cursor: "zoom-in",
-                }}
-              >
-                <Image
-                  src={img.src}
-                  alt={img.alt}
-                  fill
-                  style={{ objectFit: "cover", filter: "saturate(0.88)" }}
-                  sizes="33vw"
-                />
-              </div>
-            ))}
-          </motion.div>
-
-          {/* Second row — 2-column */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.9 }}
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "1rem",
-              width: "100vw",
-              marginLeft: "calc(-50vw + 50%)",
-              marginBottom: "3rem",
-              padding: "0 1rem",
-              boxSizing: "border-box",
-            }}
-          >
-            {[
-              { src: "/images/houses/fools-valley-0.jpg", alt: "Fools Valley — overview" },
-              { src: "/images/houses/fools-valley-9.jpg", alt: "Fools Valley — evening light" },
-            ].map((img) => (
-              <div
-                key={img.src}
-                onClick={() => openLightbox(img.src)}
-                style={{
-                  position: "relative",
-                  aspectRatio: "4/3",
-                  borderRadius: "10px",
-                  overflow: "hidden",
-                  boxShadow: "0 4px 24px rgba(35,24,16,0.10)",
-                  cursor: "zoom-in",
-                }}
-              >
-                <Image
-                  src={img.src}
-                  alt={img.alt}
-                  fill
-                  style={{ objectFit: "cover", filter: "saturate(0.88)" }}
-                  sizes="50vw"
-                />
-              </div>
-            ))}
-          </motion.div>
-
-          <ThinRule />
 
           {/* Rituals & Rhythms */}
           <motion.section
@@ -807,7 +651,7 @@ export default function HousesContent() {
                     </p>
                     <p
                       style={{
-                        fontSize: "clamp(0.95rem, 1.8vw, 1.05rem)",
+                        fontSize: "clamp(1.09rem, 2.07vw, 1.21rem)",
                         lineHeight: 1.75,
                         color: "var(--text-mid)",
                       }}
@@ -816,6 +660,186 @@ export default function HousesContent() {
                     </p>
                   </div>
                 </motion.div>
+              ))}
+            </div>
+          </motion.section>
+
+          {/* Photo grid — 3-column: 6 (vertical) | 2 (center) | 7 (vertical) */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9 }}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr 1fr",
+              gap: "1rem",
+              width: "100vw",
+              marginLeft: "calc(-50vw + 50%)",
+              marginBottom: "1.5rem",
+              padding: "0 1rem",
+              boxSizing: "border-box",
+            }}
+          >
+            {[
+              { src: "/images/houses/fools-valley-6.jpg", alt: "Fools Valley — the estate" },
+              { src: "/images/houses/fools-valley-7.jpg", alt: "Fools Valley — the gardens" },
+              { src: "/images/houses/fools-valley-2.jpg", alt: "Fools Valley — the valley" },
+            ].map((img) => (
+              <div
+                key={img.src}
+                onClick={() => openLightbox(img.src)}
+                style={{
+                  position: "relative",
+                  aspectRatio: "3/4",
+                  borderRadius: "10px",
+                  overflow: "hidden",
+                  boxShadow: "0 4px 24px rgba(35,24,16,0.10)",
+                  cursor: "zoom-in",
+                }}
+              >
+                <Image
+                  src={img.src}
+                  alt={img.alt}
+                  fill
+                  style={{ objectFit: "cover", filter: "saturate(0.88)" }}
+                  sizes="33vw"
+                />
+              </div>
+            ))}
+          </motion.div>
+
+          {/* Second row — 2-column */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9 }}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "1rem",
+              width: "100vw",
+              marginLeft: "calc(-50vw + 50%)",
+              marginBottom: "3rem",
+              padding: "0 1rem",
+              boxSizing: "border-box",
+            }}
+          >
+            {[
+              { src: "/images/houses/fools-valley-0.jpg", alt: "Fools Valley — overview" },
+              { src: "/images/houses/fools-valley-9.jpg", alt: "Fools Valley — evening light" },
+            ].map((img) => (
+              <div
+                key={img.src}
+                onClick={() => openLightbox(img.src)}
+                style={{
+                  position: "relative",
+                  aspectRatio: "4/3",
+                  borderRadius: "10px",
+                  overflow: "hidden",
+                  boxShadow: "0 4px 24px rgba(35,24,16,0.10)",
+                  cursor: "zoom-in",
+                }}
+              >
+                <Image
+                  src={img.src}
+                  alt={img.alt}
+                  fill
+                  style={{ objectFit: "cover", filter: "saturate(0.88)" }}
+                  sizes="50vw"
+                />
+              </div>
+            ))}
+          </motion.div>
+
+          <ThinRule />
+
+          {/* Fools Valley */}
+          <motion.section
+            id="fools-valley"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            style={{ marginBottom: "3rem" }}
+          >
+            <h2
+              style={{
+                fontFamily: "var(--font-playfair)",
+                fontSize: "clamp(1.54rem, 3.15vw, 2.45rem)",
+                fontWeight: 400,
+                letterSpacing: "-0.01em",
+                color: "var(--text-dark)",
+                textAlign: "center",
+                marginBottom: "2rem",
+              }}
+            >
+              <a
+                href="https://maps.app.goo.gl/2i8Y1mDy1rbo8vun6"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "var(--coral)", textDecoration: "none" }}
+              >
+                Fools Valley
+              </a>
+            </h2>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem", fontSize: "clamp(1.15rem, 2.3vw, 1.32rem)", lineHeight: 1.85, color: "var(--text-mid)", textAlign: "center" }}>
+              <p>Deep in Portugal, there is a place called{" "}
+                <a
+                  href="https://maps.app.goo.gl/2i8Y1mDy1rbo8vun6"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "var(--coral)", textDecoration: "underline", textUnderlineOffset: "3px", textDecorationThickness: "1px" }}
+                >
+                  Fools Valley
+                </a>.
+              </p>
+              <p>
+                Down a road that feels like it&apos;s keeping a secret. Past the
+                olive groves. Into a private valley that somehow manages to be
+                thirty minutes from Lisbon and twenty from the Atlantic and feel
+                like neither. Like something older. Something that was waiting.
+              </p>
+              <p>
+                This is your home for the month. Not a hotel. Not a venue. A home
+                with a pool, a pond, a sauna, a dance hall, a co-working space
+                where ideas arrive easily, and a private chef who conjures three
+                nourishing meals a day from things that grew nearby.
+              </p>
+              <p>
+                Everything here is designed, quietly and carefully, to bring you
+                back to yourself. Your circadian rhythm, the one the modern world
+                quietly broke slowly returns. You sleep deeply. Think clearly. Feel
+                more like yourself, or perhaps like the person you always suspected
+                you could be.
+              </p>
+            </div>
+
+            {/* Amenities */}
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "0.5rem 1rem",
+                justifyContent: "center",
+                marginTop: "2.5rem",
+                color: "var(--text-soft)",
+                fontSize: "clamp(0.9rem, 1.8vw, 1rem)",
+              }}
+            >
+              {[
+                "Private bedrooms", "Co-working space", "Sauna & pool",
+                "Private pond", "Dance hall", "Private chef",
+                "3 meals daily", "Workshop spaces",
+                "30 min from Lisbon", "20 min from the Ocean",
+                "Alcohol & Cigarette free",
+              ].map((item, i) => (
+                <span key={item} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                  {i > 0 && <span style={{ color: "var(--gold)", fontSize: "0.6rem" }}>·</span>}
+                  {item}
+                </span>
               ))}
             </div>
           </motion.section>
@@ -871,7 +895,7 @@ export default function HousesContent() {
 
             <p
               style={{
-                fontSize: "clamp(1rem, 2vw, 1.15rem)",
+                fontSize: "clamp(1.15rem, 2.3vw, 1.32rem)",
                 lineHeight: 1.85,
                 color: "var(--text-mid)",
                 textAlign: "center",
@@ -914,6 +938,40 @@ export default function HousesContent() {
           {/* Dream Dues */}
           <DreamDuesSlider />
 
+          <ThinRule />
+
+          {/* Closing CTA */}
+          <motion.section
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9 }}
+            style={{ marginBottom: "3rem", textAlign: "center" }}
+          >
+            <a
+              href="https://forms.gle/SPc8q7K1UsmV5iWF9"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-block",
+                fontFamily: "var(--font-nunito)",
+                fontWeight: 700,
+                fontSize: "clamp(0.9rem, 1.8vw, 1rem)",
+                letterSpacing: "0.08em",
+                color: "#fdf8f0",
+                backgroundColor: "var(--coral)",
+                borderRadius: "999px",
+                padding: "0.85rem 2.5rem",
+                textDecoration: "none",
+                transition: "opacity 0.2s",
+              }}
+            >
+              If you&apos;re interested, apply here.
+            </a>
+          </motion.section>
+
+          <ThinRule />
+
           {/* Photo 5 — closing 2-photo strip, full-width */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
@@ -924,7 +982,7 @@ export default function HousesContent() {
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
               gap: "1rem",
-              marginBottom: "3rem",
+              marginBottom: "5rem",
               width: "100vw",
               marginLeft: "calc(-50vw + 50%)",
               padding: "0 1rem",
@@ -970,38 +1028,6 @@ export default function HousesContent() {
               />
             </div>
           </motion.div>
-
-          <ThinRule />
-
-          {/* Closing CTA */}
-          <motion.section
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.9 }}
-            style={{ marginBottom: "5rem", textAlign: "center" }}
-          >
-            <a
-              href="https://forms.gle/SPc8q7K1UsmV5iWF9"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: "inline-block",
-                fontFamily: "var(--font-nunito)",
-                fontWeight: 700,
-                fontSize: "clamp(0.9rem, 1.8vw, 1rem)",
-                letterSpacing: "0.08em",
-                color: "#fdf8f0",
-                backgroundColor: "var(--coral)",
-                borderRadius: "999px",
-                padding: "0.85rem 2.5rem",
-                textDecoration: "none",
-                transition: "opacity 0.2s",
-              }}
-            >
-              If you&apos;re interested, apply here.
-            </a>
-          </motion.section>
         </div>
       </div>
     </div>

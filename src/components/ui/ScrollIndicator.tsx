@@ -15,7 +15,7 @@ export default function ScrollIndicator({ visible, onHide }: ScrollIndicatorProp
     startScrollY.current = window.scrollY;
 
     const handleScroll = () => {
-      if (Math.abs(window.scrollY - startScrollY.current) > 800) {
+      if (Math.abs(window.scrollY - startScrollY.current) > 1600) {
         onHide();
       }
     };
@@ -34,7 +34,7 @@ export default function ScrollIndicator({ visible, onHide }: ScrollIndicatorProp
         width: "280px",
         height: "140px",
         paddingBottom: "2rem",
-        background: "radial-gradient(ellipse at center bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.15) 50%, transparent 75%)",
+        background: "none",
       }}
     >
       <div className="flex flex-col items-center gap-2 animate-bounce-slow">

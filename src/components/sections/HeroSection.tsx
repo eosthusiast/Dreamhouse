@@ -246,8 +246,8 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
       >
         <div className="text-center" style={{ marginBottom: "1.5rem", overflow: "hidden" }}>
           <Image
-            src="/images/typography/what-will-that-dream.png"
-            alt="What would that dream dare to become with the right community by your side?"
+            src="/images/typography/how-can-others-support.png"
+            alt="How can others support your dream?"
             width={1200}
             height={400}
             className="w-[90vw] max-w-[900px] h-auto mx-auto"
