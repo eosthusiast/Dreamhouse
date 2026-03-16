@@ -239,7 +239,7 @@ export default function HeroGateOverlay({
           />
         </div>
 
-        <div ref={inputRef} data-hero-input>
+        <div ref={inputRef} data-hero-input className="w-full">
           <DreamInput
             onSubmit={handleHero1Submit}
             ctaText="Submit your dream"

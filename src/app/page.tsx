@@ -131,18 +131,33 @@ export default function Home() {
     setShowScrollHint(true);
   }, []);
 
-  // Overlay dismissal: fade out galaxy backdrop, then unmount both.
-  // Delay fade start by 500ms so iOS Safari toolbar has time to auto-hide
-  // from the scroll — otherwise the gap between sticky and toolbar is visible.
+  // Overlay dismissal: fade out galaxy backdrop on first user scroll.
+  // Programmatic scrollTo() doesn't trigger iOS toolbar auto-hide — only
+  // user touch gestures do. So the backdrop must stay until the user scrolls
+  // manually (which hides the toolbar, eliminating the sticky viewport gap).
   const handleOverlayDismiss = useCallback(() => {
     setOverlayDone(true);
     const backdrop = document.querySelector("[data-galaxy-backdrop]") as HTMLElement;
     if (backdrop) {
-      setTimeout(() => {
+      const fadeOut = () => {
         backdrop.style.transition = "opacity 0.8s ease-out";
         backdrop.style.opacity = "0";
         setTimeout(() => setGalaxyBackdropVisible(false), 800);
-      }, 500);
+      };
+      // Listen for first user-initiated scroll (toolbar will auto-hide).
+      // Delay attaching by 100ms to skip any trailing GSAP scroll events.
+      const onScroll = () => {
+        window.removeEventListener("scroll", onScroll);
+        fadeOut();
+      };
+      setTimeout(() => {
+        window.addEventListener("scroll", onScroll, { passive: true });
+      }, 100);
+      // Safety fallback: fade out after 5s even if user hasn't scrolled
+      setTimeout(() => {
+        window.removeEventListener("scroll", onScroll);
+        if (backdrop.style.opacity !== "0") fadeOut();
+      }, 5000);
     } else {
       setGalaxyBackdropVisible(false);
     }
