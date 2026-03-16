@@ -43,10 +43,10 @@ const OCEAN_TEXTS: TextConfig[] = [
     x: 78,
     y: 68,
     mobileX: 94,
-    mobileY: 65,
+    mobileY: 58,
     align: "right",
   },
-  { text: "What if that wasn\u2019t luck?", x: 78, y: 82, mobileX: 94, mobileY: 72, align: "right" },
+  { text: "What if that wasn\u2019t luck?", x: 78, y: 82, mobileX: 94, mobileY: 78, align: "right" },
 ];
 
 const LINE_STYLE = {

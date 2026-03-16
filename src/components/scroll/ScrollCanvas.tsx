@@ -59,21 +59,33 @@ export default function ScrollCanvas({
 
     // On iOS, 100dvh doesn't track toolbar show/hide for sticky elements.
     // Use visualViewport.height (iOS 13+) or innerHeight (older) instead.
-    // During hero gate on iOS, the HeroGateOverlay handles input interaction
-    // separately, so no gate-specific height capping is needed here.
+    // During hero gate: freeze at initial height so galaxy video fills viewport
+    // even when iOS keyboard opens (HeroGateOverlay is on top, transparent).
+    // After gate completes (dreamhouse:unlock-scroll), track normally.
     if (isIOS && stickyRef.current) {
       const sticky = stickyRef.current;
       let rafId: number;
+      let gateUnlocked = false;
+      let initialHeight = window.visualViewport?.height ?? window.innerHeight;
 
       const updateHeight = () => {
         cancelAnimationFrame(rafId);
         rafId = requestAnimationFrame(() => {
           const h = window.visualViewport?.height ?? window.innerHeight;
-          sticky.style.height = `${h}px`;
+          // During gate: keep initial height so video fills viewport behind overlay
+          // After gate: track viewport height for toolbar show/hide
+          sticky.style.height = `${gateUnlocked ? h : Math.max(h, initialHeight)}px`;
         });
       };
 
       updateHeight();
+
+      const onUnlock = () => {
+        gateUnlocked = true;
+        initialHeight = 0; // Allow free tracking
+        updateHeight();
+      };
+      window.addEventListener("dreamhouse:unlock-scroll", onUnlock);
 
       if (window.visualViewport) {
         window.visualViewport.addEventListener("resize", updateHeight);
@@ -82,6 +94,7 @@ export default function ScrollCanvas({
       window.addEventListener("resize", updateHeight);
 
       return () => {
+        window.removeEventListener("dreamhouse:unlock-scroll", onUnlock);
         window.visualViewport?.removeEventListener("resize", updateHeight);
         window.removeEventListener("orientationchange", updateHeight);
         window.removeEventListener("resize", updateHeight);
