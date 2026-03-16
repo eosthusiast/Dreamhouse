@@ -276,7 +276,7 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
       <div
         ref={hero2Ref}
         onClick={() => { hero2Ref.current?.querySelector("input")?.focus(); }}
-        className="absolute inset-0 flex flex-col items-center justify-center h-full w-full px-6"
+        className="absolute inset-0 flex flex-col items-center justify-center h-full w-full px-4"
         style={{
           visibility: "hidden",
           opacity: 0,

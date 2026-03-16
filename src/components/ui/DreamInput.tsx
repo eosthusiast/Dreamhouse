@@ -58,7 +58,7 @@ export default function DreamInput({
   return (
     <form
       ref={formRef}
-      className="flex flex-col items-center w-full max-w-2xl mx-auto px-4 safe-area-bottom"
+      className="flex flex-col items-center w-[85vw] max-w-lg mx-auto px-4 safe-area-bottom"
       style={{
         gap: compact ? "0.75rem" : "1.25rem",
         pointerEvents: visible ? "auto" : "none",

@@ -131,33 +131,30 @@ export default function Home() {
     setShowScrollHint(true);
   }, []);
 
-  // Overlay dismissal: fade out galaxy backdrop on first user scroll.
-  // Programmatic scrollTo() doesn't trigger iOS toolbar auto-hide — only
-  // user touch gestures do. So the backdrop must stay until the user scrolls
-  // manually (which hides the toolbar, eliminating the sticky viewport gap).
+  // Overlay dismissal: drop backdrop behind ScrollCanvas so it fills the
+  // toolbar gap with galaxy instead of black. Programmatic scrollTo() doesn't
+  // trigger iOS toolbar auto-hide, so we can't fade out the backdrop yet.
+  // Instead, move it behind ScrollCanvas (z-index: 0 vs scroll-canvas z-index: 1).
+  // The backdrop is invisible behind normal content but fills the toolbar gap area.
+  // Unmount after first user scroll (toolbar auto-hides, gap disappears).
   const handleOverlayDismiss = useCallback(() => {
     setOverlayDone(true);
     const backdrop = document.querySelector("[data-galaxy-backdrop]") as HTMLElement;
     if (backdrop) {
-      const fadeOut = () => {
-        backdrop.style.transition = "opacity 0.8s ease-out";
-        backdrop.style.opacity = "0";
-        setTimeout(() => setGalaxyBackdropVisible(false), 800);
-      };
-      // Listen for first user-initiated scroll (toolbar will auto-hide).
-      // Delay attaching by 100ms to skip any trailing GSAP scroll events.
-      const onScroll = () => {
+      // Drop behind ScrollCanvas — fills gap but invisible behind content
+      backdrop.style.zIndex = "0";
+
+      // Unmount after first user scroll (toolbar will have auto-hidden)
+      const cleanup = () => {
         window.removeEventListener("scroll", onScroll);
-        fadeOut();
+        setGalaxyBackdropVisible(false);
       };
+      const onScroll = () => cleanup();
       setTimeout(() => {
-        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("scroll", onScroll, { once: true, passive: true });
       }, 100);
-      // Safety fallback: fade out after 5s even if user hasn't scrolled
-      setTimeout(() => {
-        window.removeEventListener("scroll", onScroll);
-        if (backdrop.style.opacity !== "0") fadeOut();
-      }, 5000);
+      // Safety fallback: unmount after 8s
+      setTimeout(() => cleanup(), 8000);
     } else {
       setGalaxyBackdropVisible(false);
     }
@@ -289,7 +286,7 @@ export default function Home() {
         </div>
       )}
 
-      <div id="scroll-canvas">
+      <div id="scroll-canvas" className="relative z-[1]" style={{ overflowX: "hidden" }}>
         <ScrollCanvas
           sections={sections}
           heroVideo={heroVideo}

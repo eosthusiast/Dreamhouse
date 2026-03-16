@@ -38,6 +38,7 @@
 
   html {
     scroll-behavior: auto; /* Lenis handles smooth scroll */
+    overflow-x: hidden; /* iOS Safari: body overflow-x alone is unreliable */
   }
 
   body {
