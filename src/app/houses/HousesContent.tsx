@@ -32,7 +32,7 @@ const SLIDER_TIERS = [
   { value: 3000,  label: "€3,000",  name: "covering costs",                                        accent: PHASE_COLORS[0] },
   { value: 5000,  label: "€5,000",  name: "covering true costs of 1 person",                       accent: PHASE_COLORS[1] },
   { value: 8000,  label: "€8,000",  name: "supporting others in experiencing this",                 accent: PHASE_COLORS[2] },
-  { value: 9000, label: "€9,000", name: "you want Caro to get paid something for creating this",  accent: PHASE_COLORS[3] },
+  { value: 9000, label: "€9,000", name: "support Caro to get paid a bit for creating this",  accent: PHASE_COLORS[3] },
 ];
 
 function Lightbox({ src, onClose }: { src: string; onClose: () => void }) {
@@ -185,7 +185,7 @@ function DreamDuesSlider() {
         }}
       >
         Most people spend €4–6k on a single transformational week. Dream
-        House is a month. Not-for-profit by design. Everything is included
+        House is a whole month, not-for-profit by design. Everything is included
         from the moment you arrive — your private room, meals, and every
         community experience.
       </p>
@@ -382,7 +382,7 @@ function DreamDuesSlider() {
           fontStyle: "italic",
         }}
       >
-        Financial aid available — send Carolin a message.
+        Financial aid available — send Caro a message.
       </p>
     </motion.section>
   );
@@ -694,7 +694,7 @@ export default function HousesContent() {
                   {
                     icon: "🌙",
                     title: "The opening ceremony: a mystery school for connection",
-                    body: "Your first weekend together is a mystery school for connection. Everyone must arrive by 12pm on July 4th. It\u2019s super important we open the experience together.",
+                    body: "Our first weekend together is a mystery school for connection. Everyone must arrive by 12pm on July 4th. It\u2019s super important we open the experience together.",
                   },
                   {
                     icon: "🪄",
@@ -839,17 +839,17 @@ export default function HousesContent() {
                 like neither. Like something older. Something that was waiting.
               </p>
               <p>
-                This is your home for the month. Not a hotel. Not a venue. A home
-                with a pool, a pond, a sauna, a dance hall, a co-working space
-                where ideas arrive easily, and a private chef who conjures three
-                nourishing meals a day from things that grew nearby.
+                This is your home for the month: with a pool, a pond, a sauna, a
+                dance hall, a co-working space where ideas arrive easily, and a
+                private chef who conjures three nourishing meals a day from things
+                that grew nearby.
               </p>
               <p>
-                Everything here is designed, quietly and carefully, to bring you
-                back to yourself. Your circadian rhythm, the one the modern world
-                quietly broke slowly returns. You sleep deeply. Think clearly. Feel
-                more like yourself, or perhaps like the person you always suspected
-                you could be.
+                Everything here is designed, quietly and carefully, to bring us
+                back to ourselves. Our circadian rhythms, which the modern world
+                quietly broke slowly return. We sleep deeply. Think clearly. Feel
+                more like ourselves, or perhaps like the persons we always
+                suspected we could be.
               </p>
             </div>
 
@@ -1029,7 +1029,7 @@ export default function HousesContent() {
               </span>
               For those who wish to continue the story, an invitation awaits. The
               week immediately after Portugal, a curated festival in a stunning
-              ch&acirc;teau in France. The same spirit. A grander stage. Optional.
+              ch&acirc;teau in France. The same spirit. A grander stage. Completely optional.
             </p>
           </motion.section>
 

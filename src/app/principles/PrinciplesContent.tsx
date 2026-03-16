@@ -281,11 +281,11 @@ export default function PrinciplesContent() {
                 color: "var(--text-mid)",
               }}
             >
-              I could tell you that integrity, curiosity, kindness etc is
+              I could tell you that integrity, curiosity, kindness, etc is
               important. And they are. Those are expected&hellip;.
               <br />
               <br />
-              <span style={{ color: "var(--coral)", fontWeight: 360 }}>
+              <span style={{ color: "var(--coral)", fontWeight: 360, fontStyle: "normal" }}>
                 These are the principles that make us a little more unique:
               </span>
             </p>

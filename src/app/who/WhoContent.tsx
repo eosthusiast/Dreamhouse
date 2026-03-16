@@ -255,13 +255,13 @@ export default function WhoContent() {
           {/* Yes-list — each item reveals individually on scroll */}
           <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
             {[
-              "You accidentally inspire people, constantly",
-              "You believe joy and ambition belong in the same room",
-              "You sharing your gifts and being of service energises you",
-              "You have something you're building that means something to you",
-              "You miss the kind of community that was just around you earlier in life",
-              "You get genuinely energised by people who think differently to you",
-              "You are willing to be fully seen and see others honestly",
+              "We accidentally inspire people, constantly",
+              "We believe joy and ambition belong in the same room",
+              "We share our gifts and being of service energises us",
+              "We have something we're building that means something to us",
+              "We miss the kind of community that was just around us earlier in life",
+              "We get genuinely energised by people who think differently to us",
+              "We are willing to be fully seen and see others honestly",
             ].map((item, i) => (
               <motion.div
                 key={i}
@@ -299,31 +299,62 @@ export default function WhoContent() {
                 pointerEvents: "none",
               }}
             />
-            <motion.a
-              href="/houses"
+            <motion.div
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
-              whileHover={{ y: -2, boxShadow: "0 8px 32px rgba(232,128,106,0.45)" }}
               style={{
-                display: "inline-block",
-                fontFamily: "var(--font-nunito)",
-                fontWeight: 700,
-                fontSize: "0.95rem",
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-                color: "#fdf8f0",
-                background: "linear-gradient(135deg, var(--coral), var(--terra))",
-                padding: "0.85rem 2.5rem",
-                borderRadius: "999px",
-                textDecoration: "none",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "0.75rem",
                 position: "relative",
-                boxShadow: "0 4px 24px rgba(232,128,106,0.35)",
               }}
             >
-              Sound like you? Join a Dream House
-            </motion.a>
+              <motion.a
+                href="/houses"
+                whileHover={{ y: -2, boxShadow: "0 8px 32px rgba(232,128,106,0.45)" }}
+                style={{
+                  display: "inline-block",
+                  fontFamily: "var(--font-nunito)",
+                  fontWeight: 700,
+                  fontSize: "0.95rem",
+                  letterSpacing: "0.06em",
+                  textTransform: "uppercase",
+                  color: "#fdf8f0",
+                  background: "linear-gradient(135deg, var(--coral), var(--terra))",
+                  padding: "0.85rem 2.5rem",
+                  borderRadius: "999px",
+                  textDecoration: "none",
+                  boxShadow: "0 4px 24px rgba(232,128,106,0.35)",
+                }}
+              >
+                Upcoming Dream House
+              </motion.a>
+              <motion.a
+                href="https://forms.gle/SPc8q7K1UsmV5iWF9"
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ y: -2, boxShadow: "0 8px 32px rgba(184,168,212,0.45)" }}
+                style={{
+                  display: "inline-block",
+                  fontFamily: "var(--font-nunito)",
+                  fontWeight: 700,
+                  fontSize: "0.95rem",
+                  letterSpacing: "0.06em",
+                  textTransform: "uppercase",
+                  color: "#fdf8f0",
+                  background: "linear-gradient(135deg, var(--lavender), #8a7cb8)",
+                  padding: "0.85rem 2.5rem",
+                  borderRadius: "999px",
+                  textDecoration: "none",
+                  boxShadow: "0 4px 24px rgba(184,168,212,0.35)",
+                }}
+              >
+                Apply Now
+              </motion.a>
+            </motion.div>
           </div>
         </div>
 
@@ -693,31 +724,62 @@ export default function WhoContent() {
                 pointerEvents: "none",
               }}
             />
-            <motion.a
-              href="/houses"
+            <motion.div
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
-              whileHover={{ y: -2, boxShadow: "0 8px 32px rgba(232,128,106,0.45)" }}
               style={{
-                display: "inline-block",
-                fontFamily: "var(--font-nunito)",
-                fontWeight: 700,
-                fontSize: "0.95rem",
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-                color: "#fdf8f0",
-                background: "linear-gradient(135deg, var(--coral), var(--terra))",
-                padding: "0.85rem 2.5rem",
-                borderRadius: "999px",
-                textDecoration: "none",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "0.75rem",
                 position: "relative",
-                boxShadow: "0 4px 24px rgba(232,128,106,0.35)",
               }}
             >
-              Sound like you? Join a Dream House
-            </motion.a>
+              <motion.a
+                href="/houses"
+                whileHover={{ y: -2, boxShadow: "0 8px 32px rgba(232,128,106,0.45)" }}
+                style={{
+                  display: "inline-block",
+                  fontFamily: "var(--font-nunito)",
+                  fontWeight: 700,
+                  fontSize: "0.95rem",
+                  letterSpacing: "0.06em",
+                  textTransform: "uppercase",
+                  color: "#fdf8f0",
+                  background: "linear-gradient(135deg, var(--coral), var(--terra))",
+                  padding: "0.85rem 2.5rem",
+                  borderRadius: "999px",
+                  textDecoration: "none",
+                  boxShadow: "0 4px 24px rgba(232,128,106,0.35)",
+                }}
+              >
+                Upcoming Dream House
+              </motion.a>
+              <motion.a
+                href="https://forms.gle/SPc8q7K1UsmV5iWF9"
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ y: -2, boxShadow: "0 8px 32px rgba(184,168,212,0.45)" }}
+                style={{
+                  display: "inline-block",
+                  fontFamily: "var(--font-nunito)",
+                  fontWeight: 700,
+                  fontSize: "0.95rem",
+                  letterSpacing: "0.06em",
+                  textTransform: "uppercase",
+                  color: "#fdf8f0",
+                  background: "linear-gradient(135deg, var(--lavender), #8a7cb8)",
+                  padding: "0.85rem 2.5rem",
+                  borderRadius: "999px",
+                  textDecoration: "none",
+                  boxShadow: "0 4px 24px rgba(184,168,212,0.35)",
+                }}
+              >
+                Apply Now
+              </motion.a>
+            </motion.div>
           </div>
         </div>
       </div>

@@ -159,10 +159,10 @@ function GalleryGroup({
 export default function GallerySection() {
   return (
     <section className="bg-cream relative z-10" style={{ padding: "4rem 0 6rem" }}>
-      <div className="flex justify-center" style={{ marginBottom: "3rem" }}>
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4" style={{ marginBottom: "3rem" }}>
         <a
           href="/who"
-          className="font-playfair italic text-lg md:text-xl tracking-wide transition-all duration-500 hover:shadow-lg"
+          className="font-playfair italic text-lg md:text-xl tracking-wide transition-all duration-500 hover:shadow-lg hover:-translate-y-0.5"
           style={{
             padding: "1.05rem 3.6rem",
             background: "linear-gradient(135deg, #e8a87c 0%, #d4a0c0 50%, #b8a9c9 100%)",
@@ -171,7 +171,22 @@ export default function GallerySection() {
             boxShadow: "0 4px 20px rgba(232, 168, 124, 0.25)",
           }}
         >
-          I accept the invitation
+          Who will be there
+        </a>
+        <a
+          href="https://forms.gle/SPc8q7K1UsmV5iWF9"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-playfair italic text-lg md:text-xl tracking-wide transition-all duration-500 hover:-translate-y-0.5 hover:shadow-lg"
+          style={{
+            padding: "1.05rem 3.6rem",
+            color: "rgba(255, 255, 255, 0.95)",
+            borderRadius: "9999px",
+            background: "linear-gradient(135deg, #b8a9c9 0%, #8a7cb8 50%, #9b8ec4 100%)",
+            boxShadow: "0 4px 20px rgba(184, 168, 212, 0.3)",
+          }}
+        >
+          Apply Now
         </a>
       </div>
       <GalleryGroup images={GALLERY_IMAGES} />

@@ -15,7 +15,7 @@ interface TextConfig {
 
 const TEXTS: TextConfig[] = [
   {
-    text: "For those that feel the need for a more intelligent way to live",
+    text: "For those that feel the need for a more intelligent way to live...",
     x: 15,
     y: 30,
     mobileY: 12,
@@ -24,7 +24,7 @@ const TEXTS: TextConfig[] = [
     maxWidth: "28rem",
   },
   {
-    text: "in connection with nature, ourselves and each other.",
+    text: "... in connection with nature, ourselves and each other.",
     x: 82,
     y: 63,
     mobileY: 56,
