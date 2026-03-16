@@ -23,36 +23,55 @@ export default function Home() {
   const [isMobile, setIsMobile] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
   const [overlayDone, setOverlayDone] = useState(false);
+  const [galaxyBackdropVisible, setGalaxyBackdropVisible] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const backdropVideoRef = useRef<HTMLVideoElement>(null);
   const lastActiveRef = useRef(-1);
 
   const galleryRef = useRef<HTMLDivElement>(null);
   const inGalleryRef = useRef(false);
 
-  // Detect iOS Safari, configure video playback, set blend mode, swap mobile video
+  // Detect iOS Safari, configure video playback, set blend mode
   useEffect(() => {
     const ua = navigator.userAgent;
-    const isIOS =
+    const isIOSDevice =
       /iPad|iPhone|iPod/.test(ua) ||
       (ua.includes("Mac") && "ontouchend" in document);
 
     // mix-blend-mode over <video> renders black on iOS Safari
-    if (!isIOS) setCanBlend(true);
-    setIsIOS(isIOS);
+    if (!isIOSDevice) setCanBlend(true);
+    setIsIOS(isIOSDevice);
 
+    // On iOS (non-skip), show fullscreen galaxy backdrop during gate
+    const params = new URLSearchParams(window.location.search);
+    if (isIOSDevice && !params.has("home")) {
+      setGalaxyBackdropVisible(true);
+    }
+
+    // Configure ScrollCanvas hero video
     const video = videoRef.current;
-    if (!video) return;
+    const tryPlayVideo = video ? () => { video.play().catch(() => {}); } : null;
+    if (video && tryPlayVideo) {
+      video.muted = true;
+      tryPlayVideo();
+      video.addEventListener("canplay", tryPlayVideo, { once: true });
+    }
 
-    // Fix React muted attribute hydration bug — iOS checks DOM property, not attribute
-    video.muted = true;
-
-    // Programmatic play for iOS (autoPlay attribute alone is unreliable)
-    const tryPlay = () => { video.play().catch(() => {}); };
-    tryPlay();
-    video.addEventListener("canplay", tryPlay, { once: true });
-
-    return () => video.removeEventListener("canplay", tryPlay);
+    return () => {
+      if (video && tryPlayVideo) video.removeEventListener("canplay", tryPlayVideo);
+    };
   }, []);
+
+  // Configure backdrop video playback when it mounts (iOS gate only)
+  useEffect(() => {
+    const bdVideo = backdropVideoRef.current;
+    if (!bdVideo) return;
+    bdVideo.muted = true;
+    const tryPlay = () => { bdVideo.play().catch(() => {}); };
+    tryPlay();
+    bdVideo.addEventListener("canplay", tryPlay, { once: true });
+    return () => bdVideo.removeEventListener("canplay", tryPlay);
+  }, [galaxyBackdropVisible]);
 
   // Detect mobile
   useEffect(() => {
@@ -110,6 +129,19 @@ export default function Home() {
 
   const handleScrollComplete = useCallback(() => {
     setShowScrollHint(true);
+  }, []);
+
+  // Overlay dismissal: fade out galaxy backdrop, then unmount both
+  const handleOverlayDismiss = useCallback(() => {
+    setOverlayDone(true);
+    const backdrop = document.querySelector("[data-galaxy-backdrop]") as HTMLElement;
+    if (backdrop) {
+      backdrop.style.transition = "opacity 1s ease-out";
+      backdrop.style.opacity = "0";
+      setTimeout(() => setGalaxyBackdropVisible(false), 1000);
+    } else {
+      setGalaxyBackdropVisible(false);
+    }
   }, []);
 
   // On iOS (non-skip), overlay handles gate — section 0 content is empty
@@ -206,7 +238,36 @@ export default function Home() {
       <Navigation visible={gateComplete} variant={navVariant} />
       <ScrollIndicator visible={showScrollHint} onHide={() => setShowScrollHint(false)} />
 
-      <div id="scroll-canvas" style={{ background: "#050518" }}>
+      {/* iOS galaxy backdrop: position:fixed covers full screen including behind Safari toolbar.
+          Eliminates the dark gap that visualViewport.height causes on the sticky ScrollCanvas. */}
+      {galaxyBackdropVisible && (
+        <div
+          className="fixed inset-0 z-[9998]"
+          style={{ pointerEvents: "none" }}
+          data-galaxy-backdrop
+        >
+          <div className="absolute inset-0" style={{ background: "#050a1a" }} />
+          <video
+            ref={backdropVideoRef}
+            autoPlay
+            loop
+            muted
+            playsInline
+            poster="/videos/hero-bg-2-poster.jpg"
+            className="absolute inset-0 w-full h-full object-cover"
+            aria-hidden="true"
+          >
+            <source src="/videos/hero-bg-2.mp4" type="video/mp4" />
+            <source src="/videos/hero-bg-2.webm" type="video/webm" />
+          </video>
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{ background: "rgba(88, 44, 131, 0.30)" }}
+          />
+        </div>
+      )}
+
+      <div id="scroll-canvas">
         <ScrollCanvas
           sections={sections}
           heroVideo={heroVideo}
@@ -220,7 +281,7 @@ export default function Home() {
           onGateComplete={handleGateComplete}
           onScrollComplete={handleScrollComplete}
           isMobile={isMobile}
-          onDismiss={() => setOverlayDone(true)}
+          onDismiss={handleOverlayDismiss}
         />
       )}
 

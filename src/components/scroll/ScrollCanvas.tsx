@@ -58,40 +58,22 @@ export default function ScrollCanvas({
     setIsIOSSafari(isIOS);
 
     // On iOS, 100dvh doesn't track toolbar show/hide for sticky elements.
-    // Use visualViewport.height (iOS 13+) or innerHeight (older) instead.
-    // During hero gate: freeze at initial height so galaxy video fills viewport
-    // even when iOS keyboard opens (HeroGateOverlay is on top, transparent).
-    // After gate completes (dreamhouse:unlock-scroll), track normally.
+    // Use visualViewport.height to keep sticky viewport accurate.
+    // During the gate, the galaxy backdrop (position:fixed) covers this element,
+    // so height changes here don't affect the visual experience.
     if (isIOS && stickyRef.current) {
       const sticky = stickyRef.current;
       let rafId: number;
-      let gateUnlocked = false;
-      let initialHeight = window.visualViewport?.height ?? window.innerHeight;
 
       const updateHeight = () => {
         cancelAnimationFrame(rafId);
         rafId = requestAnimationFrame(() => {
           const h = window.visualViewport?.height ?? window.innerHeight;
-          // During gate: freeze at initial height so keyboard doesn't shrink
-          // the galaxy video. Don't set explicit height — let CSS 100dvh handle
-          // the base sizing (setting '100vh' via JS breaks iOS Safari rendering).
-          // After gate: track visualViewport.height for toolbar show/hide.
-          if (gateUnlocked) {
-            sticky.style.height = `${h}px`;
-          } else {
-            sticky.style.height = `${Math.max(h, initialHeight)}px`;
-          }
+          sticky.style.height = `${h}px`;
         });
       };
 
       updateHeight();
-
-      const onUnlock = () => {
-        gateUnlocked = true;
-        initialHeight = 0; // Allow free tracking
-        updateHeight();
-      };
-      window.addEventListener("dreamhouse:unlock-scroll", onUnlock);
 
       if (window.visualViewport) {
         window.visualViewport.addEventListener("resize", updateHeight);
@@ -100,7 +82,6 @@ export default function ScrollCanvas({
       window.addEventListener("resize", updateHeight);
 
       return () => {
-        window.removeEventListener("dreamhouse:unlock-scroll", onUnlock);
         window.visualViewport?.removeEventListener("resize", updateHeight);
         window.removeEventListener("orientationchange", updateHeight);
         window.removeEventListener("resize", updateHeight);
