@@ -114,12 +114,21 @@ function Lightbox({ src, onClose }: { src: string; onClose: () => void }) {
 
 function DreamDuesSlider() {
   const [sliderVal, setSliderVal] = useState(5000);
+  const [prevTierVal, setPrevTierVal] = useState(5000);
 
   const tier = SLIDER_TIERS.reduce((prev, curr) =>
     Math.abs(curr.value - sliderVal) < Math.abs(prev.value - sliderVal) ? curr : prev
   );
 
   const pct = ((sliderVal - 3000) / (9000 - 3000)) * 100;
+
+  // Interpolate track color between tier accents based on slider position
+  const tierIdx = SLIDER_TIERS.findIndex((t) => t.value === tier.value);
+  const trackColor = tier.accent;
+
+  // Detect tier change for card animation
+  const tierChanged = tier.value !== prevTierVal;
+  if (tierChanged) setPrevTierVal(tier.value);
 
   return (
     <motion.section
@@ -133,14 +142,13 @@ function DreamDuesSlider() {
       <p
         style={{
           fontFamily: "var(--font-nunito)",
-          fontSize: "0.68rem",
+          fontSize: "0.65rem",
           fontWeight: 700,
-          letterSpacing: "0.28em",
+          letterSpacing: "0.3em",
           textTransform: "uppercase",
           color: "var(--coral)",
           textAlign: "center",
           marginBottom: "1.25rem",
-          opacity: 0.85,
         }}
       >
         Dream Dues
@@ -150,7 +158,7 @@ function DreamDuesSlider() {
       <h2
         style={{
           fontFamily: "var(--font-playfair)",
-          fontSize: "clamp(1.08rem, 2.21vw, 1.72rem)",
+          fontSize: "clamp(1.54rem, 3.15vw, 2.52rem)",
           fontWeight: 400,
           letterSpacing: "-0.01em",
           lineHeight: 1.15,
@@ -168,7 +176,7 @@ function DreamDuesSlider() {
       {/* Intro */}
       <p
         style={{
-          fontSize: "clamp(1rem, 2vw, 1.1rem)",
+          fontSize: "clamp(1.15rem, 2.3vw, 1.32rem)",
           lineHeight: 1.85,
           color: "var(--text-mid)",
           textAlign: "center",
@@ -184,7 +192,7 @@ function DreamDuesSlider() {
 
       <p
         style={{
-          fontSize: "clamp(1rem, 2vw, 1.1rem)",
+          fontSize: "clamp(1.15rem, 2.3vw, 1.32rem)",
           lineHeight: 1.85,
           color: "var(--text-mid)",
           textAlign: "center",
@@ -207,11 +215,12 @@ function DreamDuesSlider() {
             height: 2px;
             background: linear-gradient(
               to right,
-              #e8806a ${pct}%,
-              rgba(35,24,16,0.15) ${pct}%
+              ${trackColor} ${pct}%,
+              rgba(35,24,16,0.12) ${pct}%
             );
             outline: none;
             cursor: pointer;
+            transition: background 0.3s;
           }
           .dh-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
@@ -220,22 +229,31 @@ function DreamDuesSlider() {
             height: 28px;
             border-radius: 50%;
             background: #fdf8f0;
-            border: 2px solid #e8806a;
-            box-shadow: 0 2px 12px rgba(232,128,106,0.35);
+            border: 2px solid ${trackColor};
+            box-shadow: 0 2px 12px ${trackColor}55, 0 0 0 0 ${trackColor}00;
             cursor: pointer;
-            transition: box-shadow 0.15s;
+            transition: box-shadow 0.3s, border-color 0.3s, transform 0.15s;
           }
           .dh-slider::-webkit-slider-thumb:hover {
-            box-shadow: 0 2px 18px rgba(232,128,106,0.55);
+            box-shadow: 0 2px 18px ${trackColor}88, 0 0 0 6px ${trackColor}15;
+            transform: scale(1.1);
+          }
+          .dh-slider::-webkit-slider-thumb:active {
+            transform: scale(0.95);
+            box-shadow: 0 1px 8px ${trackColor}66;
           }
           .dh-slider::-moz-range-thumb {
             width: 28px;
             height: 28px;
             border-radius: 50%;
             background: #fdf8f0;
-            border: 2px solid #e8806a;
-            box-shadow: 0 2px 12px rgba(232,128,106,0.35);
+            border: 2px solid ${trackColor};
+            box-shadow: 0 2px 12px ${trackColor}55;
             cursor: pointer;
+            transition: box-shadow 0.3s, border-color 0.3s;
+          }
+          .dh-slider::-moz-range-thumb:hover {
+            box-shadow: 0 2px 18px ${trackColor}88, 0 0 0 6px ${trackColor}15;
           }
         `}</style>
 
@@ -249,90 +267,122 @@ function DreamDuesSlider() {
           className="dh-slider"
         />
 
-        {/* Tick labels — positioned at true % along the 3k–10k range */}
+        {/* Tick labels — positioned at true % along the 3k–9k range */}
         <div style={{ position: "relative", height: "1.5rem", marginTop: "0.75rem" }}>
-          {[3000, 5000, 8000, 9000].map((v) => {
-            const nudge: Record<number, number> = { 5000: 1.25, 8000: -1.25 };
+          {SLIDER_TIERS.map(({ value: v }) => {
+            const nudge: Record<number, number> = { 5000: -3, 8000: -5.6 };
             const pos = ((v - 3000) / (9000 - 3000)) * 100 + (nudge[v] ?? 0);
+            const isActive = tier.value === v;
             return (
-              <span
+              <motion.span
                 key={v}
                 onClick={() => setSliderVal(v)}
+                animate={{
+                  scale: isActive ? 1.12 : 1,
+                  color: isActive ? tier.accent : "var(--text-soft)",
+                }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
                 style={{
                   position: "absolute",
                   left: `${pos}%`,
                   transform: "translateX(-50%)",
                   fontFamily: "var(--font-nunito)",
                   fontSize: "0.78rem",
-                  color: sliderVal === v ? "var(--coral)" : "var(--text-soft)",
-                  fontWeight: sliderVal === v ? 700 : 400,
-                  transition: "color 0.2s",
+                  fontWeight: isActive ? 700 : 400,
                   cursor: "pointer",
                   whiteSpace: "nowrap",
                 }}
               >
                 €{v.toLocaleString()}
-              </span>
+              </motion.span>
             );
           })}
         </div>
       </div>
 
       {/* Active tier card */}
-      <motion.div
-        key={tier.value}
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        style={{
-          maxWidth: "560px",
-          margin: "0 auto 2rem",
-          backgroundColor: `${tier.accent}10`,
-          border: `1.5px solid ${tier.accent}44`,
-          borderRadius: "16px",
-          padding: "2rem 2rem",
-          textAlign: "center",
-        }}
-      >
-        <p
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={tier.value}
+          initial={{ opacity: 0, y: 10, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -6, scale: 0.98 }}
+          transition={{
+            type: "spring",
+            stiffness: 300,
+            damping: 24,
+            mass: 0.8,
+          }}
           style={{
-            fontFamily: "var(--font-fraunces)",
-            fontSize: "clamp(2rem, 4vw, 3rem)",
-            fontWeight: 400,
-            color: "var(--text-dark)",
-            letterSpacing: "-0.02em",
-            marginBottom: "0.5rem",
+            maxWidth: "560px",
+            margin: "0 auto 2rem",
+            backgroundColor: `${tier.accent}0a`,
+            border: `1.5px solid ${tier.accent}30`,
+            borderRadius: "20px",
+            padding: "2.25rem 2rem",
+            textAlign: "center",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+            boxShadow: `0 8px 32px ${tier.accent}12, inset 0 1px 0 rgba(255,255,255,0.5)`,
           }}
         >
-          €{sliderVal.toLocaleString()}
-        </p>
-        <p
-          style={{
-            fontFamily: "var(--font-nunito)",
-            fontSize: "0.65rem",
-            fontWeight: 700,
-            letterSpacing: "0.24em",
-            textTransform: "uppercase",
-            color: tier.accent,
-            marginBottom: "0.75rem",
-            opacity: 0.9,
-          }}
-        >
-          {tier.name}
-        </p>
-      </motion.div>
+          {/* Decorative sparkle */}
+          <motion.span
+            initial={{ opacity: 0, rotate: -30 }}
+            animate={{ opacity: 0.35, rotate: 0 }}
+            transition={{ delay: 0.15, duration: 0.4 }}
+            style={{
+              display: "block",
+              fontSize: "0.7rem",
+              color: tier.accent,
+              marginBottom: "0.75rem",
+              letterSpacing: "0.5em",
+            }}
+          >
+            {tierIdx === 0 ? "✦" : tierIdx === 1 ? "✦ ✦" : tierIdx === 2 ? "✦ ✦ ✦" : "✦ ✦ ✦ ✦"}
+          </motion.span>
+
+          <p
+            style={{
+              fontFamily: "var(--font-fraunces)",
+              fontSize: "clamp(2.2rem, 4.5vw, 3.2rem)",
+              fontWeight: 400,
+              color: "var(--text-dark)",
+              letterSpacing: "-0.02em",
+              marginBottom: "0.5rem",
+            }}
+          >
+            €{sliderVal.toLocaleString()}
+          </p>
+          <motion.p
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 0.9, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.3 }}
+            style={{
+              fontFamily: "var(--font-nunito)",
+              fontSize: "0.65rem",
+              fontWeight: 700,
+              letterSpacing: "0.3em",
+              textTransform: "uppercase",
+              color: tier.accent,
+            }}
+          >
+            {tier.name}
+          </motion.p>
+        </motion.div>
+      </AnimatePresence>
 
       {/* Financial Aid */}
       <p
         style={{
           fontFamily: "var(--font-fraunces)",
-          fontSize: "clamp(1rem, 2vw, 1.1rem)",
+          fontSize: "clamp(1.15rem, 2.3vw, 1.32rem)",
           color: "var(--text-soft)",
           textAlign: "center",
           fontStyle: "italic",
         }}
       >
-        Financial Aid Available — Send Carolin a message.
+        Financial aid available — send Carolin a message.
       </p>
     </motion.section>
   );
@@ -520,10 +570,10 @@ export default function HousesContent() {
 
           {/* Photo 1 — full-width cinematic banner */}
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 1 }}
+            transition={{ duration: 0.9 }}
             onClick={() => openLightbox("/images/houses/fools-valley-8_a.jpg")}
             style={{
               position: "relative",
@@ -541,7 +591,7 @@ export default function HousesContent() {
               fill
               style={{
                 objectFit: "cover",
-                filter: "saturate(0.82)",
+                filter: "saturate(0.85)",
               }}
               sizes="100vw"
             />
@@ -595,43 +645,46 @@ export default function HousesContent() {
               {[
                 {
                   icon: "🌙",
-                  title: "The Opening Ceremony: A Mystery School for Connection",
+                  title: "The opening ceremony: a mystery school for connection",
                   body: "Your first weekend together is a mystery school for connection. Everyone must arrive by 12pm on July 4th. It\u2019s super important we open the experience together.",
                 },
                 {
                   icon: "🪄",
-                  title: "Whiteboard",
+                  title: "The whiteboard",
                   body: "A whiteboard that each of you is encouraged to fill with your ideas and offerings.",
                 },
                 {
                   icon: "🍵",
-                  title: "Daily Rituals",
+                  title: "Daily rituals",
                   body: "Sunrise tea ceremonies, morning intention settings, movement, lunch & learns\u2026 we get to create them, together.",
                 },
                 {
                   icon: "💻",
-                  title: "Deep Work",
+                  title: "Deep work",
                   body: "Opportunities created to get into deep focus with supportive accountability and collaboration if useful. It could be your most productive month of the year.",
                 },
                 {
                   icon: "✨",
-                  title: "Peer Workshops",
+                  title: "Peer workshops",
                   body: "Everyone in this house knows something the others don\u2019t. We make structured space for that exchange. You will teach. You will be taught. Often by the person you least expected.",
                 },
                 {
                   icon: "🌿",
-                  title: "Giving Back",
+                  title: "Giving back",
                   body: "Opportunities to give back to the local community. Being of service.",
                 },
                 {
                   icon: "🔮",
-                  title: "Community & Hosting",
+                  title: "Community & hosting",
                   body: "Some days the valley belongs only to us \u2014 intimate, held, sacred. Other days we open the gates and invite our wider European community in.",
                 },
-              ].map((ritual) => (
+              ].map((ritual, i) => (
                 <motion.div
                   key={ritual.title}
-                  transition={{ duration: 0.2 }}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: i * 0.08 }}
                   style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem", textAlign: "center" }}
                 >
                   <span style={{ fontSize: "1.5rem" }}>
@@ -641,8 +694,8 @@ export default function HousesContent() {
                     <p
                       style={{
                         fontFamily: "var(--font-fraunces)",
-                        fontSize: "clamp(1rem, 2vw, 1.15rem)",
-                        fontWeight: 400,
+                        fontSize: "clamp(1.1rem, 2.1vw, 1.25rem)",
+                        fontWeight: 500,
                         color: "var(--text-dark)",
                         marginBottom: "0.3rem",
                       }}
@@ -651,8 +704,8 @@ export default function HousesContent() {
                     </p>
                     <p
                       style={{
-                        fontSize: "clamp(1.09rem, 2.07vw, 1.21rem)",
-                        lineHeight: 1.75,
+                        fontSize: "clamp(1.15rem, 2.3vw, 1.32rem)",
+                        lineHeight: 1.85,
                         color: "var(--text-mid)",
                       }}
                     >
@@ -702,7 +755,7 @@ export default function HousesContent() {
                   src={img.src}
                   alt={img.alt}
                   fill
-                  style={{ objectFit: "cover", filter: "saturate(0.88)" }}
+                  style={{ objectFit: "cover", filter: "saturate(0.85)" }}
                   sizes="33vw"
                 />
               </div>
@@ -746,7 +799,7 @@ export default function HousesContent() {
                   src={img.src}
                   alt={img.alt}
                   fill
-                  style={{ objectFit: "cover", filter: "saturate(0.88)" }}
+                  style={{ objectFit: "cover", filter: "saturate(0.85)" }}
                   sizes="50vw"
                 />
               </div>
@@ -767,7 +820,7 @@ export default function HousesContent() {
             <h2
               style={{
                 fontFamily: "var(--font-playfair)",
-                fontSize: "clamp(1.54rem, 3.15vw, 2.45rem)",
+                fontSize: "clamp(1.54rem, 3.15vw, 2.52rem)",
                 fontWeight: 400,
                 letterSpacing: "-0.01em",
                 color: "var(--text-dark)",
@@ -883,7 +936,7 @@ export default function HousesContent() {
             <h2
               style={{
                 fontFamily: "var(--font-playfair)",
-                fontSize: "clamp(1.08rem, 2.21vw, 1.72rem)",
+                fontSize: "clamp(1.54rem, 3.15vw, 2.52rem)",
                 fontWeight: 400,
                 letterSpacing: "-0.01em",
                 color: "var(--text-dark)",
@@ -909,11 +962,12 @@ export default function HousesContent() {
                   width: "auto",
                   height: "8em",
                   aspectRatio: "3/4",
-                  borderRadius: "6px",
+                  borderRadius: "10px",
                   overflow: "hidden",
                   float: "right",
                   marginLeft: "1rem",
                   marginBottom: "0.25rem",
+                  boxShadow: "0 4px 24px rgba(35,24,16,0.10)",
                   flexShrink: 0,
                   verticalAlign: "middle",
                   cursor: "zoom-in",
@@ -941,34 +995,44 @@ export default function HousesContent() {
           <ThinRule />
 
           {/* Closing CTA */}
-          <motion.section
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.9 }}
-            style={{ marginBottom: "3rem", textAlign: "center" }}
-          >
-            <a
+          <div style={{ textAlign: "center", paddingTop: "1rem", paddingBottom: "1rem", position: "relative" }}>
+            <div
+              aria-hidden
+              style={{
+                position: "absolute",
+                inset: 0,
+                background: "radial-gradient(ellipse 60% 80% at 50% 50%, rgba(232,128,106,0.10) 0%, transparent 70%)",
+                pointerEvents: "none",
+              }}
+            />
+            <motion.a
               href="https://forms.gle/SPc8q7K1UsmV5iWF9"
               target="_blank"
               rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              whileHover={{ y: -2, boxShadow: "0 8px 32px rgba(232,128,106,0.45)" }}
               style={{
                 display: "inline-block",
                 fontFamily: "var(--font-nunito)",
                 fontWeight: 700,
-                fontSize: "clamp(0.9rem, 1.8vw, 1rem)",
-                letterSpacing: "0.08em",
+                fontSize: "0.95rem",
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
                 color: "#fdf8f0",
-                backgroundColor: "var(--coral)",
-                borderRadius: "999px",
+                background: "linear-gradient(135deg, var(--coral), var(--terra))",
                 padding: "0.85rem 2.5rem",
+                borderRadius: "999px",
                 textDecoration: "none",
-                transition: "opacity 0.2s",
+                position: "relative",
+                boxShadow: "0 4px 24px rgba(232,128,106,0.35)",
               }}
             >
               If you&apos;re interested, apply here.
-            </a>
-          </motion.section>
+            </motion.a>
+          </div>
 
           <ThinRule />
 
@@ -982,7 +1046,7 @@ export default function HousesContent() {
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
               gap: "1rem",
-              marginBottom: "5rem",
+              marginBottom: "3rem",
               width: "100vw",
               marginLeft: "calc(-50vw + 50%)",
               padding: "0 1rem",
@@ -1023,7 +1087,7 @@ export default function HousesContent() {
                 src="/images/houses/fools-valley-1.jpg"
                 alt="Fools Valley — the valley at rest"
                 fill
-                style={{ objectFit: "cover", filter: "saturate(0.82)" }}
+                style={{ objectFit: "cover", filter: "saturate(0.85)" }}
                 sizes="375px"
               />
             </div>
