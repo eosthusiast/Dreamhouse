@@ -286,7 +286,7 @@ export default function Home() {
         </div>
       )}
 
-      <div id="scroll-canvas" className="relative z-[1]" style={{ overflowX: "hidden" }}>
+      <div id="scroll-canvas" className="relative z-[1]">
         <ScrollCanvas
           sections={sections}
           heroVideo={heroVideo}
