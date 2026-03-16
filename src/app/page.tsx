@@ -44,6 +44,13 @@ export default function Home() {
     if (!isIOSDevice) setCanBlend(true);
     setIsIOS(isIOSDevice);
 
+    // iOS Safari: overflow-x:clip on html prevents horizontal scroll without
+    // breaking sticky (Safari handles clip correctly). Chrome treats clip same
+    // as hidden on html (breaks sticky), so only apply on iOS.
+    if (isIOSDevice) {
+      document.documentElement.style.overflowX = "clip";
+    }
+
     // On iOS (non-skip), show fullscreen galaxy backdrop during gate
     const params = new URLSearchParams(window.location.search);
     if (isIOSDevice && !params.has("home")) {
