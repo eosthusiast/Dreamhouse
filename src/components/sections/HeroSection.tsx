@@ -103,28 +103,39 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
   const handleHero1Submit = useCallback((dream: string) => {
     if (!hero1Ref.current || !hero2Ref.current) return;
 
-    // Set phase early so DreamInput renders during the fade-in (no layout shift)
-    setPhase("hero2");
+    // Blur hero1 input first to dismiss iOS keyboard cleanly
+    const hero1Input = hero1Ref.current.querySelector("input");
+    hero1Input?.blur();
 
-    const tl = gsap.timeline();
-    tl.to(hero1Ref.current, {
-      autoAlpha: 0,
-      duration: 1.5,
-      ease: "power2.inOut",
-    }).fromTo(
-      hero2Ref.current,
-      { autoAlpha: 0 },
-      {
-        autoAlpha: 1,
-        duration: 3,
+    // Wait for keyboard to dismiss before transitioning
+    setTimeout(() => {
+      // Set phase early so DreamInput renders during the fade-in (no layout shift)
+      setPhase("hero2");
+
+      const tl = gsap.timeline();
+      tl.to(hero1Ref.current!, {
+        autoAlpha: 0,
+        duration: 1.5,
         ease: "power2.inOut",
-        onComplete: () => {
-          const input = hero2Ref.current?.querySelector("input");
-          input?.focus();
+      }).fromTo(
+        hero2Ref.current!,
+        { autoAlpha: 0 },
+        {
+          autoAlpha: 1,
+          duration: 3,
+          ease: "power2.inOut",
         },
-      },
-      "-=1.2"
-    );
+        "-=1.2"
+      );
+
+      // Focus hero2 input after animation completes, with visibility check
+      gsap.delayedCall(3.8, () => {
+        const input = hero2Ref.current?.querySelector("input");
+        if (input && window.getComputedStyle(hero2Ref.current!).opacity !== "0") {
+          input.focus();
+        }
+      });
+    }, 300);
 
     if (typeof window !== "undefined") {
       sessionStorage.setItem("dream1", dream);
@@ -197,7 +208,7 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
       <div
         ref={hero1Ref}
         className="flex flex-col items-center justify-center h-full w-full px-4"
-        style={keyboardOpen ? { transform: "translateY(-15vh)" } : undefined}
+        style={{ transition: "transform 0.3s ease-out", ...(keyboardOpen ? { transform: "translateY(-15vh)" } : {}) }}
       >
         {/* Ornate PNG heading */}
         <div ref={headingRef} data-hero-heading className="text-center" style={{ marginBottom: "1.5rem", overflow: "hidden" }}>
@@ -237,10 +248,12 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
       {/* Hero 2 Content (hidden initially) */}
       <div
         ref={hero2Ref}
+        onClick={() => { hero2Ref.current?.querySelector("input")?.focus(); }}
         className="absolute inset-0 flex flex-col items-center justify-center h-full w-full px-6"
         style={{
           visibility: "hidden",
           opacity: 0,
+          transition: "transform 0.3s ease-out",
           ...(keyboardOpen ? { transform: "translateY(-15vh)" } : {}),
         }}
       >

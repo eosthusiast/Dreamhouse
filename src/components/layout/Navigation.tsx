@@ -67,7 +67,7 @@ export default function Navigation({ visible = true, variant = "dark" }: Navigat
 
           {/* Mobile hamburger */}
           <button
-            className={`md:hidden p-2 ${isDark ? "text-cream" : "text-galaxy-deep"}`}
+            className={`md:hidden p-3 min-w-[44px] min-h-[44px] flex items-center justify-center ${isDark ? "text-cream" : "text-galaxy-deep"}`}
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle menu"
           >

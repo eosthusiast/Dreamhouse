@@ -20,33 +20,24 @@ export default function DreamInput({
   const inputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const [value, setValue] = useState("");
-  const [keyboardOpen, setKeyboardOpen] = useState(false);
 
   useEffect(() => {
     if (autoFocus && visible && inputRef.current) {
       // Try to focus immediately, then retry a few times
       // (browsers may block focus during animations)
+      // Gate retries: only focus if element is actually visible in DOM
       inputRef.current.focus();
       const retries = [100, 300, 600, 1000];
       const timers = retries.map((delay) =>
-        setTimeout(() => inputRef.current?.focus(), delay)
+        setTimeout(() => {
+          if (visible && inputRef.current?.offsetParent !== null) {
+            inputRef.current?.focus();
+          }
+        }, delay)
       );
       return () => timers.forEach(clearTimeout);
     }
   }, [autoFocus, visible]);
-
-  // Detect iOS keyboard open/close via visualViewport resize
-  useEffect(() => {
-    const vv = window.visualViewport;
-    if (!vv) return;
-    const initialHeight = vv.height;
-    const onResize = () => {
-      // Keyboard is open when viewport shrinks significantly
-      setKeyboardOpen(vv.height < initialHeight * 0.75);
-    };
-    vv.addEventListener("resize", onResize);
-    return () => vv.removeEventListener("resize", onResize);
-  }, []);
 
   const handleSubmit = () => {
     if (value.trim()) {
@@ -67,7 +58,6 @@ export default function DreamInput({
       style={{
         gap: "1.25rem",
         pointerEvents: visible ? "auto" : "none",
-        ...(keyboardOpen ? { paddingBottom: "1rem" } : {}),
       }}
       onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}
       action="javascript:void(0)"
@@ -114,6 +104,8 @@ export default function DreamInput({
           if (value.trim()) {
             e.preventDefault();
             handleSubmit();
+            // Blur current input to cleanly dismiss keyboard before parent transitions
+            inputRef.current?.blur();
           }
         }}
         className={`

@@ -90,6 +90,12 @@ export default function WhoContent() {
     const timer = setTimeout(() => setShowBullets(true), 3000);
     return () => clearTimeout(timer);
   }, []);
+  // Match body background to page theme (prevent dark peek-through)
+  useEffect(() => {
+    const prev = document.body.style.backgroundColor;
+    document.body.style.backgroundColor = "#fdf8f0";
+    return () => { document.body.style.backgroundColor = prev; };
+  }, []);
 
   return (
     <div
@@ -111,6 +117,7 @@ export default function WhoContent() {
         position: "relative",
         overflowX: "hidden",
       }}
+      data-page-wrapper
     >
       {/* ── Background ── */}
       <PageBackground />

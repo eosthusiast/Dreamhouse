@@ -45,6 +45,8 @@
     color: var(--foreground);
     font-family: var(--font-cormorant);
     overflow-x: hidden;
+    min-height: 100vh;
+    min-height: 100dvh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -141,9 +143,22 @@ html.lenis body {
   }
 }
 
+/* CSS-only fallback: reveal hero elements if GSAP/JS fails entirely (noscript) */
+/* GSAP sets inline styles which override these; animation removed to avoid conflicts */
+
+/* Sub-page wrapper min-height — prevent dark body peek-through */
+@supports (min-height: 100dvh) {
+  [data-page-wrapper] {
+    min-height: 100dvh !important;
+  }
+}
+
 /* Safe area padding for notched devices */
 @supports (padding: env(safe-area-inset-bottom)) {
   .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  [data-page-wrapper] {
     padding-bottom: env(safe-area-inset-bottom);
   }
 }

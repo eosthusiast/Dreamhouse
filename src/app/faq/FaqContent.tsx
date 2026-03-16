@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import Image from "next/image";
 import Navigation from "@/components/layout/Navigation";
@@ -69,6 +69,11 @@ const QUESTIONS = [
 export default function FaqContent() {
   const [open, setOpen] = useState<number | null>(0);
   const wrapperClass = `${fraunces.variable} ${nunito.variable} ${playfair.variable}`;
+  useEffect(() => {
+    const prev = document.body.style.backgroundColor;
+    document.body.style.backgroundColor = "#fdf8f0";
+    return () => { document.body.style.backgroundColor = prev; };
+  }, []);
 
   return (
     <div
@@ -88,6 +93,7 @@ export default function FaqContent() {
         position: "relative",
         overflowX: "hidden",
       }}
+      data-page-wrapper
     >
       <PageBackground />
 

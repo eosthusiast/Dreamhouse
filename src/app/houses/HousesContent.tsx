@@ -404,8 +404,20 @@ function ThinRule() {
 
 export default function HousesContent() {
   const wrapperClass = `${fraunces.variable} ${nunito.variable} ${playfair.variable}`;
+  const [isMobile, setIsMobile] = useState(false);
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const openLightbox = useCallback((src: string) => setLightboxSrc(src), []);
+  useEffect(() => {
+    const prev = document.body.style.backgroundColor;
+    document.body.style.backgroundColor = "#fdf8f0";
+    return () => { document.body.style.backgroundColor = prev; };
+  }, []);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   return (
     <div
@@ -426,6 +438,7 @@ export default function HousesContent() {
         position: "relative",
         overflowX: "hidden",
       }}
+      data-page-wrapper
     >
       <AnimatePresence>
         {lightboxSrc && (
@@ -875,7 +888,7 @@ export default function HousesContent() {
             transition={{ duration: 0.9 }}
             style={{
               display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr",
+              gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr 1fr",
               gap: "1rem",
               width: "100vw",
               marginLeft: "calc(-50vw + 50%)",
@@ -920,7 +933,7 @@ export default function HousesContent() {
             transition={{ duration: 0.9 }}
             style={{
               display: "grid",
-              gridTemplateColumns: "1fr 1fr",
+              gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
               gap: "1rem",
               width: "100vw",
               marginLeft: "calc(-50vw + 50%)",
@@ -1077,7 +1090,7 @@ export default function HousesContent() {
             transition={{ duration: 0.9 }}
             style={{
               display: "grid",
-              gridTemplateColumns: "1fr 1fr",
+              gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
               gap: "1rem",
               marginBottom: "3rem",
               width: "100vw",

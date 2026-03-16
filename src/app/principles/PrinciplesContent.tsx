@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import Image from "next/image";
 import Navigation from "@/components/layout/Navigation";
@@ -31,7 +31,7 @@ function TarotCard({ principleColor, title, frontImage }: { principleColor: stri
 
   return (
     <div
-      style={{ perspective: "800px", width: "260px", height: "390px", flexShrink: 0 }}
+      style={{ perspective: "800px", width: "260px", maxWidth: "100%", height: "390px", flexShrink: 0 }}
       onMouseEnter={() => setIsFlipped(true)}
       onMouseLeave={() => setIsFlipped(false)}
       onClick={() => setIsFlipped((f) => !f)}
@@ -129,6 +129,11 @@ const PRINCIPLES = [
 
 export default function PrinciplesContent() {
   const wrapperClass = `${fraunces.variable} ${nunito.variable} ${playfair.variable}`;
+  useEffect(() => {
+    const prev = document.body.style.backgroundColor;
+    document.body.style.backgroundColor = "#fdf8f0";
+    return () => { document.body.style.backgroundColor = prev; };
+  }, []);
 
   return (
     <div
@@ -148,6 +153,7 @@ export default function PrinciplesContent() {
         position: "relative",
         overflowX: "hidden",
       }}
+      data-page-wrapper
     >
       <PageBackground />
 

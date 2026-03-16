@@ -96,6 +96,11 @@ export default function ScrollCanvas({
       const contents = stickyRef.current.querySelectorAll("[data-scroll-content]");
       if (images[0]) (images[0] as HTMLElement).style.cssText += "visibility:visible;opacity:1;";
       if (contents[0]) (contents[0] as HTMLElement).style.cssText += "visibility:visible;opacity:1;";
+      // Also reveal hero gate elements in case GSAP hasn't loaded
+      const heroHeading = document.querySelector("[data-hero-heading]") as HTMLElement;
+      const heroInput = document.querySelector("[data-hero-input]") as HTMLElement;
+      if (heroHeading) heroHeading.style.cssText += "visibility:visible;opacity:1;";
+      if (heroInput) heroInput.style.cssText += "visibility:visible;opacity:1;";
     }, 3000);
     return () => clearTimeout(fallback);
   }, []);
