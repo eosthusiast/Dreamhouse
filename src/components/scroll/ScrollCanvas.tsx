@@ -69,12 +69,12 @@ export default function ScrollCanvas({
       const updateHeight = () => {
         cancelAnimationFrame(rafId);
         rafId = requestAnimationFrame(() => {
+          const h = window.visualViewport?.height ?? window.innerHeight;
           if (!gateUnlocked) {
-            // During gate: fixed height — keyboard overlays, doesn't shrink container
-            sticky.style.height = `${initialHeight}px`;
+            // During gate: track viewport but cap minimum to prevent keyboard shrink
+            sticky.style.height = `${Math.max(h, initialHeight * 0.65)}px`;
             return;
           }
-          const h = window.visualViewport?.height ?? window.innerHeight;
           sticky.style.height = `${h}px`;
         });
       };
@@ -575,7 +575,7 @@ export default function ScrollCanvas({
         ref={stickyRef}
         className="sticky top-0 w-full"
         data-sticky-viewport
-        style={{ height: "100vh" }}
+        style={{ height: "100dvh" }}
       >
         <div className="relative w-full h-full overflow-hidden">
           {/* Background layers */}

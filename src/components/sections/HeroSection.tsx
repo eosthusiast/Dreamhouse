@@ -37,7 +37,7 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
       if (isOpen) {
         const kbHeight = initialVpHeight.current - vv.height;
         // Shift up by 30% of keyboard height — keeps input visible above keyboard
-        setKeyboardShift(kbHeight > 100 ? Math.round(kbHeight * 0.3) : 0);
+        setKeyboardShift(kbHeight > 100 ? Math.round(kbHeight * 0.45) : 0);
       } else {
         setKeyboardShift(0);
       }
@@ -265,6 +265,8 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
         onClick={() => { hero2Ref.current?.querySelector("input")?.focus(); }}
         className="absolute inset-0 flex flex-col items-center justify-center h-full w-full px-6"
         style={{
+          visibility: "hidden",
+          opacity: 0,
           transition: "transform 0.3s ease-out",
           transform: keyboardShift ? `translateY(-${keyboardShift}px)` : "none",
         }}
