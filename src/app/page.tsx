@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
+import Image from "next/image";
 import ScrollCanvas from "@/components/scroll/ScrollCanvas";
 import HeroSection from "@/components/sections/HeroSection";
 import StorySection from "@/components/sections/StorySection";
@@ -24,6 +25,7 @@ export default function Home() {
   const [isIOS, setIsIOS] = useState(false);
   const [overlayDone, setOverlayDone] = useState(false);
   const [galaxyBackdropVisible, setGalaxyBackdropVisible] = useState(false);
+  const [backdropImage, setBackdropImage] = useState<"galaxy" | "beach">("galaxy");
   const videoRef = useRef<HTMLVideoElement>(null);
   const backdropVideoRef = useRef<HTMLVideoElement>(null);
   const lastActiveRef = useRef(-1);
@@ -131,17 +133,19 @@ export default function Home() {
     setShowScrollHint(true);
   }, []);
 
-  // Overlay dismissal: drop backdrop behind ScrollCanvas so it fills the
-  // toolbar gap with galaxy instead of black. Programmatic scrollTo() doesn't
-  // trigger iOS toolbar auto-hide, so we can't fade out the backdrop yet.
-  // Instead, move it behind ScrollCanvas (z-index: 0 vs scroll-canvas z-index: 1).
-  // The backdrop is invisible behind normal content but fills the toolbar gap area.
-  // Unmount after first user scroll (toolbar auto-hides, gap disappears).
+  // Overlay dismissal: swap backdrop from galaxy to beach image, then drop
+  // behind ScrollCanvas. The beach image fills the toolbar gap (matching the
+  // visible section) instead of showing galaxy or black. Programmatic scrollTo()
+  // doesn't trigger iOS toolbar auto-hide, so the backdrop stays until the user
+  // scrolls manually (which hides the toolbar, eliminating the gap).
   const handleOverlayDismiss = useCallback(() => {
     setOverlayDone(true);
+    // Swap galaxy video to beach image — matches the section we landed on
+    setBackdropImage("beach");
+
     const backdrop = document.querySelector("[data-galaxy-backdrop]") as HTMLElement;
     if (backdrop) {
-      // Drop behind ScrollCanvas — fills gap but invisible behind content
+      // Drop behind ScrollCanvas — fills toolbar gap but invisible behind content
       backdrop.style.zIndex = "0";
 
       // Unmount after first user scroll (toolbar will have auto-hidden)
@@ -253,36 +257,50 @@ export default function Home() {
   ), [canBlend]);
 
   return (
-    <main>
+    <main style={{ overflowX: "clip" }}>
       <Navigation visible={gateComplete} variant={navVariant} />
       <ScrollIndicator visible={showScrollHint} onHide={() => setShowScrollHint(false)} />
 
-      {/* iOS galaxy backdrop: position:fixed covers full screen including behind Safari toolbar.
-          Eliminates the dark gap that visualViewport.height causes on the sticky ScrollCanvas. */}
+      {/* iOS backdrop: position:fixed covers full screen including behind Safari toolbar.
+          During gate: galaxy video. After gate: beach image (matches visible section).
+          Fills the toolbar gap that visualViewport.height causes on the sticky ScrollCanvas. */}
       {galaxyBackdropVisible && (
         <div
           className="fixed inset-0 z-[9998]"
           style={{ pointerEvents: "none" }}
           data-galaxy-backdrop
         >
-          <div className="absolute inset-0" style={{ background: "#050a1a" }} />
-          <video
-            ref={backdropVideoRef}
-            autoPlay
-            loop
-            muted
-            playsInline
-            poster="/videos/hero-bg-2-poster.jpg"
-            className="absolute inset-0 w-full h-full object-cover"
-            aria-hidden="true"
-          >
-            <source src="/videos/hero-bg-2.mp4" type="video/mp4" />
-            <source src="/videos/hero-bg-2.webm" type="video/webm" />
-          </video>
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{ background: "rgba(88, 44, 131, 0.30)" }}
-          />
+          {backdropImage === "galaxy" ? (
+            <>
+              <div className="absolute inset-0" style={{ background: "#050a1a" }} />
+              <video
+                ref={backdropVideoRef}
+                autoPlay
+                loop
+                muted
+                playsInline
+                poster="/videos/hero-bg-2-poster.jpg"
+                className="absolute inset-0 w-full h-full object-cover"
+                aria-hidden="true"
+              >
+                <source src="/videos/hero-bg-2.mp4" type="video/mp4" />
+                <source src="/videos/hero-bg-2.webm" type="video/webm" />
+              </video>
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{ background: "rgba(88, 44, 131, 0.30)" }}
+              />
+            </>
+          ) : (
+            <Image
+              src="/images/sections/beach-sunset.jpg"
+              alt=""
+              fill
+              className="object-cover"
+              style={{ objectPosition: "center 33%" }}
+              sizes="100vw"
+            />
+          )}
         </div>
       )}
 

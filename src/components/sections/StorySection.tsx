@@ -27,7 +27,7 @@ const BEACH_TEXTS: TextConfig[] = [
     align: "left",
     topAlign: true,
   },
-  { text: "When everything feels possible.", x: 78, y: 78, mobileX: 94, mobileY: 75, align: "right" },
+  { text: "When everything feels possible.", x: 78, y: 78, mobileX: 88, mobileY: 75, align: "right" },
 ];
 
 const OCEAN_TEXTS: TextConfig[] = [
@@ -42,11 +42,11 @@ const OCEAN_TEXTS: TextConfig[] = [
     text: "Where your dreams become reality on the same day you dream them.",
     x: 78,
     y: 68,
-    mobileX: 94,
+    mobileX: 88,
     mobileY: 58,
     align: "right",
   },
-  { text: "What if that wasn\u2019t luck?", x: 78, y: 82, mobileX: 94, mobileY: 78, align: "right" },
+  { text: "What if that wasn\u2019t luck?", x: 78, y: 82, mobileX: 88, mobileY: 78, align: "right" },
 ];
 
 const LINE_STYLE = {
