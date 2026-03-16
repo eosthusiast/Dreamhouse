@@ -269,7 +269,7 @@ export default function HeroGateOverlay({
         onClick={() => {
           hero2Ref.current?.querySelector("input")?.focus();
         }}
-        className="absolute inset-0 flex flex-col items-center w-full px-6"
+        className="absolute inset-0 flex flex-col items-center w-full px-4"
       >
         <div className="flex flex-col items-center w-full my-auto"
           style={{ padding: keyboardOpen ? "0.5rem 0" : "1rem 0" }}
