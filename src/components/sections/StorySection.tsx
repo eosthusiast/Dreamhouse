@@ -23,7 +23,7 @@ const BEACH_TEXTS: TextConfig[] = [
     text: "That version of yourself that\u2019s lit up, inspired, in love with being alive.",
     x: 25,
     y: 12,
-    mobileY: 25,
+    mobileY: 32,
     align: "left",
     topAlign: true,
   },

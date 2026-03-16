@@ -66,7 +66,14 @@ export default function ScrollCanvas({
       const sticky = stickyRef.current;
       let rafId: number;
       let gateUnlocked = false;
-      let initialHeight = window.visualViewport?.height ?? window.innerHeight;
+      // Use the LARGER of visualViewport and innerHeight as frozen reference.
+      // visualViewport excludes toolbars; innerHeight includes toolbar area
+      // (with viewport-fit=cover). Without this, galaxy video is shorter than
+      // the full screen during gate, showing body bg as a black bar at bottom.
+      let initialHeight = Math.max(
+        window.visualViewport?.height ?? window.innerHeight,
+        window.innerHeight
+      );
 
       const updateHeight = () => {
         cancelAnimationFrame(rafId);

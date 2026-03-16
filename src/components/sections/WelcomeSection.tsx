@@ -5,7 +5,7 @@ export default function WelcomeSection() {
     <div className="relative w-full h-full">
       <style>{`
         @media (min-width: 768px) {
-          .welcome-details { color: rgba(10,26,58,0.8) !important; text-shadow: none !important; }
+          .welcome-details { color: rgba(10,26,58,0.8) !important; text-shadow: none !important; gap: 1.25rem !important; }
         }
       `}</style>
 
@@ -13,7 +13,7 @@ export default function WelcomeSection() {
       <div
         data-reveal
         className="absolute"
-        style={{ left: "6%", top: "35%", transform: "translateY(-50%)" }}
+        style={{ left: "6%", top: "28%", transform: "translateY(-50%)" }}
       >
         {/* Dark vignette behind PNG */}
         <div
@@ -37,15 +37,15 @@ export default function WelcomeSection() {
       {/* Details - right side, vertically centered */}
       <div
         className="absolute"
-        style={{ right: "10%", top: "65%", transform: "translateY(-30%)" }}
+        style={{ right: "10%", top: "58%", transform: "translateY(-30%)" }}
       >
-        <div className="welcome-details font-playfair italic text-lg md:text-xl lg:text-2xl" style={{ display: "flex", flexDirection: "column", gap: "1.25rem", color: "rgba(255,255,255,0.95)", textShadow: "0 2px 20px rgba(0,0,0,0.6), 0 0 40px rgba(0,0,0,0.3)" }}>
+        <div className="welcome-details font-playfair italic text-lg md:text-xl lg:text-2xl" style={{ display: "flex", flexDirection: "column", gap: "0.6rem", color: "rgba(255,255,255,0.95)", textShadow: "0 2px 20px rgba(0,0,0,0.6), 0 0 40px rgba(0,0,0,0.3)" }}>
           <p data-reveal>1 month</p>
           <p data-reveal>10 &ndash; 16 people</p>
           <p data-reveal>Carefully curated.</p>
           <p data-reveal>Consciously held.</p>
           <p data-reveal>Co-created.</p>
-          <p data-reveal className="mt-6 max-w-xs">
+          <p data-reveal className="mt-2 md:mt-6 max-w-xs">
             Where inspiring people
             <br />
             go to get inspired.
