@@ -56,19 +56,21 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
     if (hero2Ref.current) gsap.set(hero2Ref.current, { autoAlpha: 0 });
     onGateComplete();
 
-    // Auto-scroll to just before the first text in the beach section
+    // Auto-scroll to just before the first text in the beach section.
+    // Read actual container height from DOM (always correct, matches CSS vh).
     requestAnimationFrame(() => {
+      const container = document.querySelector("#scroll-canvas > div");
+      const containerHeight = container?.getBoundingClientRect().height
+        ?? document.documentElement.scrollHeight;
+      const scrollRange = containerHeight - window.innerHeight;
+
       const baseSectionVhs = [530, 530, 325, 315, 330, 340, 315, 235];
       const mobile = window.innerWidth < 768;
       const sectionVhs = baseSectionVhs.map(v => mobile ? Math.round(v * 0.85) : v);
       const totalVh = sectionVhs.reduce((a, b) => a + b, 0);
-      // Use innerHeight (matches CSS vh unit used for container height),
-      // NOT visualViewport.height (excludes iOS toolbar, causes undershoot)
-      const vh = window.innerHeight / 100;
-      const scrollRange = totalVh * vh - window.innerHeight;
-      // Target: 40vh into section 2 (text starts at 52vh, land just before)
+      // Target: 60vh into section 2 (safely past galaxy→beach crossfade)
       const section2StartVh = sectionVhs[0] + sectionVhs[1];
-      const targetVh = section2StartVh + 40;
+      const targetVh = section2StartVh + 60;
       const targetProgress = targetVh / totalVh;
       const targetScroll = targetProgress * scrollRange;
       window.scrollTo(0, targetScroll);
@@ -176,8 +178,13 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
       setPhase("done");
       onGateComplete();
 
+      // Blur input to dismiss keyboard BEFORE scroll calculation
+      const activeInput = hero2Ref.current?.querySelector("input");
+      activeInput?.blur();
+
       // Animated transition: fade out hero2 content, then GSAP-scroll
-      // through the dark→light crossfade to land on blank beach
+      // through the dark→light crossfade to land on blank beach.
+      // Wait 600ms for keyboard to fully dismiss (Android resizes innerHeight)
       setTimeout(() => {
         const tl = gsap.timeline();
 
@@ -190,30 +197,34 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
           });
         }
 
-        // 2. Animated scroll — drives the ScrollCanvas crossfade from galaxy to beach
-        const baseSectionVhs = [530, 530, 325, 315, 330, 340, 315, 235];
-      const mobile = window.innerWidth < 768;
-      const sectionVhs = baseSectionVhs.map(v => mobile ? Math.round(v * 0.85) : v);
-        const totalVh = sectionVhs.reduce((a, b) => a + b, 0);
-        // Use innerHeight (matches CSS vh unit used for container height),
-        // NOT visualViewport.height (excludes iOS toolbar, causes undershoot)
-        const vh = window.innerHeight / 100;
-        const scrollRange = totalVh * vh - window.innerHeight;
-        // Target: 40vh into section 2 (beach at full opacity, just before text starts)
-        const section2StartVh = sectionVhs[0] + sectionVhs[1];
-        const targetVh = section2StartVh + 40;
-        const targetProgress = targetVh / totalVh;
-        const targetScroll = targetProgress * scrollRange;
+        // 2. Compute scroll target AFTER keyboard dismissed.
+        // Read actual container height from DOM (always correct, matches CSS vh).
+        tl.call(() => {
+          const container = document.querySelector("#scroll-canvas > div");
+          const containerHeight = container?.getBoundingClientRect().height
+            ?? document.documentElement.scrollHeight;
+          const scrollRange = containerHeight - window.innerHeight;
 
-        const scrollProxy = { y: window.scrollY };
-        tl.to(scrollProxy, {
-          y: targetScroll,
-          duration: 3.5,
-          ease: "power2.inOut",
-          onUpdate: () => window.scrollTo(0, scrollProxy.y),
-          onComplete: () => onScrollComplete?.(),
-        }, "-=0.3");
-      }, 400);
+          const baseSectionVhs = [530, 530, 325, 315, 330, 340, 315, 235];
+          const mobile = window.innerWidth < 768;
+          const sectionVhs = baseSectionVhs.map(v => mobile ? Math.round(v * 0.85) : v);
+          const totalVh = sectionVhs.reduce((a, b) => a + b, 0);
+          // Target: 60vh into section 2 (safely past galaxy→beach crossfade which ends at 40vh)
+          const section2StartVh = sectionVhs[0] + sectionVhs[1];
+          const targetVh = section2StartVh + 60;
+          const targetProgress = targetVh / totalVh;
+          const targetScroll = targetProgress * scrollRange;
+
+          const scrollProxy = { y: window.scrollY };
+          gsap.to(scrollProxy, {
+            y: targetScroll,
+            duration: 3.5,
+            ease: "power2.inOut",
+            onUpdate: () => window.scrollTo(0, scrollProxy.y),
+            onComplete: () => onScrollComplete?.(),
+          });
+        });
+      }, 600);
     },
     [onGateComplete, onScrollComplete]
   );

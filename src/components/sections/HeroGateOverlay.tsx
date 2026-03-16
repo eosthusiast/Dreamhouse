@@ -164,18 +164,21 @@ export default function HeroGateOverlay({
             overlayRef.current.style.pointerEvents = "none";
           }
 
+          // Read actual container height from DOM (always correct, matches CSS vh)
+          const container = document.querySelector("#scroll-canvas > div");
+          const containerHeight = container?.getBoundingClientRect().height
+            ?? document.documentElement.scrollHeight;
+          const scrollRange = containerHeight - window.innerHeight;
+
           const baseSectionVhs = [530, 530, 325, 315, 330, 340, 315, 235];
           const mobile = window.innerWidth < 768;
           const sectionVhs = baseSectionVhs.map((v) =>
             mobile ? Math.round(v * 0.85) : v
           );
           const totalVh = sectionVhs.reduce((a, b) => a + b, 0);
-          // Use innerHeight (matches CSS vh unit used for container height),
-          // NOT visualViewport.height (excludes iOS toolbar, causes undershoot)
-          const vh = window.innerHeight / 100;
-          const scrollRange = totalVh * vh - window.innerHeight;
+          // Target: 60vh into section 2 (safely past galaxy→beach crossfade which ends at 40vh)
           const section2StartVh = sectionVhs[0] + sectionVhs[1];
-          const targetVh = section2StartVh + 40;
+          const targetVh = section2StartVh + 60;
           const targetProgress = targetVh / totalVh;
           const targetScroll = targetProgress * scrollRange;
 
