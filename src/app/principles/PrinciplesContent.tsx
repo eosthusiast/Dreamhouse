@@ -31,7 +31,7 @@ function TarotCard({ principleColor, title, frontImage }: { principleColor: stri
 
   return (
     <div
-      style={{ perspective: "800px", width: "200px", height: "300px", flexShrink: 0 }}
+      style={{ perspective: "800px", width: "260px", height: "390px", flexShrink: 0 }}
       onMouseEnter={() => setIsFlipped(true)}
       onMouseLeave={() => setIsFlipped(false)}
       onClick={() => setIsFlipped((f) => !f)}
@@ -64,7 +64,7 @@ function TarotCard({ principleColor, title, frontImage }: { principleColor: stri
             alt="Tarot card back"
             fill
             style={{ objectFit: "cover" }}
-            sizes="200px"
+            sizes="260px"
           />
         </div>
 
@@ -86,7 +86,7 @@ function TarotCard({ principleColor, title, frontImage }: { principleColor: stri
             alt={title}
             fill
             style={{ objectFit: "cover" }}
-            sizes="200px"
+            sizes="260px"
           />
         </div>
       </div>
@@ -161,8 +161,8 @@ export default function PrinciplesContent() {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            minHeight: "35vh",
-            padding: "6rem 1.5rem 3rem",
+            minHeight: "25vh",
+            padding: "6rem 1.5rem 1.5rem",
             textAlign: "center",
           }}
         >
@@ -182,37 +182,74 @@ export default function PrinciplesContent() {
           >
             Principles
           </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 1 }}
-            style={{
-              maxWidth: "520px",
-              marginBottom: "3rem",
-            }}
-          >
-            <span style={{
-              fontFamily: "var(--font-fraunces)",
-              fontSize: "clamp(0.89rem, 1.79vw, 1.34rem)",
-              fontWeight: 400,
-              color: "var(--text-soft)",
-              display: "block",
-              marginBottom: "0.3rem",
-            }}>
-              Where inspiring people go to get inspired.
-            </span>
-            <span style={{
-              fontFamily: "var(--font-fraunces)",
-              fontSize: "clamp(0.75rem, 1.4vw, 1.05rem)",
-              fontWeight: 300,
-              fontStyle: "italic",
-              color: "var(--text-soft)",
-            }}>
-              A detox from the modern world and its limiting beliefs.
-            </span>
-          </motion.p>
         </section>
+
+        {/* Banner photo */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.9 }}
+          style={{
+            position: "relative",
+            width: "100vw",
+            height: "55vh",
+            overflow: "hidden",
+            marginBottom: "3rem",
+          }}
+        >
+          <Image
+            src="/images/sections/pexels-jplenio.jpg"
+            alt="Landscape"
+            fill
+            style={{
+              objectFit: "cover",
+              filter: "saturate(0.85)",
+            }}
+            sizes="100vw"
+          />
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "linear-gradient(to bottom, rgba(253,248,240,0.08) 0%, rgba(253,248,240,0.18) 100%)",
+              pointerEvents: "none",
+            }}
+          />
+        </motion.div>
+
+        {/* Subheading — moved below banner */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 1 }}
+          style={{
+            maxWidth: "520px",
+            margin: "0 auto 3rem",
+            textAlign: "center",
+            padding: "0 2rem",
+          }}
+        >
+          <span style={{
+            fontFamily: "var(--font-fraunces)",
+            fontSize: "clamp(0.89rem, 1.79vw, 1.34rem)",
+            fontWeight: 400,
+            color: "var(--text-soft)",
+            display: "block",
+            marginBottom: "0.3rem",
+          }}>
+            Where inspiring people go to get inspired.
+          </span>
+          <span style={{
+            fontFamily: "var(--font-fraunces)",
+            fontSize: "clamp(0.75rem, 1.4vw, 1.05rem)",
+            fontWeight: 300,
+            fontStyle: "italic",
+            color: "var(--text-soft)",
+          }}>
+            A detox from the modern world and its limiting beliefs.
+          </span>
+        </motion.p>
 
         {/* Content container */}
         <div style={{ maxWidth: "750px", margin: "0 auto", padding: "0 2rem 6rem" }}>

@@ -420,6 +420,7 @@ export default function HousesContent() {
         ["--text-dark" as string]: "#231810",
         ["--text-mid" as string]: "#5a3828",
         ["--text-soft" as string]: "#8a6050",
+        ["--night" as string]: "#1c1018",
         backgroundColor: "var(--cream)",
         minHeight: "100vh",
         position: "relative",
@@ -468,8 +469,45 @@ export default function HousesContent() {
 
         </section>
 
+        {/* Photo 1 — full-width cinematic banner */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.9 }}
+          onClick={() => openLightbox("/images/houses/fools-valley-8_a.jpg")}
+          style={{
+            position: "relative",
+            width: "100vw",
+            height: "55vh",
+            overflow: "hidden",
+            marginBottom: "3rem",
+            cursor: "zoom-in",
+          }}
+        >
+          <Image
+            src="/images/houses/fools-valley-8_a.jpg"
+            alt="Fools Valley, Portugal"
+            fill
+            style={{
+              objectFit: "cover",
+              filter: "saturate(0.85)",
+            }}
+            sizes="100vw"
+          />
+          {/* Dreamy cream overlay */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "linear-gradient(to bottom, rgba(253,248,240,0.08) 0%, rgba(253,248,240,0.18) 100%)",
+              pointerEvents: "none",
+            }}
+          />
+        </motion.div>
+
         {/* Content container */}
-        <div style={{ maxWidth: "750px", margin: "0 auto", padding: "0 2rem 6rem" }}>
+        <div style={{ maxWidth: "750px", margin: "0 auto", padding: "0 2rem 3rem" }}>
 
           {/* Chapter listings */}
           <motion.section
@@ -477,7 +515,7 @@ export default function HousesContent() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            style={{ marginBottom: "3rem" }}
+            style={{ marginBottom: "1.5rem" }}
           >
             <h2
               style={{
@@ -487,7 +525,7 @@ export default function HousesContent() {
                 letterSpacing: "-0.01em",
                 color: "var(--text-dark)",
                 textAlign: "center",
-                marginBottom: "0.5rem",
+                marginBottom: "0.4rem",
               }}
             >
               Next chapter:{" "}
@@ -505,7 +543,7 @@ export default function HousesContent() {
                 fontStyle: "italic",
                 color: "var(--text-soft)",
                 textAlign: "center",
-                marginBottom: "1.5rem",
+                marginBottom: "2rem",
               }}
             >
               4th July &ndash; 2nd August 2026
@@ -519,7 +557,7 @@ export default function HousesContent() {
                 letterSpacing: "-0.01em",
                 color: "var(--text-dark)",
                 textAlign: "center",
-                marginBottom: "1.5rem",
+                marginBottom: "0.4rem",
               }}
             >
               Past chapter:{" "}
@@ -539,7 +577,7 @@ export default function HousesContent() {
                 fontStyle: "italic",
                 color: "var(--text-soft)",
                 textAlign: "center",
-                marginBottom: "1.5rem",
+                marginBottom: "2rem",
               }}
             >
               February 2025
@@ -552,7 +590,6 @@ export default function HousesContent() {
                 fontStyle: "italic",
                 color: "var(--text-soft)",
                 textAlign: "center",
-                marginBottom: "0.5rem",
               }}
             >
               More chapters coming soon &mdash;{" "}
@@ -568,245 +605,165 @@ export default function HousesContent() {
             </p>
           </motion.section>
 
-          {/* Photo 1 — full-width cinematic banner */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.9 }}
-            onClick={() => openLightbox("/images/houses/fools-valley-8_a.jpg")}
-            style={{
-              position: "relative",
-              width: "100vw",
-              marginLeft: "calc(-50vw + 50%)",
-              height: "55vh",
-              overflow: "hidden",
-              marginBottom: "3rem",
-              cursor: "zoom-in",
-            }}
-          >
-            <Image
-              src="/images/houses/fools-valley-8_a.jpg"
-              alt="Fools Valley, Portugal"
-              fill
-              style={{
-                objectFit: "cover",
-                filter: "saturate(0.85)",
-              }}
-              sizes="100vw"
-            />
-            {/* Dreamy cream overlay */}
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                background: "linear-gradient(to bottom, rgba(253,248,240,0.08) 0%, rgba(253,248,240,0.18) 100%)",
-                pointerEvents: "none",
-              }}
-            />
-          </motion.div>
+        </div>
 
-          {/* Rituals & Rhythms */}
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            style={{ marginBottom: "3rem" }}
-          >
-            <h2
-              style={{
-                fontFamily: "var(--font-playfair)",
-                fontSize: "clamp(1.08rem, 2.21vw, 1.72rem)",
-                fontWeight: 400,
-                letterSpacing: "-0.01em",
-                color: "var(--text-dark)",
-                textAlign: "center",
-                marginBottom: "1rem",
-              }}
-            >
-              The rituals &amp; the rhythms
-            </h2>
-
-            <p
-              style={{
-                fontFamily: "var(--font-fraunces)",
-                fontStyle: "italic",
-                fontSize: "clamp(1.05rem, 2vw, 1.25rem)",
-                color: "var(--text-soft)",
-                textAlign: "center",
-                marginBottom: "2.5rem",
-              }}
-            >
-              Enough structure to hold you, enough spaciousness to surprise you.
-            </p>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
-              {[
-                {
-                  icon: "🌙",
-                  title: "The opening ceremony: a mystery school for connection",
-                  body: "Your first weekend together is a mystery school for connection. Everyone must arrive by 12pm on July 4th. It\u2019s super important we open the experience together.",
-                },
-                {
-                  icon: "🪄",
-                  title: "The whiteboard",
-                  body: "A whiteboard that each of you is encouraged to fill with your ideas and offerings.",
-                },
-                {
-                  icon: "🍵",
-                  title: "Daily rituals",
-                  body: "Sunrise tea ceremonies, morning intention settings, movement, lunch & learns\u2026 we get to create them, together.",
-                },
-                {
-                  icon: "💻",
-                  title: "Deep work",
-                  body: "Opportunities created to get into deep focus with supportive accountability and collaboration if useful. It could be your most productive month of the year.",
-                },
-                {
-                  icon: "✨",
-                  title: "Peer workshops",
-                  body: "Everyone in this house knows something the others don\u2019t. We make structured space for that exchange. You will teach. You will be taught. Often by the person you least expected.",
-                },
-                {
-                  icon: "🌿",
-                  title: "Giving back",
-                  body: "Opportunities to give back to the local community. Being of service.",
-                },
-                {
-                  icon: "🔮",
-                  title: "Community & hosting",
-                  body: "Some days the valley belongs only to us \u2014 intimate, held, sacred. Other days we open the gates and invite our wider European community in.",
-                },
-              ].map((ritual, i) => (
-                <motion.div
-                  key={ritual.title}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: i * 0.08 }}
-                  style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.5rem", textAlign: "center" }}
-                >
-                  <span style={{ fontSize: "1.5rem" }}>
-                    {ritual.icon}
-                  </span>
-                  <div>
-                    <p
-                      style={{
-                        fontFamily: "var(--font-fraunces)",
-                        fontSize: "clamp(1.1rem, 2.1vw, 1.25rem)",
-                        fontWeight: 500,
-                        color: "var(--text-dark)",
-                        marginBottom: "0.3rem",
-                      }}
-                    >
-                      {ritual.title}
-                    </p>
-                    <p
-                      style={{
-                        fontSize: "clamp(1.15rem, 2.3vw, 1.32rem)",
-                        lineHeight: 1.85,
-                        color: "var(--text-mid)",
-                      }}
-                    >
-                      {ritual.body}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.section>
-
-          {/* Photo grid — 3-column: 6 (vertical) | 2 (center) | 7 (vertical) */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.9 }}
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr",
-              gap: "1rem",
-              width: "100vw",
-              marginLeft: "calc(-50vw + 50%)",
-              marginBottom: "1.5rem",
-              padding: "0 1rem",
-              boxSizing: "border-box",
-            }}
-          >
+        {/* Rituals & Rhythms — dark section */}
+        <section
+          style={{
+            backgroundColor: "var(--night)",
+            padding: "5rem 2rem",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          {/* dark blobs */}
+          <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
             {[
-              { src: "/images/houses/fools-valley-6.jpg", alt: "Fools Valley — the estate" },
-              { src: "/images/houses/fools-valley-7.jpg", alt: "Fools Valley — the gardens" },
-              { src: "/images/houses/fools-valley-2.jpg", alt: "Fools Valley — the valley" },
-            ].map((img) => (
+              { color: "rgba(232,128,106,0.08)", top: "10%", left: "5%", size: 320 },
+              { color: "rgba(184,168,212,0.07)", bottom: "15%", right: "8%", size: 280 },
+              { color: "rgba(140,184,154,0.06)", top: "60%", left: "70%", size: 240 },
+            ].map((b, i) => (
               <div
-                key={img.src}
-                onClick={() => openLightbox(img.src)}
+                key={i}
                 style={{
-                  position: "relative",
-                  aspectRatio: "3/4",
-                  borderRadius: "10px",
-                  overflow: "hidden",
-                  boxShadow: "0 4px 24px rgba(35,24,16,0.10)",
-                  cursor: "zoom-in",
+                  position: "absolute",
+                  top: "top" in b ? b.top : undefined,
+                  bottom: "bottom" in b ? b.bottom : undefined,
+                  left: "left" in b ? b.left : undefined,
+                  right: "right" in b ? b.right : undefined,
+                  width: b.size,
+                  height: b.size,
+                  borderRadius: "50%",
+                  background: b.color,
+                  filter: "blur(60px)",
+                }}
+              />
+            ))}
+          </div>
+
+          <div style={{ maxWidth: "750px", margin: "0 auto", position: "relative", zIndex: 1 }}>
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.8 }}
+            >
+              <h2
+                style={{
+                  fontFamily: "var(--font-playfair)",
+                  fontSize: "clamp(1.54rem, 3.15vw, 2.52rem)",
+                  fontWeight: 400,
+                  letterSpacing: "-0.01em",
+                  lineHeight: 1.15,
+                  color: "rgba(253,220,200,0.95)",
+                  textAlign: "center",
+                  marginBottom: "1rem",
                 }}
               >
-                <Image
-                  src={img.src}
-                  alt={img.alt}
-                  fill
-                  style={{ objectFit: "cover", filter: "saturate(0.85)" }}
-                  sizes="33vw"
-                />
-              </div>
-            ))}
-          </motion.div>
+                The rituals &amp; the rhythms
+              </h2>
 
-          {/* Second row — 2-column */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.9 }}
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "1rem",
-              width: "100vw",
-              marginLeft: "calc(-50vw + 50%)",
-              marginBottom: "3rem",
-              padding: "0 1rem",
-              boxSizing: "border-box",
-            }}
-          >
-            {[
-              { src: "/images/houses/fools-valley-0.jpg", alt: "Fools Valley — overview" },
-              { src: "/images/houses/fools-valley-9.jpg", alt: "Fools Valley — evening light" },
-            ].map((img) => (
-              <div
-                key={img.src}
-                onClick={() => openLightbox(img.src)}
+              <p
                 style={{
-                  position: "relative",
-                  aspectRatio: "4/3",
-                  borderRadius: "10px",
-                  overflow: "hidden",
-                  boxShadow: "0 4px 24px rgba(35,24,16,0.10)",
-                  cursor: "zoom-in",
+                  fontFamily: "var(--font-fraunces)",
+                  fontStyle: "italic",
+                  fontSize: "clamp(1.05rem, 2vw, 1.25rem)",
+                  color: "rgba(253,220,200,0.55)",
+                  textAlign: "center",
+                  marginBottom: "3rem",
                 }}
               >
-                <Image
-                  src={img.src}
-                  alt={img.alt}
-                  fill
-                  style={{ objectFit: "cover", filter: "saturate(0.85)" }}
-                  sizes="50vw"
-                />
-              </div>
-            ))}
-          </motion.div>
+                Enough structure to hold you, enough spaciousness to surprise you.
+              </p>
 
-          <ThinRule />
+              <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
+                {[
+                  {
+                    icon: "🌙",
+                    title: "The opening ceremony: a mystery school for connection",
+                    body: "Your first weekend together is a mystery school for connection. Everyone must arrive by 12pm on July 4th. It\u2019s super important we open the experience together.",
+                  },
+                  {
+                    icon: "🪄",
+                    title: "The whiteboard",
+                    body: "A whiteboard that each of you is encouraged to fill with your ideas and offerings.",
+                  },
+                  {
+                    icon: "🍵",
+                    title: "Daily rituals",
+                    body: "Sunrise tea ceremonies, morning intention settings, movement, lunch & learns\u2026 we get to create them, together.",
+                  },
+                  {
+                    icon: "💻",
+                    title: "Deep work",
+                    body: "Opportunities created to get into deep focus with supportive accountability and collaboration if useful. It could be your most productive month of the year.",
+                  },
+                  {
+                    icon: "✨",
+                    title: "Peer workshops",
+                    body: "Everyone in this house knows something the others don\u2019t. We make structured space for that exchange. You will teach. You will be taught. Often by the person you least expected.",
+                  },
+                  {
+                    icon: "🌿",
+                    title: "Giving back",
+                    body: "Opportunities to give back to the local community. Being of service.",
+                  },
+                  {
+                    icon: "🔮",
+                    title: "Community & hosting",
+                    body: "Some days the valley belongs only to us \u2014 intimate, held, sacred. Other days we open the gates and invite our wider European community in.",
+                  },
+                ].map((ritual, i) => (
+                  <motion.div
+                    key={ritual.title}
+                    initial={{ opacity: 0, x: -16 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: "-60px" }}
+                    transition={{ duration: 0.6, delay: i * 0.1 }}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                      padding: "2rem 0",
+                      borderBottom: "1px solid rgba(253,220,200,0.08)",
+                      textAlign: "center",
+                    }}
+                  >
+                    <span style={{ fontSize: "1.5rem" }}>
+                      {ritual.icon}
+                    </span>
+                    <div>
+                      <p
+                        style={{
+                          fontFamily: "var(--font-fraunces)",
+                          fontSize: "clamp(1.1rem, 2.1vw, 1.25rem)",
+                          fontWeight: 500,
+                          color: "rgba(253,220,200,0.9)",
+                          marginBottom: "0.3rem",
+                        }}
+                      >
+                        {ritual.title}
+                      </p>
+                      <p
+                        style={{
+                          fontSize: "clamp(1.15rem, 2.3vw, 1.32rem)",
+                          lineHeight: 1.85,
+                          color: "rgba(253,220,200,0.6)",
+                        }}
+                      >
+                        {ritual.body}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Content container (continued after rituals) */}
+        <div style={{ maxWidth: "750px", margin: "0 auto", padding: "0 2rem 6rem" }}>
 
           {/* Fools Valley */}
           <motion.section
@@ -815,7 +772,7 @@ export default function HousesContent() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            style={{ marginBottom: "3rem" }}
+            style={{ marginBottom: "3rem", paddingTop: "4rem" }}
           >
             <h2
               style={{
@@ -837,6 +794,19 @@ export default function HousesContent() {
                 Fools Valley
               </a>
             </h2>
+
+            <p
+              style={{
+                fontFamily: "var(--font-fraunces)",
+                fontSize: "clamp(1.05rem, 2vw, 1.25rem)",
+                fontStyle: "italic",
+                color: "var(--text-soft)",
+                textAlign: "center",
+                marginBottom: "1.5rem",
+              }}
+            >
+              4th July &ndash; 2nd August 2026
+            </p>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem", fontSize: "clamp(1.15rem, 2.3vw, 1.32rem)", lineHeight: 1.85, color: "var(--text-mid)", textAlign: "center" }}>
               <p>Deep in Portugal, there is a place called{" "}
@@ -897,30 +867,93 @@ export default function HousesContent() {
             </div>
           </motion.section>
 
-          {/* Photo 4 — wide single, full-width */}
+          {/* Photo gallery — 3-column */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.9 }}
-            onClick={() => openLightbox("/images/houses/fools-valley-3.jpg")}
             style={{
-              position: "relative",
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr 1fr",
+              gap: "1rem",
               width: "100vw",
               marginLeft: "calc(-50vw + 50%)",
-              aspectRatio: "16/7",
-              overflow: "hidden",
-              marginBottom: "3rem",
-              cursor: "zoom-in",
+              marginBottom: "1.5rem",
+              padding: "0 1rem",
+              boxSizing: "border-box",
             }}
           >
-            <Image
-              src="/images/houses/fools-valley-3.jpg"
-              alt="Fools Valley — a quiet corner"
-              fill
-              style={{ objectFit: "cover", filter: "saturate(0.85)" }}
-              sizes="100vw"
-            />
+            {[
+              { src: "/images/houses/fools-valley-6.jpg", alt: "Fools Valley — the estate" },
+              { src: "/images/houses/fools-valley-7.jpg", alt: "Fools Valley — the gardens" },
+              { src: "/images/houses/fools-valley-2.jpg", alt: "Fools Valley — the valley" },
+            ].map((img) => (
+              <div
+                key={img.src}
+                onClick={() => openLightbox(img.src)}
+                style={{
+                  position: "relative",
+                  aspectRatio: "3/4",
+                  borderRadius: "10px",
+                  overflow: "hidden",
+                  boxShadow: "0 4px 24px rgba(35,24,16,0.10)",
+                  cursor: "zoom-in",
+                }}
+              >
+                <Image
+                  src={img.src}
+                  alt={img.alt}
+                  fill
+                  style={{ objectFit: "cover", filter: "saturate(0.85)" }}
+                  sizes="33vw"
+                />
+              </div>
+            ))}
+          </motion.div>
+
+          {/* Photo gallery — 2-column */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9 }}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "1rem",
+              width: "100vw",
+              marginLeft: "calc(-50vw + 50%)",
+              marginBottom: "3rem",
+              padding: "0 1rem",
+              boxSizing: "border-box",
+            }}
+          >
+            {[
+              { src: "/images/houses/fools-valley-0.jpg", alt: "Fools Valley — overview" },
+              { src: "/images/houses/fools-valley-9.jpg", alt: "Fools Valley — evening light" },
+            ].map((img) => (
+              <div
+                key={img.src}
+                onClick={() => openLightbox(img.src)}
+                style={{
+                  position: "relative",
+                  aspectRatio: "4/3",
+                  borderRadius: "10px",
+                  overflow: "hidden",
+                  boxShadow: "0 4px 24px rgba(35,24,16,0.10)",
+                  cursor: "zoom-in",
+                }}
+              >
+                <Image
+                  src={img.src}
+                  alt={img.alt}
+                  fill
+                  style={{ objectFit: "cover", filter: "saturate(0.85)" }}
+                  sizes="50vw"
+                />
+              </div>
+            ))}
           </motion.div>
 
           <ThinRule />

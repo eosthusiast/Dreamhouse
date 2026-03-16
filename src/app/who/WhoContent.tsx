@@ -126,8 +126,8 @@ export default function WhoContent() {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            minHeight: "40vh",
-            padding: "6rem 1.5rem 1rem",
+            minHeight: "25vh",
+            padding: "6rem 1.5rem 1.5rem",
             textAlign: "center",
           }}
         >
@@ -148,6 +148,85 @@ export default function WhoContent() {
             Who is this{" "}
             <em style={{ color: "var(--coral)", fontStyle: "italic" }}>for?</em>
           </motion.h1>
+        </section>
+
+        {/* Banner photo with rotator overlay */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.9 }}
+          style={{
+            position: "relative",
+            width: "100vw",
+            height: "55vh",
+            overflow: "hidden",
+            marginBottom: "3rem",
+          }}
+        >
+          <Image
+            src="/images/sections/pexels-lum3n.jpg"
+            alt="Nature landscape"
+            fill
+            style={{
+              objectFit: "cover",
+              filter: "saturate(0.85)",
+            }}
+            sizes="100vw"
+          />
+          {/* Darkening overlay for text legibility */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.35) 100%)",
+              pointerEvents: "none",
+            }}
+          />
+          {/* Rotator overlay */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 1,
+            }}
+          >
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.9, duration: 0.8 }}
+              style={{ textAlign: "center" }}
+            >
+              <AnimatePresence mode="wait">
+                <motion.p
+                  key={tagIndex}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.5 }}
+                  style={{
+                    fontFamily: "var(--font-fraunces)",
+                    fontSize: "clamp(2.5rem, 5vw, 4rem)",
+                    fontWeight: 700,
+                    fontStyle: "italic",
+                    color: "#fdf8f0",
+                    margin: 0,
+                    textShadow: "0 2px 16px rgba(0,0,0,0.3)",
+                  }}
+                >
+                  {TAGS[tagIndex].label}
+                </motion.p>
+              </AnimatePresence>
+            </motion.div>
+          </div>
+        </motion.div>
+
+        {/* ── Yes-list + CTA ── */}
+        <div style={{ maxWidth: "760px", margin: "0 auto", padding: "0 2rem 6rem" }}>
 
           <motion.p
             initial={{ opacity: 0 }}
@@ -159,44 +238,12 @@ export default function WhoContent() {
               fontWeight: 300,
               fontStyle: "italic",
               color: "var(--text-soft)",
-              maxWidth: "clamp(280px, 56vw, 560px)",
-              marginBottom: "1.6rem",
+              textAlign: "center",
+              marginBottom: "2rem",
             }}
           >
             This is for the ambitious weirdos &amp; genuinely good eggs.
           </motion.p>
-        </section>
-
-        {/* ── Rotator ── */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.9, duration: 0.8 }}
-          style={{ textAlign: "center", padding: "1rem 2rem 6.3rem" }}
-        >
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={tagIndex}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.5 }}
-              style={{
-                fontFamily: "var(--font-fraunces)",
-                fontSize: "clamp(2.5rem, 5vw, 4rem)",
-                fontWeight: 700,
-                fontStyle: "italic",
-                color: "var(--coral)",
-                margin: 0,
-              }}
-            >
-              {TAGS[tagIndex].label}
-            </motion.p>
-          </AnimatePresence>
-        </motion.div>
-
-        {/* ── Yes-list + CTA ── */}
-        <div style={{ maxWidth: "760px", margin: "0 auto", padding: "0 2rem 6rem" }}>
 
           {/* Yes-list — each item reveals individually on scroll */}
           <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
@@ -246,9 +293,7 @@ export default function WhoContent() {
               }}
             />
             <motion.a
-              href="https://forms.gle/SPc8q7K1UsmV5iWF9"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/houses"
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -270,7 +315,7 @@ export default function WhoContent() {
                 boxShadow: "0 4px 24px rgba(232,128,106,0.35)",
               }}
             >
-              Apply for next Dream House (July 4th – August 2nd '26)
+              Sound like you? Join a Dream House
             </motion.a>
           </div>
         </div>
@@ -642,9 +687,7 @@ export default function WhoContent() {
               }}
             />
             <motion.a
-              href="https://forms.gle/SPc8q7K1UsmV5iWF9"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/houses"
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -666,7 +709,7 @@ export default function WhoContent() {
                 boxShadow: "0 4px 24px rgba(232,128,106,0.35)",
               }}
             >
-              Apply for next Dream House (July 4th – August 2nd '26)
+              Sound like you? Join a Dream House
             </motion.a>
           </div>
         </div>

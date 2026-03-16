@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import Image from "next/image";
 import Navigation from "@/components/layout/Navigation";
 import PageBackground from "@/components/PageBackground";
 import { Fraunces, Nunito, Playfair_Display } from "next/font/google";
@@ -26,6 +27,11 @@ const playfair = Playfair_Display({
 });
 
 const QUESTIONS = [
+  {
+    q: "How do I apply?",
+    a: 'We regularly add new future chapters, so even if you can\u2019t make the date of the next one, you can fill in our short <a href="https://forms.gle/SPc8q7K1UsmV5iWF9" target="_blank" rel="noopener noreferrer" style="color:#e8806a;text-decoration:none">application form</a> — it takes about 5 minutes. We review every application personally and will be in touch.',
+    html: true,
+  },
   {
     q: "Do I need to be working on something specific to apply?",
     a: "Creative energy will be high, and you\u2019ll be surrounded by a bunch of inspiring people who may just have the missing ideas, or skills you\u2019ve been waiting for. So whilst you do not need a formal project or business, it\u2019s a super fun place to be in an active creative, designing the next chapter, building a business, learning something, etc. Dream House works best for people who have something they want to move forward, even if that thing is still taking shape.",
@@ -58,15 +64,10 @@ const QUESTIONS = [
     q: "What happens after Dream House?",
     a: "Hopefully you leave inspired and expanded in some way, and you are encouraged to bring that into your life in whatever unique shape or form it needs to for you. You have ongoing support from Carolin, including an integration coaching session, should you desire it. You leave deeply connected with those that you met and let those relationships take form in the way that it most makes sense for your life. Or maybe, you end up at another Dream House together ;)",
   },
-  {
-    q: "How do I apply?",
-    a: 'Fill in our short <a href="https://forms.gle/SPc8q7K1UsmV5iWF9" target="_blank" rel="noopener noreferrer" style="color:#e8806a;text-decoration:none">application form</a> — it takes about 5 minutes. We review every application personally and will be in touch.',
-    html: true,
-  },
 ];
 
 export default function FaqContent() {
-  const [open, setOpen] = useState<number | null>(QUESTIONS.length - 1);
+  const [open, setOpen] = useState<number | null>(0);
   const wrapperClass = `${fraunces.variable} ${nunito.variable} ${playfair.variable}`;
 
   return (
@@ -100,8 +101,8 @@ export default function FaqContent() {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            minHeight: "35vh",
-            padding: "6rem 1.5rem 3rem",
+            minHeight: "25vh",
+            padding: "6rem 1.5rem 1.5rem",
             textAlign: "center",
           }}
         >
@@ -123,11 +124,41 @@ export default function FaqContent() {
           </motion.h1>
         </section>
 
+        {/* Banner photo */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.3 }}
+          style={{
+            position: "relative",
+            width: "100vw",
+            height: "55vh",
+            overflow: "hidden",
+            marginBottom: "3rem",
+          }}
+        >
+          <Image
+            src="/images/sections/pexels-wolfram.jpg"
+            alt="Mountain landscape"
+            fill
+            style={{
+              objectFit: "cover",
+              filter: "saturate(0.85)",
+            }}
+            sizes="100vw"
+          />
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "linear-gradient(to bottom, rgba(253,248,240,0.08) 0%, rgba(253,248,240,0.18) 100%)",
+              pointerEvents: "none",
+            }}
+          />
+        </motion.div>
+
         {/* Content container */}
         <div style={{ maxWidth: "750px", margin: "0 auto", padding: "0 2rem 6rem" }}>
-          {/* Divider */}
-          <hr style={{ border: "none", height: "1px", background: "linear-gradient(to right, transparent, rgba(232,128,106,0.35), transparent)", margin: "0 auto 3rem", maxWidth: "480px" }} />
-
           {/* Accordion */}
           <div>
             {QUESTIONS.map((item, i) => (
