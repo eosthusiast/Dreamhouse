@@ -151,7 +151,10 @@ export default function Home() {
     {
       id: "hero-1",
       image: null,
-      content: showOverlay
+      // On iOS non-skip: always null — HeroGateOverlay handles the gate.
+      // Without this guard, overlayDone=true flips showOverlay to false,
+      // which would render HeroSection mid-crossfade (ghosted PNG/input/button).
+      content: (isIOS && !skipGate)
         ? null
         : <HeroSection onGateComplete={handleGateComplete} onScrollComplete={handleScrollComplete} skipGate={skipGate} isMobile={isMobile} />,
     },
