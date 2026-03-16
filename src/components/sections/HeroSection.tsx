@@ -62,9 +62,10 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
       const mobile = window.innerWidth < 768;
       const sectionVhs = baseSectionVhs.map(v => mobile ? Math.round(v * 0.85) : v);
       const totalVh = sectionVhs.reduce((a, b) => a + b, 0);
-      const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
-      const vh = viewportHeight / 100;
-      const scrollRange = totalVh * vh - viewportHeight;
+      // Use innerHeight (matches CSS vh unit used for container height),
+      // NOT visualViewport.height (excludes iOS toolbar, causes undershoot)
+      const vh = window.innerHeight / 100;
+      const scrollRange = totalVh * vh - window.innerHeight;
       // Target: 40vh into section 2 (text starts at 52vh, land just before)
       const section2StartVh = sectionVhs[0] + sectionVhs[1];
       const targetVh = section2StartVh + 40;
@@ -194,9 +195,10 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
       const mobile = window.innerWidth < 768;
       const sectionVhs = baseSectionVhs.map(v => mobile ? Math.round(v * 0.85) : v);
         const totalVh = sectionVhs.reduce((a, b) => a + b, 0);
-        const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
-        const vh = viewportHeight / 100;
-        const scrollRange = totalVh * vh - viewportHeight;
+        // Use innerHeight (matches CSS vh unit used for container height),
+        // NOT visualViewport.height (excludes iOS toolbar, causes undershoot)
+        const vh = window.innerHeight / 100;
+        const scrollRange = totalVh * vh - window.innerHeight;
         // Target: 40vh into section 2 (beach at full opacity, just before text starts)
         const section2StartVh = sectionVhs[0] + sectionVhs[1];
         const targetVh = section2StartVh + 40;

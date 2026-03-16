@@ -131,14 +131,18 @@ export default function Home() {
     setShowScrollHint(true);
   }, []);
 
-  // Overlay dismissal: fade out galaxy backdrop, then unmount both
+  // Overlay dismissal: fade out galaxy backdrop, then unmount both.
+  // Delay fade start by 500ms so iOS Safari toolbar has time to auto-hide
+  // from the scroll — otherwise the gap between sticky and toolbar is visible.
   const handleOverlayDismiss = useCallback(() => {
     setOverlayDone(true);
     const backdrop = document.querySelector("[data-galaxy-backdrop]") as HTMLElement;
     if (backdrop) {
-      backdrop.style.transition = "opacity 1s ease-out";
-      backdrop.style.opacity = "0";
-      setTimeout(() => setGalaxyBackdropVisible(false), 1000);
+      setTimeout(() => {
+        backdrop.style.transition = "opacity 0.8s ease-out";
+        backdrop.style.opacity = "0";
+        setTimeout(() => setGalaxyBackdropVisible(false), 800);
+      }, 500);
     } else {
       setGalaxyBackdropVisible(false);
     }

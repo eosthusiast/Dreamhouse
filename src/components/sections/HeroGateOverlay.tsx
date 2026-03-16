@@ -170,10 +170,10 @@ export default function HeroGateOverlay({
             mobile ? Math.round(v * 0.85) : v
           );
           const totalVh = sectionVhs.reduce((a, b) => a + b, 0);
-          const viewportHeight =
-            window.visualViewport?.height ?? window.innerHeight;
-          const vh = viewportHeight / 100;
-          const scrollRange = totalVh * vh - viewportHeight;
+          // Use innerHeight (matches CSS vh unit used for container height),
+          // NOT visualViewport.height (excludes iOS toolbar, causes undershoot)
+          const vh = window.innerHeight / 100;
+          const scrollRange = totalVh * vh - window.innerHeight;
           const section2StartVh = sectionVhs[0] + sectionVhs[1];
           const targetVh = section2StartVh + 40;
           const targetProgress = targetVh / totalVh;
