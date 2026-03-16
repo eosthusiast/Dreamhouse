@@ -27,9 +27,9 @@ export default function HeroGateOverlay({
   const headingRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
 
-  // Track visualViewport.height for iOS keyboard/toolbar — the key simplification.
-  // When keyboard opens, visualViewport.height shrinks, overlay shrinks,
-  // justify-center re-centers content above keyboard. No shift math needed.
+  // Track BOTH visualViewport.height AND offsetTop.
+  // iOS shifts the visual viewport down when keyboard opens — offsetTop tracks this.
+  // Without it, content centers in the wrong (layout viewport) position.
   useEffect(() => {
     const vv = window.visualViewport;
     if (!vv) return;
@@ -37,6 +37,7 @@ export default function HeroGateOverlay({
     if (!el) return;
     const update = () => {
       el.style.height = `${vv.height}px`;
+      el.style.top = `${vv.offsetTop}px`;
     };
     update();
     vv.addEventListener("resize", update);
@@ -135,10 +136,16 @@ export default function HeroGateOverlay({
       setPhase("done");
       onGateComplete();
 
+      // Blur input to dismiss keyboard BEFORE scroll calculation
+      const input = hero2Ref.current?.querySelector("input");
+      input?.blur();
+
+      // Wait for keyboard to fully dismiss (~300ms iOS animation),
+      // then start fade + scroll with correct viewport measurements
       setTimeout(() => {
         const tl = gsap.timeline();
 
-        // Fade out hero2 content
+        // 1. Fade out hero2 content
         if (hero2Ref.current) {
           tl.to(hero2Ref.current, {
             autoAlpha: 0,
@@ -147,31 +154,29 @@ export default function HeroGateOverlay({
           });
         }
 
-        // Allow pointer events through to ScrollCanvas during scroll animation
-        if (overlayRef.current) {
-          overlayRef.current.style.pointerEvents = "none";
-        }
+        // 2. After fade: compute scroll target (keyboard now dismissed, viewport correct)
+        tl.call(() => {
+          if (overlayRef.current) {
+            overlayRef.current.style.pointerEvents = "none";
+          }
 
-        // Animated scroll — drives the ScrollCanvas crossfade from galaxy to beach
-        const baseSectionVhs = [530, 530, 325, 315, 330, 340, 315, 235];
-        const mobile = window.innerWidth < 768;
-        const sectionVhs = baseSectionVhs.map((v) =>
-          mobile ? Math.round(v * 0.85) : v
-        );
-        const totalVh = sectionVhs.reduce((a, b) => a + b, 0);
-        const viewportHeight =
-          window.visualViewport?.height ?? window.innerHeight;
-        const vh = viewportHeight / 100;
-        const scrollRange = totalVh * vh - viewportHeight;
-        const section2StartVh = sectionVhs[0] + sectionVhs[1];
-        const targetVh = section2StartVh + 40;
-        const targetProgress = targetVh / totalVh;
-        const targetScroll = targetProgress * scrollRange;
+          const baseSectionVhs = [530, 530, 325, 315, 330, 340, 315, 235];
+          const mobile = window.innerWidth < 768;
+          const sectionVhs = baseSectionVhs.map((v) =>
+            mobile ? Math.round(v * 0.85) : v
+          );
+          const totalVh = sectionVhs.reduce((a, b) => a + b, 0);
+          const viewportHeight =
+            window.visualViewport?.height ?? window.innerHeight;
+          const vh = viewportHeight / 100;
+          const scrollRange = totalVh * vh - viewportHeight;
+          const section2StartVh = sectionVhs[0] + sectionVhs[1];
+          const targetVh = section2StartVh + 40;
+          const targetProgress = targetVh / totalVh;
+          const targetScroll = targetProgress * scrollRange;
 
-        const scrollProxy = { y: window.scrollY };
-        tl.to(
-          scrollProxy,
-          {
+          const scrollProxy = { y: window.scrollY };
+          gsap.to(scrollProxy, {
             y: targetScroll,
             duration: 3.5,
             ease: "power2.inOut",
@@ -180,9 +185,8 @@ export default function HeroGateOverlay({
               onScrollComplete?.();
               onDismiss();
             },
-          },
-          "-=0.3"
-        );
+          });
+        });
       }, 400);
     },
     [onGateComplete, onScrollComplete, onDismiss]
@@ -191,12 +195,14 @@ export default function HeroGateOverlay({
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center px-4"
+      className="fixed left-0 right-0 z-[9999] flex flex-col items-center justify-center px-4"
       style={{
+        top: 0,
         height: "100dvh",
         background: "transparent",
         pointerEvents: phase === "done" ? "none" : "auto",
         overscrollBehavior: "none",
+        overflow: "hidden",
       }}
     >
       {/* Hero 1 Content */}
