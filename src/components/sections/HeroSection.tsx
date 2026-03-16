@@ -18,19 +18,29 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
     "loading"
   );
   const [keyboardOpen, setKeyboardOpen] = useState(false);
+  const [keyboardShift, setKeyboardShift] = useState(0);
+  const initialVpHeight = useRef(0);
   const hero1Ref = useRef<HTMLDivElement>(null);
   const hero2Ref = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
   const skipRef = useRef<HTMLAnchorElement>(null);
 
-  // Detect keyboard open/close on mobile
+  // Detect keyboard open/close on mobile, compute pixel-based shift
   useEffect(() => {
     const vv = window.visualViewport;
     if (!vv) return;
-    const initialHeight = vv.height;
+    initialVpHeight.current = vv.height;
     const onResize = () => {
-      setKeyboardOpen(vv.height < initialHeight * 0.75);
+      const isOpen = vv.height < initialVpHeight.current * 0.75;
+      setKeyboardOpen(isOpen);
+      if (isOpen) {
+        const kbHeight = initialVpHeight.current - vv.height;
+        // Shift up by 30% of keyboard height — keeps input visible above keyboard
+        setKeyboardShift(kbHeight > 100 ? Math.round(kbHeight * 0.3) : 0);
+      } else {
+        setKeyboardShift(0);
+      }
     };
     vv.addEventListener("resize", onResize);
     return () => vv.removeEventListener("resize", onResize);
@@ -72,6 +82,8 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
 
     gsap.set(headingRef.current, { autoAlpha: 0, y: 20 });
     gsap.set(inputRef.current, { autoAlpha: 0, y: 10 });
+    // Set hero2 initial hidden state via GSAP (single source of truth)
+    if (hero2Ref.current) gsap.set(hero2Ref.current, { autoAlpha: 0 });
 
     const tl = gsap.timeline();
 
@@ -124,17 +136,19 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
           autoAlpha: 1,
           duration: 3,
           ease: "power2.inOut",
+          onComplete: () => {
+            // Safety: ensure inline styles match GSAP's final state
+            if (hero2Ref.current) {
+              hero2Ref.current.style.visibility = "visible";
+              hero2Ref.current.style.opacity = "1";
+            }
+            // Focus hero2 input now that it's guaranteed visible
+            const input = hero2Ref.current?.querySelector("input");
+            input?.focus();
+          },
         },
         "-=1.2"
       );
-
-      // Focus hero2 input after animation completes, with visibility check
-      gsap.delayedCall(3.8, () => {
-        const input = hero2Ref.current?.querySelector("input");
-        if (input && window.getComputedStyle(hero2Ref.current!).opacity !== "0") {
-          input.focus();
-        }
-      });
     }, 300);
 
     if (typeof window !== "undefined") {
@@ -208,7 +222,7 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
       <div
         ref={hero1Ref}
         className="flex flex-col items-center justify-center h-full w-full px-4"
-        style={{ transition: "transform 0.3s ease-out", ...(keyboardOpen ? { transform: "translateY(-15vh)" } : {}) }}
+        style={{ transition: "transform 0.3s ease-out", transform: keyboardShift ? `translateY(-${keyboardShift}px)` : "none" }}
       >
         {/* Ornate PNG heading */}
         <div ref={headingRef} data-hero-heading className="text-center" style={{ marginBottom: "1.5rem", overflow: "hidden" }}>
@@ -251,10 +265,8 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
         onClick={() => { hero2Ref.current?.querySelector("input")?.focus(); }}
         className="absolute inset-0 flex flex-col items-center justify-center h-full w-full px-6"
         style={{
-          visibility: "hidden",
-          opacity: 0,
           transition: "transform 0.3s ease-out",
-          ...(keyboardOpen ? { transform: "translateY(-15vh)" } : {}),
+          transform: keyboardShift ? `translateY(-${keyboardShift}px)` : "none",
         }}
       >
         <div className="text-center" style={{ marginBottom: "1.5rem", overflow: "hidden" }}>

@@ -58,7 +58,11 @@ export function LenisProvider({ children }: { children: ReactNode }) {
       // iOS: overflow:hidden doesn't prevent touch scroll
       // Target only the scroll canvas container, not the whole page
       const scrollCanvas = document.getElementById("scroll-canvas");
-      const preventTouch = (e: TouchEvent) => e.preventDefault();
+      const preventTouch = (e: TouchEvent) => {
+        const target = e.target as HTMLElement;
+        if (target.closest("form")) return; // let input interactions work on iOS
+        e.preventDefault();
+      };
       scrollCanvas?.addEventListener("touchmove", preventTouch, { passive: false });
 
       // Listen for unlock event from the dream gate

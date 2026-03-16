@@ -20,6 +20,7 @@ export default function DreamInput({
   const inputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const [value, setValue] = useState("");
+  const submittedRef = useRef(false);
 
   useEffect(() => {
     if (autoFocus && visible && inputRef.current) {
@@ -40,7 +41,8 @@ export default function DreamInput({
   }, [autoFocus, visible]);
 
   const handleSubmit = () => {
-    if (value.trim()) {
+    if (value.trim() && !submittedRef.current) {
+      submittedRef.current = true;
       onSubmit(value.trim());
     }
   };
@@ -84,7 +86,12 @@ export default function DreamInput({
             focus:outline-none focus:border-turquoise/60
             caret-turquoise py-2 transition-colors duration-300
           "
-          style={{ caretColor: "#5CE0D2" }}
+          style={{
+            caretColor: "#5CE0D2",
+            touchAction: "auto",
+            userSelect: "text",
+            WebkitUserSelect: "text",
+          } as React.CSSProperties}
         />
         {/* Blinking cursor hint when empty */}
         {!value && (
@@ -98,13 +105,19 @@ export default function DreamInput({
       <button
         type="submit"
         disabled={!value.trim()}
-        onTouchEnd={(e) => {
-          // iOS: first tap on a button while keyboard is open dismisses keyboard
-          // without firing click. touchend fires before keyboard dismissal.
+        onPointerDown={(e) => {
+          // Fire at contact — before iOS blurs input and shifts layout
           if (value.trim()) {
-            e.preventDefault();
+            e.preventDefault(); // prevent focus moving to button (keeps keyboard stable)
             handleSubmit();
-            // Blur current input to cleanly dismiss keyboard before parent transitions
+            setTimeout(() => inputRef.current?.blur(), 50);
+          }
+        }}
+        onClick={(e) => {
+          // Fallback for keyboard Enter, accessibility, non-touch
+          e.preventDefault();
+          if (value.trim()) {
+            handleSubmit();
             inputRef.current?.blur();
           }
         }}
@@ -128,6 +141,7 @@ export default function DreamInput({
           boxShadow: value.trim()
             ? "0 4px 20px rgba(232, 168, 124, 0.25)"
             : "none",
+          touchAction: "manipulation",
         }}
       >
         <span className="relative z-10">{ctaText}</span>
