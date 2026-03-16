@@ -7,7 +7,6 @@ interface TextConfig {
   text: string;
   x: number;
   y: number;
-  mobileX?: number;
   mobileY: number;
   align: "left" | "right";
   topAlign?: boolean;
@@ -28,7 +27,6 @@ const TEXTS: TextConfig[] = [
     text: "in connection with nature, ourselves and each other.",
     x: 82,
     y: 63,
-    mobileX: 88,
     mobileY: 56,
     align: "right",
     maxWidth: "24rem",
@@ -37,7 +35,6 @@ const TEXTS: TextConfig[] = [
     text: "Fertile soil for the truest version of yourself to play.",
     x: 82,
     y: 75,
-    mobileX: 88,
     mobileY: 76,
     align: "right",
     maxWidth: "22rem",
@@ -154,16 +151,15 @@ export default function IntelligentSection() {
             style={{
               ...(item.align === "right"
                 ? {
-                    right: isMobile
-                      ? `${100 - (item.mobileX ?? item.x)}%`
-                      : `${100 - item.x}%`,
-                    left: "auto",
+                    right: isMobile ? "1rem" : `${100 - item.x}%`,
+                    left: isMobile ? "20%" : "auto",
                   }
                 : {
-                    left: isMobile ? "8%" : `${item.x}%`,
+                    left: isMobile ? "1rem" : `${item.x}%`,
+                    right: isMobile ? "20%" : "auto",
                   }),
               top: isMobile ? `${item.mobileY}%` : `${item.y}%`,
-              maxWidth: isMobile ? "85%" : item.maxWidth,
+              maxWidth: isMobile ? "none" : item.maxWidth,
               textAlign: item.align,
               transform: `translate(0, ${item.topAlign && !isMobile ? "0" : "-50%"})`,
               textShadow: "0 2px 20px rgba(0,0,0,0.6), 0 0 40px rgba(0,0,0,0.3)",

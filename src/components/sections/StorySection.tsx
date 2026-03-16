@@ -27,7 +27,7 @@ const BEACH_TEXTS: TextConfig[] = [
     align: "left",
     topAlign: true,
   },
-  { text: "When everything feels possible.", x: 78, y: 78, mobileX: 88, mobileY: 75, align: "right" },
+  { text: "When everything feels possible.", x: 78, y: 78, mobileY: 75, align: "right" },
 ];
 
 const OCEAN_TEXTS: TextConfig[] = [
@@ -42,11 +42,10 @@ const OCEAN_TEXTS: TextConfig[] = [
     text: "Where your dreams become reality on the same day you dream them.",
     x: 78,
     y: 68,
-    mobileX: 88,
     mobileY: 58,
     align: "right",
   },
-  { text: "What if that wasn\u2019t luck?", x: 78, y: 82, mobileX: 88, mobileY: 78, align: "right" },
+  { text: "What if that wasn\u2019t luck?", x: 78, y: 82, mobileY: 78, align: "right" },
 ];
 
 const LINE_STYLE = {
@@ -198,14 +197,13 @@ export default function StorySection({ variant }: StorySectionProps) {
                   : "max-w-[80%] md:max-w-xs lg:max-w-sm"
           }`}
           style={{
-            ...(item.align === "right" && (variant === "ocean" || isMobile)
-              ? {
-                  right: isMobile ? `${100 - (item.mobileX ?? item.x)}%` : `${100 - item.x}%`,
-                  left: "auto",
-                }
-              : {
-                  left: isMobile ? (item.mobileX ? `${item.mobileX}%` : "6%") : `${item.x}%`,
-                }),
+            ...(isMobile
+              ? (item.align === "right"
+                ? { right: "1rem", left: "20%" }
+                : { left: "1rem", right: "20%" })
+              : (item.align === "right" && variant === "ocean"
+                ? { right: `${100 - item.x}%`, left: "auto" }
+                : { left: `${item.x}%` })),
             top: isMobile ? `${item.mobileY}%` : `${item.y}%`,
             textAlign: item.align,
             transform: `translate(0, ${item.topAlign && !isMobile ? "0" : "-50%"})`,

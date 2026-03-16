@@ -18,25 +18,25 @@ export default function InspiredBySection() {
   const col2 = INSPIRED_ITEMS.filter((i) => i.column === 2);
 
   return (
-    <div className="relative w-full h-full flex items-start md:items-center justify-center px-6 md:px-16 pt-24 pb-16 md:pt-0 md:pb-0">
+    <div className="relative w-full h-full flex items-start md:items-center justify-center px-6 md:px-16 pt-16 pb-8 md:pt-0 md:pb-0">
       <style>{`
         @media (min-width: 768px) {
           .inspired-col2 { padding-top: 8rem; }
           .inspired-col3 { padding-top: 16rem; }
         }
         @media (max-width: 767px) {
-          .inspired-col2 { margin-top: 1.5rem; margin-left: 1rem; }
-          .inspired-col3 { margin-top: 1.5rem; margin-left: 2rem; }
+          .inspired-col2 { margin-top: 1rem; margin-left: 1rem; }
+          .inspired-col3 { margin-top: 1rem; margin-left: 2rem; }
         }
       `}</style>
       <div className="flex flex-col justify-between h-full md:h-auto md:grid md:grid-cols-3 md:gap-12 max-w-5xl w-full">
         {/* Column 1 - top left */}
-        <div className="space-y-3">
+        <div className="space-y-2 md:space-y-3">
           {col0.map((item, i) => (
             <p
               key={i}
               data-reveal
-              className="font-playfair italic text-cream text-base md:text-lg lg:text-xl"
+              className="font-playfair italic text-cream text-sm md:text-lg lg:text-xl"
               style={{ textShadow: "0 2px 20px rgba(0,0,0,0.6), 0 0 40px rgba(0,0,0,0.3)" }}
             >
               {item.text}
@@ -45,12 +45,12 @@ export default function InspiredBySection() {
         </div>
 
         {/* Column 2 - center */}
-        <div className="inspired-col2 space-y-3">
+        <div className="inspired-col2 space-y-2 md:space-y-3">
           {col1.map((item, i) => (
             <p
               key={i}
               data-reveal
-              className="font-playfair italic text-cream text-base md:text-lg lg:text-xl md:text-center"
+              className="font-playfair italic text-cream text-sm md:text-lg lg:text-xl md:text-center"
               style={{ textShadow: "0 2px 20px rgba(0,0,0,0.6), 0 0 40px rgba(0,0,0,0.3)" }}
             >
               {item.text}
@@ -59,12 +59,12 @@ export default function InspiredBySection() {
         </div>
 
         {/* Column 3 - bottom right */}
-        <div className="inspired-col3 space-y-3 md:text-right">
+        <div className="inspired-col3 space-y-2 md:space-y-3 md:text-right">
           {col2.map((item, i) => (
             <p
               key={i}
               data-reveal
-              className="font-playfair italic text-cream text-base md:text-lg lg:text-xl"
+              className="font-playfair italic text-cream text-sm md:text-lg lg:text-xl"
               style={{ textShadow: "0 2px 20px rgba(0,0,0,0.6), 0 0 40px rgba(0,0,0,0.3)" }}
             >
               {item.text}
