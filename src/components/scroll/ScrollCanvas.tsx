@@ -59,33 +59,21 @@ export default function ScrollCanvas({
 
     // On iOS, 100dvh doesn't track toolbar show/hide for sticky elements.
     // Use visualViewport.height (iOS 13+) or innerHeight (older) instead.
-    // During hero gate: freeze height so keyboard doesn't shrink the viewport.
+    // During hero gate on iOS, the HeroGateOverlay handles input interaction
+    // separately, so no gate-specific height capping is needed here.
     if (isIOS && stickyRef.current) {
       const sticky = stickyRef.current;
       let rafId: number;
-      let gateUnlocked = false;
-      const initialHeight = window.visualViewport?.height ?? window.innerHeight;
 
       const updateHeight = () => {
         cancelAnimationFrame(rafId);
         rafId = requestAnimationFrame(() => {
           const h = window.visualViewport?.height ?? window.innerHeight;
-          if (!gateUnlocked) {
-            // During gate: track viewport but cap minimum to prevent keyboard shrink
-            sticky.style.height = `${Math.max(h, initialHeight * 0.65)}px`;
-            return;
-          }
           sticky.style.height = `${h}px`;
         });
       };
 
       updateHeight();
-
-      const handleUnlock = () => {
-        gateUnlocked = true;
-        updateHeight();
-      };
-      window.addEventListener("dreamhouse:unlock-scroll", handleUnlock);
 
       if (window.visualViewport) {
         window.visualViewport.addEventListener("resize", updateHeight);
@@ -94,7 +82,6 @@ export default function ScrollCanvas({
       window.addEventListener("resize", updateHeight);
 
       return () => {
-        window.removeEventListener("dreamhouse:unlock-scroll", handleUnlock);
         window.visualViewport?.removeEventListener("resize", updateHeight);
         window.removeEventListener("orientationchange", updateHeight);
         window.removeEventListener("resize", updateHeight);

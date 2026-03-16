@@ -10,6 +10,7 @@ import IntelligentSection from "@/components/sections/IntelligentSection";
 import PortalSection from "@/components/sections/PortalSection";
 import GallerySection from "@/components/sections/GallerySection";
 
+import HeroGateOverlay from "@/components/sections/HeroGateOverlay";
 import Navigation from "@/components/layout/Navigation";
 import ScrollIndicator from "@/components/ui/ScrollIndicator";
 
@@ -20,6 +21,8 @@ export default function Home() {
   const [showScrollHint, setShowScrollHint] = useState(false);
   const [skipGate, setSkipGate] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
+  const [overlayDone, setOverlayDone] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const lastActiveRef = useRef(-1);
 
@@ -35,6 +38,7 @@ export default function Home() {
 
     // mix-blend-mode over <video> renders black on iOS Safari
     if (!isIOS) setCanBlend(true);
+    setIsIOS(isIOS);
 
     const video = videoRef.current;
     if (!video) return;
@@ -108,11 +112,16 @@ export default function Home() {
     setShowScrollHint(true);
   }, []);
 
+  // On iOS (non-skip), overlay handles gate — section 0 content is empty
+  const showOverlay = isIOS && !skipGate && !overlayDone;
+
   const sections = [
     {
       id: "hero-1",
       image: null,
-      content: <HeroSection onGateComplete={handleGateComplete} onScrollComplete={handleScrollComplete} skipGate={skipGate} isMobile={isMobile} />,
+      content: showOverlay
+        ? null
+        : <HeroSection onGateComplete={handleGateComplete} onScrollComplete={handleScrollComplete} skipGate={skipGate} isMobile={isMobile} />,
     },
     {
       id: "hero-2",
@@ -205,6 +214,15 @@ export default function Home() {
           onActiveSection={handleActiveSection}
         />
       </div>
+
+      {showOverlay && (
+        <HeroGateOverlay
+          onGateComplete={handleGateComplete}
+          onScrollComplete={handleScrollComplete}
+          isMobile={isMobile}
+          onDismiss={() => setOverlayDone(true)}
+        />
+      )}
 
       <div ref={galleryRef}>
         <GallerySection />
