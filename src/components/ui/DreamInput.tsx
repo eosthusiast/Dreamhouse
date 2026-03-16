@@ -84,7 +84,7 @@ export default function DreamInput({
           placeholder={placeholder}
           className="
             w-full bg-transparent border-0 border-b border-turquoise/30
-            text-center font-playfair italic font-bold text-2xl md:text-3xl
+            text-center font-playfair italic font-bold text-sm md:text-3xl
             text-turquoise placeholder:text-[rgba(200,220,218,0.7)] placeholder:font-normal
             focus:outline-none focus:border-turquoise/60
             caret-turquoise py-2 transition-colors duration-300
@@ -98,7 +98,7 @@ export default function DreamInput({
         />
         {/* Blinking cursor hint when empty */}
         {!value && (
-          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-turquoise/50 text-2xl md:text-3xl cursor-blink pointer-events-none font-playfair italic">
+          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-turquoise/50 text-sm md:text-3xl cursor-blink pointer-events-none font-playfair italic">
             |
           </span>
         )}
@@ -126,7 +126,7 @@ export default function DreamInput({
         }}
         className={`
           relative rounded-full
-          font-playfair italic text-base md:text-lg tracking-wide
+          font-playfair italic text-sm md:text-lg tracking-wide
           transition-all duration-500 cursor-pointer
           ${
             value.trim()

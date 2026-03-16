@@ -66,22 +66,21 @@ export default function ScrollCanvas({
       const sticky = stickyRef.current;
       let rafId: number;
       let gateUnlocked = false;
-      // Use the LARGER of visualViewport and innerHeight as frozen reference.
-      // visualViewport excludes toolbars; innerHeight includes toolbar area
-      // (with viewport-fit=cover). Without this, galaxy video is shorter than
-      // the full screen during gate, showing body bg as a black bar at bottom.
-      let initialHeight = Math.max(
-        window.visualViewport?.height ?? window.innerHeight,
-        window.innerHeight
-      );
+      let initialHeight = window.visualViewport?.height ?? window.innerHeight;
 
       const updateHeight = () => {
         cancelAnimationFrame(rafId);
         rafId = requestAnimationFrame(() => {
           const h = window.visualViewport?.height ?? window.innerHeight;
-          // During gate: keep initial height so video fills viewport behind overlay
-          // After gate: track viewport height for toolbar show/hide
-          sticky.style.height = `${gateUnlocked ? h : Math.max(h, initialHeight)}px`;
+          // During gate: use 100vh (CSS largest viewport on iOS — includes area
+          // behind toolbars). visualViewport.height excludes toolbars, leaving a
+          // black bar at bottom when toolbars are visible. 100vh fills behind them.
+          // After gate: track visualViewport.height for toolbar show/hide.
+          if (gateUnlocked) {
+            sticky.style.height = `${h}px`;
+          } else {
+            sticky.style.height = '100vh';
+          }
         });
       };
 
