@@ -72,14 +72,14 @@ export default function ScrollCanvas({
         cancelAnimationFrame(rafId);
         rafId = requestAnimationFrame(() => {
           const h = window.visualViewport?.height ?? window.innerHeight;
-          // During gate: use 100vh (CSS largest viewport on iOS — includes area
-          // behind toolbars). visualViewport.height excludes toolbars, leaving a
-          // black bar at bottom when toolbars are visible. 100vh fills behind them.
+          // During gate: freeze at initial height so keyboard doesn't shrink
+          // the galaxy video. Don't set explicit height — let CSS 100dvh handle
+          // the base sizing (setting '100vh' via JS breaks iOS Safari rendering).
           // After gate: track visualViewport.height for toolbar show/hide.
           if (gateUnlocked) {
             sticky.style.height = `${h}px`;
           } else {
-            sticky.style.height = '100vh';
+            sticky.style.height = `${Math.max(h, initialHeight)}px`;
           }
         });
       };

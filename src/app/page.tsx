@@ -206,7 +206,7 @@ export default function Home() {
       <Navigation visible={gateComplete} variant={navVariant} />
       <ScrollIndicator visible={showScrollHint} onHide={() => setShowScrollHint(false)} />
 
-      <div id="scroll-canvas">
+      <div id="scroll-canvas" style={{ background: "#050518" }}>
         <ScrollCanvas
           sections={sections}
           heroVideo={heroVideo}
