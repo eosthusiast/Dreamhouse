@@ -38,7 +38,7 @@ export default function Navigation({ visible = true, variant = "dark" }: Navigat
           {/* Logo left */}
           <a href="/?home" aria-label="Dream House home">
             <Image
-              src="/images/logo/eye-icon.png"
+              src="/images/logo/eye-icon-original.png"
               alt="Dream House"
               width={84}
               height={84}

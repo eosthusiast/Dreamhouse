@@ -221,7 +221,7 @@ export default function HeroGateOverlay({
           ref={headingRef}
           data-hero-heading
           className="text-center"
-          style={{ marginBottom: keyboardOpen ? "0.75rem" : "1.5rem", overflow: "hidden" }}
+          style={{ marginBottom: "0.75rem", overflow: "hidden" }}
         >
           <Image
             src="/images/typography/dream-your-way-in.png"
@@ -231,10 +231,10 @@ export default function HeroGateOverlay({
             priority
             className="h-auto mx-auto"
             style={{
-              width: keyboardOpen ? "70vw" : "85vw",
-              maxWidth: keyboardOpen ? "600px" : "800px",
-              marginTop: keyboardOpen ? "-14%" : "-18%",
-              marginBottom: keyboardOpen ? "-18%" : "-22%",
+              width: "70vw",
+              maxWidth: "600px",
+              marginTop: "-14%",
+              marginBottom: "-18%",
             }}
           />
         </div>
@@ -275,12 +275,12 @@ export default function HeroGateOverlay({
         className="absolute inset-0 flex flex-col items-center w-full px-4"
       >
         <div className="flex flex-col items-center w-full my-auto"
-          style={{ padding: keyboardOpen ? "0.5rem 0" : "1rem 0" }}
+          style={{ padding: "0.5rem 0" }}
         >
           <div
             className="text-center"
             style={{
-              marginBottom: keyboardOpen ? "0.5rem" : "1.5rem",
+              marginBottom: "0.5rem",
               overflow: "hidden",
             }}
           >
@@ -291,10 +291,10 @@ export default function HeroGateOverlay({
               height={400}
               className="h-auto mx-auto"
               style={{
-                width: keyboardOpen ? "65vw" : "90vw",
+                width: "65vw",
                 maxWidth: "900px",
-                marginTop: keyboardOpen ? "-10%" : "-15%",
-                marginBottom: keyboardOpen ? "-12%" : "-18%",
+                marginTop: "-10%",
+                marginBottom: "-12%",
               }}
             />
           </div>

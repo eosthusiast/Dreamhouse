@@ -153,7 +153,7 @@ export default function Home() {
     const backdrop = document.querySelector("[data-galaxy-backdrop]") as HTMLElement;
     if (backdrop) {
       // Drop behind ScrollCanvas — fills toolbar gap but invisible behind content
-      backdrop.style.zIndex = "0";
+      backdrop.style.zIndex = "-1";
 
       // Unmount after first user scroll (toolbar will have auto-hidden)
       const cleanup = () => {
@@ -165,7 +165,7 @@ export default function Home() {
         window.addEventListener("scroll", onScroll, { once: true, passive: true });
       }, 100);
       // Safety fallback: unmount after 8s
-      setTimeout(() => cleanup(), 8000);
+      setTimeout(() => cleanup(), 3000);
     } else {
       setGalaxyBackdropVisible(false);
     }

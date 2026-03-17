@@ -65,14 +65,14 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 
 const TAGS = [
-  { label: "The Kind", type: "tc" },
-  { label: "The Curious", type: "ts" },
-  { label: "The Mischievous", type: "tl" },
-  { label: "The Morally Ambitious", type: "tc" },
-  { label: "The Creatives", type: "tg" },
-  { label: "The Wonderers", type: "tk" },
-  { label: "The Builders", type: "ts" },
-  { label: "The Dreamers", type: "tl" },
+  { label: "kind", type: "tc" },
+  { label: "curious", type: "ts" },
+  { label: "mischievous", type: "tl" },
+  { label: "morally ambitious", type: "tc" },
+  { label: "creative", type: "tg" },
+  { label: "wonderers", type: "tk" },
+  { label: "builders", type: "ts" },
+  { label: "dreamers", type: "tl" },
 ];
 
 
@@ -208,26 +208,38 @@ export default function WhoContent() {
               transition={{ delay: 0.9, duration: 0.8 }}
               style={{ textAlign: "center" }}
             >
-              <AnimatePresence mode="wait">
-                <motion.p
-                  key={tagIndex}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.5 }}
-                  style={{
-                    fontFamily: "var(--font-fraunces)",
-                    fontSize: "clamp(2.5rem, 5vw, 4rem)",
-                    fontWeight: 700,
-                    fontStyle: "italic",
-                    color: "#fdf8f0",
-                    margin: 0,
-                    textShadow: "0 2px 16px rgba(0,0,0,0.3)",
-                  }}
-                >
-                  {TAGS[tagIndex].label}
-                </motion.p>
-              </AnimatePresence>
+              <div
+                style={{
+                  fontFamily: "var(--font-fraunces)",
+                  fontWeight: 700,
+                  fontStyle: "italic",
+                  color: "#fdf8f0",
+                  textShadow: "0 2px 16px rgba(0,0,0,0.3)",
+                  textAlign: "center",
+                }}
+              >
+                <p style={{
+                  fontSize: "clamp(1.6rem, 3.2vw, 2.4rem)",
+                  margin: "0 0 0.15em",
+                  opacity: 0.85,
+                }}>
+                  We are
+                </p>
+                <div style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", minHeight: "1.3em" }}>
+                  <AnimatePresence mode="wait">
+                    <motion.p
+                      key={tagIndex}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      transition={{ duration: 0.5 }}
+                      style={{ margin: 0 }}
+                    >
+                      {TAGS[tagIndex].label}
+                    </motion.p>
+                  </AnimatePresence>
+                </div>
+              </div>
             </motion.div>
           </div>
         </motion.div>
