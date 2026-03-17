@@ -40,7 +40,7 @@ export default function StarCanvas() {
         driftX: driftAmp,
         driftY: driftAmp * (0.5 + Math.random() * 0.5),
         driftDuration: driftSpeed,
-        twinkleDuration: Math.random() * 3 + 3, // 3-6s twinkle
+        twinkleDuration: Math.random() * 5 + 6, // 6-11s twinkle
         twinkleDelay: Math.random() * -6, // stagger start
         driftDelay: Math.random() * -20, // stagger drift
       };
@@ -63,7 +63,7 @@ export default function StarCanvas() {
           animate={{
             x: [0, s.driftX, -s.driftX * 0.5, 0],
             y: [0, -s.driftY, s.driftY * 0.7, 0],
-            opacity: [0, 0.85, 0.15, 0.7, 0],
+            opacity: [0, 0.7, 0.2, 0.6, 0],
           }}
           transition={{
             x: {

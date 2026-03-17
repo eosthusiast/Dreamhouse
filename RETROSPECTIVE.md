@@ -1,8 +1,8 @@
 # Dream House Website — Lessons Learned Retrospective
 
 **Project**: ourdream.house — immersive scroll-driven landing page + sub-pages
-**Duration**: March 5–16, 2026 (12 days)
-**Commits**: 70 across 107 files
+**Duration**: March 5–17, 2026 (13 days)
+**Commits**: 75+ across 107 files
 **Stack**: Next.js (App Router), TypeScript, GSAP + ScrollTrigger, Tailwind CSS, Lenis smooth scroll
 
 ---
@@ -82,11 +82,14 @@ Three times, we entered a pattern where fixing one iOS bug created another, whic
 - `3ece8bb`: Revert, use color workaround (visible seam ✗)
 - `b543944`: Abandon sticky-based approaches → fixed backdrop
 
-**Chain 3** — Overflow-x (4 commits):
+**Chain 3** — Overflow-x (7+ commits):
 - `4451c9f`: Add `overflow-x: hidden` to html + scroll-canvas (all sections black ✗✗✗)
 - `6196888`: Remove from scroll-canvas (still black ✗)
 - `61e61c0`: Remove from html too (horizontal scroll returns ✗)
-- `801986c` → `aeb82b8` → `4d47537`: Try `clip` in CSS (Chrome breaks), revert, apply via JS only on iOS ✓
+- `801986c` → `aeb82b8` → `4d47537`: Try `clip` in CSS (Chrome breaks), revert, apply via JS only on iOS ✓ (on iOS 14/15)
+- `32e7741`: Restore GSAP scroll + aggressive scrollLeft reset + `overflow-x: clip` on `[data-scroll-content]` (horizontal scroll persists ✗)
+- `4f3db9c`: Discover `overflow-x: clip` on `<html>` breaks sticky on iOS 16+ — property is supported there and behaves like `hidden`. Remove from `<html>` and `<main>` (sections work on all iOS ✓, horizontal scroll persists ✗)
+- `b53a613`: Abandon GSAP scroll on iOS → `/?home` navigation (clean page state, no keyboard artifacts ✓)
 
 **In plain terms**: We spent hours playing whack-a-mole. Fix one thing, break another. The pattern was always the same: we were trying to work within a constraint (`position: sticky` inside a scroll container) that iOS Safari fundamentally handles differently. The real fix each time was to stop fighting the constraint and find a completely different approach.
 
@@ -135,12 +138,13 @@ Solutions were ad-hoc:
 
 Any of the following breaks it, often silently (no error, just blank rendering):
 - `overflow-x: hidden` on ANY ancestor element
-- `overflow-x: clip` on `html` (Chrome treats it like `hidden`)
+- `overflow-x: clip` on `html` — Chrome treats it like `hidden`; **iOS 16+ Safari also breaks** (the property is supported and triggers the same scroll container behavior as `hidden` on the root element). Only iOS 14/15 is safe (property unsupported, silently ignored).
+- `overflow-x: clip` on `<main>` or any ancestor in the sticky scroll chain — same risk
 - `overflow: hidden` directly on the sticky element
 - Setting `height: 100vh` via JavaScript on iOS Safari
 - Any ancestor creating a new scroll container (which the overflow rules above do)
 
-**Rule**: Treat the entire ancestor chain of a sticky element as a protected zone. Don't add overflow, transforms, or containment to any of them without testing on all browsers.
+**Rule**: Treat the entire ancestor chain of a sticky element as a protected zone. Don't add overflow, transforms, or containment to any of them without testing on all browsers. `overflow-x: clip` is ONLY safe on non-ancestor elements (e.g. `[data-scroll-content]` children inside the sticky viewport).
 
 ### Lesson 2: CSS `overflow` has hidden coupling
 
@@ -184,9 +188,14 @@ iOS Safari checks the *DOM property* `video.muted`, not the HTML attribute. Reac
 
 Renders as a solid black rectangle. Must detect iOS and conditionally omit the blend mode. SSR must never include it either (hydration mismatch would flash black).
 
-### Lesson 7: `overflow-x: clip` is the right CSS primitive, but browser support is inconsistent
+### Lesson 7: `overflow-x: clip` is the right CSS primitive, but support is broken everywhere on root elements
 
-Safari handles `clip` correctly — it clips overflow without creating a scroll container. Chrome (as of 2026) treats `clip` on the `html` element the same as `hidden`. The workaround: apply `overflow-x: clip` via JavaScript only on iOS devices.
+`overflow-x: clip` was designed to clip overflow without creating a scroll container. In practice:
+- **Chrome (all platforms)**: Treats `clip` on `<html>` the same as `hidden` — creates a scroll container, breaks sticky.
+- **iOS Safari 16+**: Also breaks `position: sticky` when `clip` is applied to `<html>`. The property IS supported (unlike iOS 14/15 where it's ignored), but `<html>` has special scroll root behavior.
+- **iOS Safari 14/15**: `clip` is unsupported, silently ignored — sticky works by accident.
+
+**The only safe usage**: Apply `overflow-x: clip` to non-ancestor elements like `[data-scroll-content]` (children inside the sticky viewport). Never on `<html>`, `<main>`, or any element in the sticky scroll chain.
 
 ### Lesson 8: SVG measurements are invalidated by GSAP transforms
 
@@ -199,11 +208,23 @@ const rect = el.getBoundingClientRect(); // measure
 gsap.set(el, { y: savedY });   // restore
 ```
 
-### Lesson 9: MP4 must come before WebM in `<source>` order
+### Lesson 9: iOS keyboard leaves persistent horizontal scroll compositing offset
+
+After keyboard open/close on a `position: fixed` element on iOS Safari, a horizontal scroll offset can persist even after the fixed element is removed. This offset cannot be cleared by:
+- `window.scrollTo({ left: 0 })`
+- `document.documentElement.scrollLeft = 0`
+- `document.body.scrollLeft = 0`
+- Forced layout reflow (`void document.body.offsetHeight`)
+
+The offset lives at the WebKit compositing layer, below the JavaScript scroll API. The only reliable fix is a full page navigation (`window.location.href = "/?home"`) which resets all compositing state.
+
+**Rule**: After iOS keyboard interaction, don't try to continue with GSAP scroll animations. Navigate to a clean page state instead.
+
+### Lesson 10: MP4 must come before WebM in `<source>` order
 
 Safari can't play WebM. If WebM is listed first, Safari tries it, fails, then falls back to MP4 — wasting seconds of load time. MP4 first means Safari starts playback immediately and Chrome/Firefox still prefer WebM if they check subsequent sources.
 
-### Lesson 10: `justify-center` + `overflow: hidden` clips content from the top
+### Lesson 11: `justify-center` + `overflow: hidden` clips content from the top
 
 When content exceeds its container and `justify-center` is used with `overflow: hidden`, the content is clipped equally from top and bottom — losing the top of the content entirely. `margin: auto` (via Tailwind's `my-auto`) collapses to zero when content overflows, aligning to the top instead.
 
@@ -298,7 +319,7 @@ GSAP overrides these once it initializes. But if GSAP is slow or fails, the CSS 
 
 3. **Set up real-device testing on day 1.** BrowserStack, a physical iPhone, anything. The cost of discovering iOS bugs on day 10 was 26 commits in a single day.
 
-4. **Never put `overflow` properties on ancestors of sticky elements.** Just don't. The CSS spec coupling between `overflow-x` and `overflow-y` makes it a trap. Use `overflow-x: clip` on leaf elements only, or apply via JS with platform detection.
+4. **Never put `overflow` properties on ancestors of sticky elements.** Not `hidden`, not `clip`, not anything. `overflow-x: clip` breaks sticky on iOS 16+ and Chrome when applied to `<html>` or `<main>`. Only safe on non-ancestor leaf elements like `[data-scroll-content]`.
 
 5. **Use one video format (MP4) with proper poster images.** The WebM/MP4 dual-source approach added complexity for marginal savings. Safari can't play WebM at all. Just ship MP4.
 
@@ -315,3 +336,39 @@ The most expensive bugs weren't the hardest to fix in isolation. They were the o
 The way out was never "try harder within the same approach." It was always "find a fundamentally different approach that avoids the interaction entirely."
 
 Build for the most constrained platform first. When you hit the third fix for the same bug, stop fixing and start redesigning. And test on real devices before the architecture is committed.
+
+---
+
+## Part 7: iOS Interaction & Animation Fixes (Day 13)
+
+Three more iOS Safari issues discovered through real-device testing on iPhone SE:
+
+### Lesson 12: iOS Safari caches `position: fixed` canvas layers as static bitmaps
+
+**Problem**: `StarCanvas` used a `<canvas>` element with `position: fixed; inset: 0` and `requestAnimationFrame` for continuous star animation. On iOS Safari, stars appeared frozen — occasionally jumping to new positions during scroll.
+
+**Root cause**: iOS Safari's compositor treats fixed canvas elements as static bitmap layers. It caches the initial render and only re-composites during scroll events (which is when the stars "jumped" to their current animation state). The JS `requestAnimationFrame` loop ran fine, but the compositor never picked up the new pixels.
+
+**Fix**: Replaced the canvas entirely with Framer Motion `motion.span` elements — each star is a `✦` character with independent drift (x/y transform) and twinkle (opacity) animations. The compositor handles CSS transform animations natively (same engine that drove the blob animations, which always worked on iOS).
+
+**Rule**: Never use `<canvas>` with `position: fixed` for continuous animation on iOS Safari. Use CSS transform/opacity animations (via Framer Motion or CSS @keyframes) which the compositor handles natively.
+
+### Lesson 13: React `onChange` on `<input type="range">` fires every frame
+
+**Problem**: Dream Dues slider was extremely sluggish on iOS despite using refs + rAF for DOM updates.
+
+**Root cause**: React's `onChange` on `<input type="range">` maps to the native `input` event (NOT the native `change` event). It fires on every drag frame, calling `setSliderVal()` which triggered a full React re-render of the entire slider component ~60fps — completely negating the ref-based optimizations.
+
+**Fix**: Removed `onChange` entirely. State syncs only on native `pointerup`/`touchend` via `useEffect` listeners on the input ref. All visual updates during drag go through direct DOM writes. Also moved slider CSS from an inline `<style>` tag to `globals.css` (React was diffing a 40-line style element on every re-render).
+
+**Rule**: For real-time slider interaction, never use React's `onChange` to update state during drag. Use `onInput` for visual feedback via refs, and native `pointerup`/`touchend` for state sync.
+
+### Lesson 14: CSS 3D transitions don't interpolate on iOS Safari
+
+**Problem**: Tarot card flip animation on Principles page snapped instantly instead of showing a smooth 0.6s rotation.
+
+**Root cause**: CSS `transition` on `transform: rotateY()` with `transformStyle: preserve-3d` skips interpolation on iOS Safari and jumps to the final value. Adding `will-change: transform` to child face divs made it worse by promoting each face to its own compositing layer, breaking the 3D stacking context.
+
+**Fix**: Replaced the inner `<div>` with Framer Motion `<motion.div animate={{ rotateY }}>`. Framer Motion drives the animation via JS requestAnimationFrame interpolation, completely bypassing WebKit's broken CSS transition engine for 3D transforms. Removed `will-change` from face divs.
+
+**Rule**: For 3D transforms on iOS, use JS-driven animation (Framer Motion) instead of CSS transitions. Don't add `will-change: transform` to children of `preserve-3d` containers.
