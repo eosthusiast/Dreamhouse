@@ -76,6 +76,8 @@ export default function FaqContent() {
   }, []);
 
   return (
+    <>
+    <PageBackground />
     <div
       className={wrapperClass}
       style={{
@@ -95,7 +97,6 @@ export default function FaqContent() {
       }}
       data-page-wrapper
     >
-      <PageBackground />
 
       <div style={{ position: "relative", zIndex: 3 }}>
         <Navigation variant="light" />
@@ -316,5 +317,6 @@ export default function FaqContent() {
         </div>
       </div>
     </div>
+    </>
   );
 }

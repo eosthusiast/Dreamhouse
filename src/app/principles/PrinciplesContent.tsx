@@ -152,6 +152,8 @@ export default function PrinciplesContent() {
   }, []);
 
   return (
+    <>
+    <PageBackground />
     <div
       className={wrapperClass}
       style={{
@@ -171,7 +173,6 @@ export default function PrinciplesContent() {
       }}
       data-page-wrapper
     >
-      <PageBackground />
 
       <div style={{ position: "relative", zIndex: 3 }}>
         <Navigation variant="light" />
@@ -383,5 +384,6 @@ export default function PrinciplesContent() {
         </div>
       </div>
     </div>
+    </>
   );
 }

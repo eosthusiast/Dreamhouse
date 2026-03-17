@@ -433,6 +433,8 @@ export default function HousesContent() {
   }, []);
 
   return (
+    <>
+    <PageBackground />
     <div
       className={wrapperClass}
       style={{
@@ -458,8 +460,6 @@ export default function HousesContent() {
           <Lightbox src={lightboxSrc} onClose={() => setLightboxSrc(null)} />
         )}
       </AnimatePresence>
-
-      <PageBackground />
 
       <div style={{ position: "relative", zIndex: 3 }}>
         <Navigation variant="light" />
@@ -1179,5 +1179,6 @@ export default function HousesContent() {
         </div>
       </div>
     </div>
+    </>
   );
 }

@@ -98,6 +98,8 @@ export default function WhoContent() {
   }, []);
 
   return (
+    <>
+    <PageBackground />
     <div
       className={wrapperClass}
       style={{
@@ -119,8 +121,6 @@ export default function WhoContent() {
       }}
       data-page-wrapper
     >
-      {/* ── Background ── */}
-      <PageBackground />
 
       {/* ── Page content ── */}
       <div style={{ position: "relative", zIndex: 3 }}>
@@ -797,5 +797,6 @@ export default function WhoContent() {
         </div>
       </div>
     </div>
+    </>
   );
 }
