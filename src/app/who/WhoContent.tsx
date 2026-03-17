@@ -93,7 +93,7 @@ export default function WhoContent() {
   // Match body background to page theme (prevent dark peek-through)
   useEffect(() => {
     const prev = document.body.style.backgroundColor;
-    document.body.style.backgroundColor = "#fdf8f0";
+    document.body.style.backgroundColor = "#faf4ea";
     return () => { document.body.style.backgroundColor = prev; };
   }, []);
 
@@ -102,7 +102,7 @@ export default function WhoContent() {
       className={wrapperClass}
       style={{
         // Color tokens
-        ["--cream" as string]: "#fdf8f0",
+        ["--cream" as string]: "#faf4ea",
         ["--coral" as string]: "#e8806a",
         ["--terra" as string]: "#c95f45",
         ["--gold" as string]: "#e8b84b",
@@ -214,7 +214,7 @@ export default function WhoContent() {
                   fontFamily: "var(--font-fraunces)",
                   fontWeight: 700,
                   fontStyle: "italic",
-                  color: "#fdf8f0",
+                  color: "#faf4ea",
                   textShadow: "0 2px 16px rgba(0,0,0,0.3)",
                   textAlign: "center",
                 }}
@@ -335,7 +335,7 @@ export default function WhoContent() {
                   fontSize: "0.95rem",
                   letterSpacing: "0.06em",
                   textTransform: "uppercase",
-                  color: "#fdf8f0",
+                  color: "#faf4ea",
                   background: "linear-gradient(135deg, var(--coral), var(--terra))",
                   padding: "0.85rem 2.5rem",
                   borderRadius: "999px",
@@ -357,7 +357,7 @@ export default function WhoContent() {
                   fontSize: "0.95rem",
                   letterSpacing: "0.06em",
                   textTransform: "uppercase",
-                  color: "#fdf8f0",
+                  color: "#faf4ea",
                   background: "linear-gradient(135deg, var(--lavender), #8a7cb8)",
                   padding: "0.85rem 2.5rem",
                   borderRadius: "999px",
@@ -760,7 +760,7 @@ export default function WhoContent() {
                   fontSize: "0.95rem",
                   letterSpacing: "0.06em",
                   textTransform: "uppercase",
-                  color: "#fdf8f0",
+                  color: "#faf4ea",
                   background: "linear-gradient(135deg, var(--coral), var(--terra))",
                   padding: "0.85rem 2.5rem",
                   borderRadius: "999px",
@@ -782,7 +782,7 @@ export default function WhoContent() {
                   fontSize: "0.95rem",
                   letterSpacing: "0.06em",
                   textTransform: "uppercase",
-                  color: "#fdf8f0",
+                  color: "#faf4ea",
                   background: "linear-gradient(135deg, var(--lavender), #8a7cb8)",
                   padding: "0.85rem 2.5rem",
                   borderRadius: "999px",

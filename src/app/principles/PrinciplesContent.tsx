@@ -144,7 +144,7 @@ export default function PrinciplesContent() {
   const wrapperClass = `${fraunces.variable} ${nunito.variable} ${playfair.variable}`;
   useEffect(() => {
     const prev = document.body.style.backgroundColor;
-    document.body.style.backgroundColor = "#fdf8f0";
+    document.body.style.backgroundColor = "#faf4ea";
     return () => { document.body.style.backgroundColor = prev; };
   }, []);
 
@@ -152,7 +152,7 @@ export default function PrinciplesContent() {
     <div
       className={wrapperClass}
       style={{
-        ["--cream" as string]: "#fdf8f0",
+        ["--cream" as string]: "#faf4ea",
         ["--coral" as string]: "#e8806a",
         ["--terra" as string]: "#c95f45",
         ["--gold" as string]: "#e8b84b",

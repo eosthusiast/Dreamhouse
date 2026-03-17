@@ -227,7 +227,7 @@ function DreamDuesSlider() {
             width: 28px;
             height: 28px;
             border-radius: 50%;
-            background: #fdf8f0;
+            background: #faf4ea;
             border: 2px solid var(--track-color, #e8806a);
             box-shadow: 0 2px 12px color-mix(in srgb, var(--track-color, #e8806a) 33%, transparent);
             cursor: pointer;
@@ -244,7 +244,7 @@ function DreamDuesSlider() {
             width: 28px;
             height: 28px;
             border-radius: 50%;
-            background: #fdf8f0;
+            background: #faf4ea;
             border: 2px solid var(--track-color, #e8806a);
             box-shadow: 0 2px 12px color-mix(in srgb, var(--track-color, #e8806a) 33%, transparent);
             cursor: pointer;
@@ -398,7 +398,7 @@ export default function HousesContent() {
   const openLightbox = useCallback((src: string) => setLightboxSrc(src), []);
   useEffect(() => {
     const prev = document.body.style.backgroundColor;
-    document.body.style.backgroundColor = "#fdf8f0";
+    document.body.style.backgroundColor = "#faf4ea";
     return () => { document.body.style.backgroundColor = prev; };
   }, []);
   useEffect(() => {
@@ -412,7 +412,7 @@ export default function HousesContent() {
     <div
       className={wrapperClass}
       style={{
-        ["--cream" as string]: "#fdf8f0",
+        ["--cream" as string]: "#faf4ea",
         ["--coral" as string]: "#e8806a",
         ["--terra" as string]: "#c95f45",
         ["--gold" as string]: "#e8b84b",
@@ -1073,7 +1073,7 @@ export default function HousesContent() {
                 fontSize: "0.95rem",
                 letterSpacing: "0.06em",
                 textTransform: "uppercase",
-                color: "#fdf8f0",
+                color: "#faf4ea",
                 background: "linear-gradient(135deg, var(--coral), var(--terra))",
                 padding: "0.85rem 2.5rem",
                 borderRadius: "999px",

@@ -71,7 +71,7 @@ export default function FaqContent() {
   const wrapperClass = `${fraunces.variable} ${nunito.variable} ${playfair.variable}`;
   useEffect(() => {
     const prev = document.body.style.backgroundColor;
-    document.body.style.backgroundColor = "#fdf8f0";
+    document.body.style.backgroundColor = "#faf4ea";
     return () => { document.body.style.backgroundColor = prev; };
   }, []);
 
@@ -79,7 +79,7 @@ export default function FaqContent() {
     <div
       className={wrapperClass}
       style={{
-        ["--cream" as string]: "#fdf8f0",
+        ["--cream" as string]: "#faf4ea",
         ["--coral" as string]: "#e8806a",
         ["--terra" as string]: "#c95f45",
         ["--gold" as string]: "#e8b84b",
@@ -301,7 +301,7 @@ export default function FaqContent() {
                 fontSize: "0.95rem",
                 letterSpacing: "0.06em",
                 textTransform: "uppercase",
-                color: "#fdf8f0",
+                color: "#faf4ea",
                 background: "linear-gradient(135deg, #e8806a, #c95f45)",
                 padding: "0.85rem 2.5rem",
                 borderRadius: "999px",
