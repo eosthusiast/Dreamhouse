@@ -52,15 +52,14 @@ function TarotCard({ principleColor, title, frontImage }: { principleColor: stri
       aria-pressed={isFlipped}
       aria-label={`${title} — ${isFlipped ? "showing illustration" : "tap to reveal"}`}
     >
-      <div
+      <motion.div
+        animate={{ rotateY: isFlipped ? 180 : 0 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         style={{
           position: "relative",
           width: "100%",
           height: "100%",
           transformStyle: "preserve-3d",
-          transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
-          transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
-          willChange: "transform",
           cursor: "pointer",
         }}
       >
@@ -71,7 +70,6 @@ function TarotCard({ principleColor, title, frontImage }: { principleColor: stri
             inset: 0,
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",
-            willChange: "transform",
             borderRadius: "12px",
             overflow: "hidden",
             boxShadow: "0 8px 32px rgba(35,24,16,0.18)",
@@ -94,7 +92,6 @@ function TarotCard({ principleColor, title, frontImage }: { principleColor: stri
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",
             transform: "rotateY(180deg)",
-            willChange: "transform",
             borderRadius: "12px",
             overflow: "hidden",
             boxShadow: "0 8px 32px rgba(35,24,16,0.18)",
@@ -108,7 +105,7 @@ function TarotCard({ principleColor, title, frontImage }: { principleColor: stri
             sizes="260px"
           />
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
@@ -330,16 +327,6 @@ export default function PrinciplesContent() {
                   transition={{ duration: 0.8 }}
                   style={{ marginBottom: 0 }}
                 >
-                  {/* Mobile: stack card above text; Desktop: side-by-side */}
-                  <style>{`
-                    @media (max-width: 767px) {
-                      .tarot-row { flex-direction: column !important; align-items: center !important; }
-                      .tarot-card-wrap { width: 60% !important; max-width: 240px !important; margin-bottom: 1.5rem; }
-                    }
-                    @media (max-width: 374px) {
-                      .tarot-card-wrap { width: 55% !important; max-width: 180px !important; }
-                    }
-                  `}</style>
                   <div
                     className="tarot-row"
                     style={{

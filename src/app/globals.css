@@ -189,3 +189,55 @@ html.lenis body {
     padding-bottom: env(safe-area-inset-bottom);
   }
 }
+
+/* Dream Dues slider — static CSS (outside React render for iOS perf) */
+.dh-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 2px;
+  outline: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.dh-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #faf4ea;
+  border: 2px solid var(--track-color, #e8806a);
+  box-shadow: 0 2px 12px rgba(232, 128, 106, 0.33);
+  cursor: pointer;
+}
+.dh-slider::-webkit-slider-thumb:hover {
+  box-shadow: 0 2px 18px rgba(232, 128, 106, 0.53), 0 0 0 6px rgba(232, 128, 106, 0.08);
+  transform: scale(1.1);
+}
+.dh-slider::-webkit-slider-thumb:active {
+  transform: scale(0.95);
+  box-shadow: 0 1px 8px rgba(232, 128, 106, 0.40);
+}
+.dh-slider::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #faf4ea;
+  border: 2px solid var(--track-color, #e8806a);
+  box-shadow: 0 2px 12px rgba(232, 128, 106, 0.33);
+  cursor: pointer;
+}
+.dh-slider::-moz-range-thumb:hover {
+  box-shadow: 0 2px 18px rgba(232, 128, 106, 0.53), 0 0 0 6px rgba(232, 128, 106, 0.08);
+}
+
+/* Tarot card responsive layout */
+@media (max-width: 767px) {
+  .tarot-row { flex-direction: column !important; align-items: center !important; }
+  .tarot-card-wrap { width: 60% !important; max-width: 240px !important; margin-bottom: 1.5rem; }
+}
+@media (max-width: 374px) {
+  .tarot-card-wrap { width: 55% !important; max-width: 180px !important; }
+}

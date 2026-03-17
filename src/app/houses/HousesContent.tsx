@@ -138,51 +138,61 @@ function DreamDuesSlider() {
 
   const pct = ((sliderVal - 3000) / (9000 - 3000)) * 100;
 
-  // Interpolate track color between tier accents based on slider position
   const tierIdx = SLIDER_TIERS.findIndex((t) => t.value === tier.value);
   const trackColor = tier.accent;
 
-  // Direct DOM updates during drag — bypasses React re-render entirely
-  const handleInput = useCallback((e: React.FormEvent<HTMLInputElement>) => {
-    const val = Number((e.target as HTMLInputElement).value);
-    cancelAnimationFrame(rafRef.current);
-    rafRef.current = requestAnimationFrame(() => {
-      const p = ((val - 3000) / (9000 - 3000)) * 100;
-      const t = SLIDER_TIERS.reduce((prev, curr) =>
-        Math.abs(curr.value - val) < Math.abs(prev.value - val) ? curr : prev
-      );
-      const tIdx = SLIDER_TIERS.findIndex((s) => s.value === t.value);
-      const el = inputRef.current;
-      if (el) {
-        el.style.background = `linear-gradient(to right, ${t.accent} ${p}%, rgba(35,24,16,0.12) ${p}%)`;
-        el.style.setProperty("--track-color", t.accent);
-      }
-      if (amountRef.current) amountRef.current.textContent = `€${val.toLocaleString()}`;
-      if (nameRef.current) {
-        nameRef.current.textContent = t.name;
-        nameRef.current.style.color = t.accent;
-      }
-      if (sparkleRef.current) {
-        sparkleRef.current.textContent = tIdx === 0 ? "✦" : tIdx === 1 ? "✦ ✦" : tIdx === 2 ? "✦ ✦ ✦" : "✦ ✦ ✦ ✦";
-        sparkleRef.current.style.color = t.accent;
-      }
-      if (cardRef.current) {
-        cardRef.current.style.backgroundColor = `${t.accent}0a`;
-        cardRef.current.style.borderColor = `${t.accent}30`;
-        cardRef.current.style.boxShadow = `0 8px 32px ${t.accent}12, inset 0 1px 0 rgba(255,255,255,0.5)`;
-      }
-      tickRefs.current.forEach((tick, i) => {
-        if (!tick) return;
-        const isActive = SLIDER_TIERS[i].value === t.value;
-        tick.style.fontWeight = isActive ? "700" : "400";
-        tick.style.color = isActive ? t.accent : "var(--text-soft)";
-      });
+  // Direct DOM updates — no React re-render. Used during drag AND tick clicks.
+  const updateVisuals = useCallback((val: number) => {
+    const p = ((val - 3000) / (9000 - 3000)) * 100;
+    const t = SLIDER_TIERS.reduce((prev, curr) =>
+      Math.abs(curr.value - val) < Math.abs(prev.value - val) ? curr : prev
+    );
+    const tIdx = SLIDER_TIERS.findIndex((s) => s.value === t.value);
+    const el = inputRef.current;
+    if (el) {
+      el.style.background = `linear-gradient(to right, ${t.accent} ${p}%, rgba(35,24,16,0.12) ${p}%)`;
+      el.style.setProperty("--track-color", t.accent);
+    }
+    if (amountRef.current) amountRef.current.textContent = `€${val.toLocaleString()}`;
+    if (nameRef.current) {
+      nameRef.current.textContent = t.name;
+      nameRef.current.style.color = t.accent;
+    }
+    if (sparkleRef.current) {
+      sparkleRef.current.textContent = tIdx === 0 ? "✦" : tIdx === 1 ? "✦ ✦" : tIdx === 2 ? "✦ ✦ ✦" : "✦ ✦ ✦ ✦";
+      sparkleRef.current.style.color = t.accent;
+    }
+    if (cardRef.current) {
+      cardRef.current.style.backgroundColor = `${t.accent}0a`;
+      cardRef.current.style.borderColor = `${t.accent}30`;
+      cardRef.current.style.boxShadow = `0 8px 32px ${t.accent}12, inset 0 1px 0 rgba(255,255,255,0.5)`;
+    }
+    tickRefs.current.forEach((tick, i) => {
+      if (!tick) return;
+      const isActive = SLIDER_TIERS[i].value === t.value;
+      tick.style.fontWeight = isActive ? "700" : "400";
+      tick.style.color = isActive ? t.accent : "var(--text-soft)";
     });
   }, []);
 
-  // Sync React state only on pointer release (for tick label clicks, aria, etc.)
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setSliderVal(Number(e.target.value));
+  // During drag: rAF-batched DOM updates, zero React re-renders
+  const handleInput = useCallback((e: React.FormEvent<HTMLInputElement>) => {
+    const val = Number((e.target as HTMLInputElement).value);
+    cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(() => updateVisuals(val));
+  }, [updateVisuals]);
+
+  // Sync React state on pointer/touch release only (for ARIA attributes)
+  useEffect(() => {
+    const el = inputRef.current;
+    if (!el) return;
+    const syncState = () => setSliderVal(Number(el.value));
+    el.addEventListener("pointerup", syncState);
+    el.addEventListener("touchend", syncState);
+    return () => {
+      el.removeEventListener("pointerup", syncState);
+      el.removeEventListener("touchend", syncState);
+    };
   }, []);
 
   return (
@@ -262,48 +272,6 @@ function DreamDuesSlider() {
 
       {/* Slider */}
       <div style={{ maxWidth: "560px", margin: "0 auto 2rem", padding: "0 0.5rem" }}>
-        <style>{`
-          .dh-slider {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 100%;
-            height: 2px;
-            outline: none;
-            cursor: pointer;
-          }
-          .dh-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: #faf4ea;
-            border: 2px solid var(--track-color, #e8806a);
-            box-shadow: 0 2px 12px color-mix(in srgb, var(--track-color, #e8806a) 33%, transparent);
-            cursor: pointer;
-          }
-          .dh-slider::-webkit-slider-thumb:hover {
-            box-shadow: 0 2px 18px color-mix(in srgb, var(--track-color, #e8806a) 53%, transparent), 0 0 0 6px color-mix(in srgb, var(--track-color, #e8806a) 8%, transparent);
-            transform: scale(1.1);
-          }
-          .dh-slider::-webkit-slider-thumb:active {
-            transform: scale(0.95);
-            box-shadow: 0 1px 8px color-mix(in srgb, var(--track-color, #e8806a) 40%, transparent);
-          }
-          .dh-slider::-moz-range-thumb {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: #faf4ea;
-            border: 2px solid var(--track-color, #e8806a);
-            box-shadow: 0 2px 12px color-mix(in srgb, var(--track-color, #e8806a) 33%, transparent);
-            cursor: pointer;
-          }
-          .dh-slider::-moz-range-thumb:hover {
-            box-shadow: 0 2px 18px color-mix(in srgb, var(--track-color, #e8806a) 53%, transparent), 0 0 0 6px color-mix(in srgb, var(--track-color, #e8806a) 8%, transparent);
-          }
-        `}</style>
-
         <input
           ref={inputRef}
           type="range"
@@ -312,7 +280,6 @@ function DreamDuesSlider() {
           step={100}
           defaultValue={5000}
           onInput={handleInput}
-          onChange={handleChange}
           className="dh-slider"
           style={{
             background: `linear-gradient(to right, ${trackColor} ${pct}%, rgba(35,24,16,0.12) ${pct}%)`,
@@ -335,8 +302,9 @@ function DreamDuesSlider() {
                 key={v}
                 ref={(el) => { tickRefs.current[SLIDER_TIERS.findIndex((t) => t.value === v)] = el; }}
                 onClick={() => {
-                  setSliderVal(v);
                   if (inputRef.current) inputRef.current.value = String(v);
+                  updateVisuals(v);
+                  setSliderVal(v);
                 }}
                 style={{
                   position: "absolute",
