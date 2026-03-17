@@ -38,11 +38,11 @@ export default function Navigation({ visible = true, variant = "dark" }: Navigat
           {/* Logo left */}
           <a href="/?home" aria-label="Dream House home">
             <Image
-              src="/images/logo/eye-icon-original.png"
+              src="/images/logo/eye-ball.png"
               alt="Dream House"
-              width={84}
-              height={84}
-              className="h-[63px] md:h-[84px] w-auto"
+              width={50}
+              height={50}
+              className="h-[37px] md:h-[50px] w-auto"
               style={{
                 filter: isDark
                   ? "brightness(0) saturate(100%) invert(97%) sepia(8%) saturate(500%) hue-rotate(330deg) brightness(105%)"
