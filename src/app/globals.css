@@ -73,14 +73,24 @@
   }
 }
 
-/* Focus-visible outlines for keyboard navigation */
+/* Focus-visible outlines for keyboard navigation (not on text inputs) */
 :focus-visible {
   outline: 2px solid var(--color-turquoise);
   outline-offset: 2px;
 }
 
+input:focus-visible,
+textarea:focus-visible {
+  outline: none;
+}
+
 [data-page-wrapper] :focus-visible {
   outline-color: #e8806a;
+}
+
+[data-page-wrapper] input:focus-visible,
+[data-page-wrapper] textarea:focus-visible {
+  outline: none;
 }
 
 /* Blinking cursor for dream input */

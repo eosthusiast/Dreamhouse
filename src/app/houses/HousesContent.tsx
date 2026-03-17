@@ -124,7 +124,6 @@ function Lightbox({ src, onClose }: { src: string; onClose: () => void }) {
 
 function DreamDuesSlider() {
   const [sliderVal, setSliderVal] = useState(5000);
-  const [prevTierVal, setPrevTierVal] = useState(5000);
 
   const tier = SLIDER_TIERS.reduce((prev, curr) =>
     Math.abs(curr.value - sliderVal) < Math.abs(prev.value - sliderVal) ? curr : prev
@@ -135,10 +134,6 @@ function DreamDuesSlider() {
   // Interpolate track color between tier accents based on slider position
   const tierIdx = SLIDER_TIERS.findIndex((t) => t.value === tier.value);
   const trackColor = tier.accent;
-
-  // Detect tier change for card animation
-  const tierChanged = tier.value !== prevTierVal;
-  if (tierChanged) setPrevTierVal(tier.value);
 
   return (
     <motion.section
@@ -216,7 +211,7 @@ function DreamDuesSlider() {
       </p>
 
       {/* Slider */}
-      <div style={{ maxWidth: "560px", margin: "0 auto 2rem" }}>
+      <div style={{ maxWidth: "560px", margin: "0 auto 2rem", padding: "0 0.5rem" }}>
         <style>{`
           .dh-slider {
             -webkit-appearance: none;
@@ -285,18 +280,13 @@ function DreamDuesSlider() {
         {/* Tick labels — positioned at true % along the 3k–9k range */}
         <div style={{ position: "relative", height: "1.5rem", marginTop: "0.75rem" }}>
           {SLIDER_TIERS.map(({ value: v }) => {
-            const nudge: Record<number, number> = { 5000: -3, 8000: -5.6 };
+            const nudge: Record<number, number> = { 5000: -3, 8000: -5.6, 9000: -4 };
             const pos = ((v - 3000) / (9000 - 3000)) * 100 + (nudge[v] ?? 0);
             const isActive = tier.value === v;
             return (
-              <motion.span
+              <span
                 key={v}
                 onClick={() => setSliderVal(v)}
-                animate={{
-                  scale: isActive ? 1.12 : 1,
-                  color: isActive ? tier.accent : "var(--text-soft)",
-                }}
-                transition={{ type: "spring", stiffness: 400, damping: 25 }}
                 style={{
                   position: "absolute",
                   left: `${pos}%`,
@@ -304,88 +294,77 @@ function DreamDuesSlider() {
                   fontFamily: "var(--font-nunito)",
                   fontSize: "0.78rem",
                   fontWeight: isActive ? 700 : 400,
+                  color: isActive ? tier.accent : "var(--text-soft)",
                   cursor: "pointer",
                   whiteSpace: "nowrap",
+                  transition: "color 0.2s, font-weight 0.2s",
                 }}
               >
                 €{v.toLocaleString()}
-              </motion.span>
+              </span>
             );
           })}
         </div>
       </div>
 
       {/* Active tier card */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={tier.value}
-          initial={{ opacity: 0, y: 10, scale: 0.97 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -6, scale: 0.98 }}
-          transition={{
-            type: "spring",
-            stiffness: 300,
-            damping: 24,
-            mass: 0.8,
-          }}
+      <div
+        style={{
+          maxWidth: "560px",
+          margin: "0 auto 2rem",
+          backgroundColor: `${tier.accent}0a`,
+          border: `1.5px solid ${tier.accent}30`,
+          borderRadius: "20px",
+          padding: "2.25rem 2rem",
+          textAlign: "center",
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
+          boxShadow: `0 8px 32px ${tier.accent}12, inset 0 1px 0 rgba(255,255,255,0.5)`,
+          transition: "background-color 0.3s, border-color 0.3s, box-shadow 0.3s",
+        }}
+      >
+        {/* Decorative sparkle */}
+        <span
           style={{
-            maxWidth: "560px",
-            margin: "0 auto 2rem",
-            backgroundColor: `${tier.accent}0a`,
-            border: `1.5px solid ${tier.accent}30`,
-            borderRadius: "20px",
-            padding: "2.25rem 2rem",
-            textAlign: "center",
-            backdropFilter: "blur(8px)",
-            WebkitBackdropFilter: "blur(8px)",
-            boxShadow: `0 8px 32px ${tier.accent}12, inset 0 1px 0 rgba(255,255,255,0.5)`,
+            display: "block",
+            fontSize: "0.7rem",
+            color: tier.accent,
+            marginBottom: "0.75rem",
+            letterSpacing: "0.5em",
+            opacity: 0.35,
+            transition: "color 0.3s",
           }}
         >
-          {/* Decorative sparkle */}
-          <motion.span
-            initial={{ opacity: 0, rotate: -30 }}
-            animate={{ opacity: 0.35, rotate: 0 }}
-            transition={{ delay: 0.15, duration: 0.4 }}
-            style={{
-              display: "block",
-              fontSize: "0.7rem",
-              color: tier.accent,
-              marginBottom: "0.75rem",
-              letterSpacing: "0.5em",
-            }}
-          >
-            {tierIdx === 0 ? "✦" : tierIdx === 1 ? "✦ ✦" : tierIdx === 2 ? "✦ ✦ ✦" : "✦ ✦ ✦ ✦"}
-          </motion.span>
+          {tierIdx === 0 ? "✦" : tierIdx === 1 ? "✦ ✦" : tierIdx === 2 ? "✦ ✦ ✦" : "✦ ✦ ✦ ✦"}
+        </span>
 
-          <p
-            style={{
-              fontFamily: "var(--font-fraunces)",
-              fontSize: "clamp(2.2rem, 4.5vw, 3.2rem)",
-              fontWeight: 400,
-              color: "var(--text-dark)",
-              letterSpacing: "-0.02em",
-              marginBottom: "0.5rem",
-            }}
-          >
-            €{sliderVal.toLocaleString()}
-          </p>
-          <motion.p
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 0.9, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.3 }}
-            style={{
-              fontFamily: "var(--font-nunito)",
-              fontSize: "0.65rem",
-              fontWeight: 700,
-              letterSpacing: "0.3em",
-              textTransform: "uppercase",
-              color: tier.accent,
-            }}
-          >
-            {tier.name}
-          </motion.p>
-        </motion.div>
-      </AnimatePresence>
+        <p
+          style={{
+            fontFamily: "var(--font-fraunces)",
+            fontSize: "clamp(2.2rem, 4.5vw, 3.2rem)",
+            fontWeight: 400,
+            color: "var(--text-dark)",
+            letterSpacing: "-0.02em",
+            marginBottom: "0.5rem",
+          }}
+        >
+          €{sliderVal.toLocaleString()}
+        </p>
+        <p
+          style={{
+            fontFamily: "var(--font-nunito)",
+            fontSize: "0.65rem",
+            fontWeight: 700,
+            letterSpacing: "0.3em",
+            textTransform: "uppercase",
+            color: tier.accent,
+            opacity: 0.9,
+            transition: "color 0.3s",
+          }}
+        >
+          {tier.name}
+        </p>
+      </div>
 
       {/* Financial Aid */}
       <p
