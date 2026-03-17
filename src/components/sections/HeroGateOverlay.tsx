@@ -147,6 +147,14 @@ export default function HeroGateOverlay({
       // Wait for keyboard to fully dismiss (~300ms iOS animation),
       // then start fade + scroll with correct viewport measurements
       setTimeout(() => {
+        // Aggressive horizontal scroll reset — iOS keyboard can leave a stale
+        // horizontal offset that overflow-x:clip alone doesn't clear
+        window.scrollTo({ left: 0, top: window.scrollY, behavior: "instant" as ScrollBehavior });
+        document.documentElement.scrollLeft = 0;
+        document.body.scrollLeft = 0;
+        // Force layout recalculation to flush any stale compositing state
+        void document.body.offsetHeight;
+
         const tl = gsap.timeline();
 
         // 1. Fade out hero2 content
@@ -158,14 +166,34 @@ export default function HeroGateOverlay({
           });
         }
 
-        // 2. After fade: navigate to /?home for a clean page state.
-        // The GSAP scroll animation caused persistent horizontal scroll on iOS
-        // (keyboard interaction shifts scrollX, overflow-x:clip doesn't survive).
-        // Navigating to /?home triggers the skip flow (HeroSection auto-scrolls
-        // to beach) with a fresh page state — no keyboard artifacts.
-        // The galaxy backdrop stays visible during the brief reload.
+        // 2. Compute scroll target and animate to beach section
         tl.call(() => {
-          window.location.href = "/?home";
+          const container = document.querySelector("#scroll-canvas > div");
+          const containerHeight = container?.getBoundingClientRect().height
+            ?? document.documentElement.scrollHeight;
+          const scrollRange = containerHeight - window.innerHeight;
+
+          const baseSectionVhs = [530, 530, 325, 315, 330, 340, 315, 235];
+          const mobile = window.innerWidth < 768;
+          const sectionVhs = baseSectionVhs.map(v => mobile ? Math.round(v * 0.85) : v);
+          const totalVh = sectionVhs.reduce((a: number, b: number) => a + b, 0);
+          // Target: 60vh into section 2 (safely past galaxy→beach crossfade)
+          const section2StartVh = sectionVhs[0] + sectionVhs[1];
+          const targetVh = section2StartVh + 60;
+          const targetProgress = targetVh / totalVh;
+          const targetScroll = targetProgress * scrollRange;
+
+          const scrollProxy = { y: window.scrollY };
+          gsap.to(scrollProxy, {
+            y: targetScroll,
+            duration: 3.5,
+            ease: "power2.inOut",
+            onUpdate: () => window.scrollTo(0, scrollProxy.y),
+            onComplete: () => {
+              onScrollComplete?.();
+              onDismiss();
+            },
+          });
         });
       }, 400);
     },

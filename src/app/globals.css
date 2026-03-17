@@ -38,6 +38,7 @@
 
   html {
     scroll-behavior: auto; /* Lenis handles smooth scroll */
+    overscroll-behavior-x: none;
   }
 
   body {
@@ -56,6 +57,13 @@
   [data-scroll-content] {
     visibility: hidden;
     opacity: 0;
+  }
+
+  /* Clip each section's content independently — prevents any text/SVG
+     that extends slightly beyond viewport from triggering horizontal scroll.
+     Safe because these are NOT ancestors of the sticky element. */
+  [data-scroll-content] {
+    overflow-x: clip;
   }
 
   /* Pre-hide hero gate elements — GSAP entrance animation reveals them */
