@@ -42,7 +42,7 @@ export default function HeroGateOverlay({
     initialVpHeight.current = vv.height;
     const update = () => {
       const kbHeight = initialVpHeight.current - vv.height;
-      setKeyboardHeight(kbHeight > 50 ? kbHeight : 0);
+      setKeyboardHeight(kbHeight > 100 ? kbHeight : 0);
     };
 
     vv.addEventListener("resize", update);
