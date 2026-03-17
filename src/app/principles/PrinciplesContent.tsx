@@ -28,12 +28,18 @@ const playfair = Playfair_Display({
 
 function TarotCard({ principleColor, title, frontImage }: { principleColor: string; title: string; frontImage: string }) {
   const [isFlipped, setIsFlipped] = useState(false);
+  const [canHover, setCanHover] = useState(false);
+
+  useEffect(() => {
+    // Only enable hover behavior on devices with a fine pointer (mouse)
+    setCanHover(window.matchMedia("(hover: hover) and (pointer: fine)").matches);
+  }, []);
 
   return (
     <div
       style={{ perspective: "800px", width: "260px", maxWidth: "100%", aspectRatio: "2/3", flexShrink: 0 }}
-      onMouseEnter={() => setIsFlipped(true)}
-      onMouseLeave={() => setIsFlipped(false)}
+      onMouseEnter={canHover ? () => setIsFlipped(true) : undefined}
+      onMouseLeave={canHover ? () => setIsFlipped(false) : undefined}
       onClick={() => setIsFlipped((f) => !f)}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {

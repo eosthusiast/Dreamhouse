@@ -124,6 +124,13 @@ function Lightbox({ src, onClose }: { src: string; onClose: () => void }) {
 
 function DreamDuesSlider() {
   const [sliderVal, setSliderVal] = useState(5000);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const amountRef = useRef<HTMLParagraphElement>(null);
+  const nameRef = useRef<HTMLParagraphElement>(null);
+  const sparkleRef = useRef<HTMLSpanElement>(null);
+  const tickRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number>(0);
 
   const tier = SLIDER_TIERS.reduce((prev, curr) =>
     Math.abs(curr.value - sliderVal) < Math.abs(prev.value - sliderVal) ? curr : prev
@@ -134,6 +141,49 @@ function DreamDuesSlider() {
   // Interpolate track color between tier accents based on slider position
   const tierIdx = SLIDER_TIERS.findIndex((t) => t.value === tier.value);
   const trackColor = tier.accent;
+
+  // Direct DOM updates during drag — bypasses React re-render entirely
+  const handleInput = useCallback((e: React.FormEvent<HTMLInputElement>) => {
+    const val = Number((e.target as HTMLInputElement).value);
+    cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(() => {
+      const p = ((val - 3000) / (9000 - 3000)) * 100;
+      const t = SLIDER_TIERS.reduce((prev, curr) =>
+        Math.abs(curr.value - val) < Math.abs(prev.value - val) ? curr : prev
+      );
+      const tIdx = SLIDER_TIERS.findIndex((s) => s.value === t.value);
+      const el = inputRef.current;
+      if (el) {
+        el.style.background = `linear-gradient(to right, ${t.accent} ${p}%, rgba(35,24,16,0.12) ${p}%)`;
+        el.style.setProperty("--track-color", t.accent);
+      }
+      if (amountRef.current) amountRef.current.textContent = `€${val.toLocaleString()}`;
+      if (nameRef.current) {
+        nameRef.current.textContent = t.name;
+        nameRef.current.style.color = t.accent;
+      }
+      if (sparkleRef.current) {
+        sparkleRef.current.textContent = tIdx === 0 ? "✦" : tIdx === 1 ? "✦ ✦" : tIdx === 2 ? "✦ ✦ ✦" : "✦ ✦ ✦ ✦";
+        sparkleRef.current.style.color = t.accent;
+      }
+      if (cardRef.current) {
+        cardRef.current.style.backgroundColor = `${t.accent}0a`;
+        cardRef.current.style.borderColor = `${t.accent}30`;
+        cardRef.current.style.boxShadow = `0 8px 32px ${t.accent}12, inset 0 1px 0 rgba(255,255,255,0.5)`;
+      }
+      tickRefs.current.forEach((tick, i) => {
+        if (!tick) return;
+        const isActive = SLIDER_TIERS[i].value === t.value;
+        tick.style.fontWeight = isActive ? "700" : "400";
+        tick.style.color = isActive ? t.accent : "var(--text-soft)";
+      });
+    });
+  }, []);
+
+  // Sync React state only on pointer release (for tick label clicks, aria, etc.)
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSliderVal(Number(e.target.value));
+  }, []);
 
   return (
     <motion.section
@@ -255,12 +305,14 @@ function DreamDuesSlider() {
         `}</style>
 
         <input
+          ref={inputRef}
           type="range"
           min={3000}
           max={9000}
           step={100}
-          value={sliderVal}
-          onChange={(e) => setSliderVal(Number(e.target.value))}
+          defaultValue={5000}
+          onInput={handleInput}
+          onChange={handleChange}
           className="dh-slider"
           style={{
             background: `linear-gradient(to right, ${trackColor} ${pct}%, rgba(35,24,16,0.12) ${pct}%)`,
@@ -281,7 +333,11 @@ function DreamDuesSlider() {
             return (
               <span
                 key={v}
-                onClick={() => setSliderVal(v)}
+                ref={(el) => { tickRefs.current[SLIDER_TIERS.findIndex((t) => t.value === v)] = el; }}
+                onClick={() => {
+                  setSliderVal(v);
+                  if (inputRef.current) inputRef.current.value = String(v);
+                }}
                 style={{
                   position: "absolute",
                   left: `calc(14px + (100% - 28px) * ${frac})`,
@@ -292,7 +348,6 @@ function DreamDuesSlider() {
                   color: isActive ? tier.accent : "var(--text-soft)",
                   cursor: "pointer",
                   whiteSpace: "nowrap",
-                  transition: "color 0.2s, font-weight 0.2s",
                 }}
               >
                 €{v.toLocaleString()}
@@ -304,6 +359,7 @@ function DreamDuesSlider() {
 
       {/* Active tier card */}
       <div
+        ref={cardRef}
         style={{
           maxWidth: "560px",
           margin: "0 auto 2rem",
@@ -315,11 +371,11 @@ function DreamDuesSlider() {
           backdropFilter: "blur(8px)",
           WebkitBackdropFilter: "blur(8px)",
           boxShadow: `0 8px 32px ${tier.accent}12, inset 0 1px 0 rgba(255,255,255,0.5)`,
-          transition: "background-color 0.3s, border-color 0.3s, box-shadow 0.3s",
         }}
       >
         {/* Decorative sparkle */}
         <span
+          ref={sparkleRef}
           style={{
             display: "block",
             fontSize: "0.7rem",
@@ -327,13 +383,13 @@ function DreamDuesSlider() {
             marginBottom: "0.75rem",
             letterSpacing: "0.5em",
             opacity: 0.35,
-            transition: "color 0.3s",
           }}
         >
           {tierIdx === 0 ? "✦" : tierIdx === 1 ? "✦ ✦" : tierIdx === 2 ? "✦ ✦ ✦" : "✦ ✦ ✦ ✦"}
         </span>
 
         <p
+          ref={amountRef}
           style={{
             fontFamily: "var(--font-fraunces)",
             fontSize: "clamp(2.2rem, 4.5vw, 3.2rem)",
@@ -346,6 +402,7 @@ function DreamDuesSlider() {
           €{sliderVal.toLocaleString()}
         </p>
         <p
+          ref={nameRef}
           style={{
             fontFamily: "var(--font-nunito)",
             fontSize: "0.65rem",
@@ -354,7 +411,6 @@ function DreamDuesSlider() {
             textTransform: "uppercase",
             color: tier.accent,
             opacity: 0.9,
-            transition: "color 0.3s",
           }}
         >
           {tier.name}

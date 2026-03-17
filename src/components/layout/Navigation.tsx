@@ -34,7 +34,7 @@ export default function Navigation({ visible = true, variant = "dark" }: Navigat
         }`}
         style={{
           visibility: visible ? "visible" : "hidden",
-          background: isDark ? "transparent" : "#faf4ea",
+          background: isDark ? "transparent" : "#f9ece0",
         }}
       >
         <div className="flex items-center justify-between flex-row-reverse md:flex-row py-4 md:py-6" style={{ paddingLeft: "2rem", paddingRight: "3rem" }}>
