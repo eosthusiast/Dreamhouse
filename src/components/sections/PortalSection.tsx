@@ -21,6 +21,7 @@ export default function PortalSection() {
           height={500}
           className="relative w-[92vw] md:w-[85vw] md:max-w-[800px] h-auto mx-auto"
           style={{ minWidth: "280px" }}
+          sizes="(max-width: 768px) 92vw, min(85vw, 800px)"
         />
       </div>
     </div>

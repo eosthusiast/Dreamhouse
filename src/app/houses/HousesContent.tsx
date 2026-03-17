@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "motion/react";
 import Image from "next/image";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Navigation from "@/components/layout/Navigation";
 import PageBackground from "@/components/PageBackground";
 import { Fraunces, Nunito, Playfair_Display } from "next/font/google";
@@ -36,13 +36,19 @@ const SLIDER_TIERS = [
 ];
 
 function Lightbox({ src, onClose }: { src: string; onClose: () => void }) {
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const previouslyFocused = useRef<Element | null>(null);
+
   useEffect(() => {
+    previouslyFocused.current = document.activeElement;
     const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
     document.addEventListener("keydown", handler);
     document.body.style.overflow = "hidden";
+    closeRef.current?.focus();
     return () => {
       document.removeEventListener("keydown", handler);
       document.body.style.overflow = "";
+      if (previouslyFocused.current instanceof HTMLElement) previouslyFocused.current.focus();
     };
   }, [onClose]);
 
@@ -53,6 +59,9 @@ function Lightbox({ src, onClose }: { src: string; onClose: () => void }) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.25 }}
       onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Image lightbox"
       style={{
         position: "fixed",
         inset: 0,
@@ -91,6 +100,7 @@ function Lightbox({ src, onClose }: { src: string; onClose: () => void }) {
         />
       </motion.div>
       <button
+        ref={closeRef}
         onClick={onClose}
         style={{
           position: "fixed",
@@ -104,7 +114,7 @@ function Lightbox({ src, onClose }: { src: string; onClose: () => void }) {
           lineHeight: 1,
           padding: "0.25rem",
         }}
-        aria-label="Close"
+        aria-label="Close lightbox"
       >
         ×
       </button>
@@ -265,6 +275,11 @@ function DreamDuesSlider() {
           value={sliderVal}
           onChange={(e) => setSliderVal(Number(e.target.value))}
           className="dh-slider"
+          aria-label={`Dream Dues amount: €${sliderVal.toLocaleString()}`}
+          aria-valuemin={3000}
+          aria-valuemax={9000}
+          aria-valuenow={sliderVal}
+          aria-valuetext={`€${sliderVal.toLocaleString()} — ${tier.name}`}
         />
 
         {/* Tick labels — positioned at true % along the 3k–9k range */}
@@ -488,7 +503,11 @@ export default function HousesContent() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.9 }}
+          role="button"
+          tabIndex={0}
           onClick={() => openLightbox("/images/houses/fools-valley-8_a.jpg")}
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openLightbox("/images/houses/fools-valley-8_a.jpg"); } }}
+          aria-label="View Fools Valley banner full size"
           style={{
             position: "relative",
             width: "100vw",
@@ -502,6 +521,7 @@ export default function HousesContent() {
             src="/images/houses/fools-valley-8_a.jpg"
             alt="Fools Valley, Portugal"
             fill
+            priority
             style={{
               objectFit: "cover",
               filter: "saturate(0.85)",
@@ -743,7 +763,7 @@ export default function HousesContent() {
                       textAlign: "center",
                     }}
                   >
-                    <span style={{ fontSize: "1.5rem" }}>
+                    <span style={{ fontSize: "1.5rem" }} role="img" aria-hidden="true">
                       {ritual.icon}
                     </span>
                     <div>
@@ -904,7 +924,11 @@ export default function HousesContent() {
             ].map((img) => (
               <div
                 key={img.src}
+                role="button"
+                tabIndex={0}
                 onClick={() => openLightbox(img.src)}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openLightbox(img.src); } }}
+                aria-label={`View ${img.alt} full size`}
                 style={{
                   position: "relative",
                   aspectRatio: "3/4",
@@ -919,7 +943,7 @@ export default function HousesContent() {
                   alt={img.alt}
                   fill
                   style={{ objectFit: "cover", filter: "saturate(0.85)" }}
-                  sizes="33vw"
+                  sizes="(max-width: 768px) 100vw, 33vw"
                 />
               </div>
             ))}
@@ -948,7 +972,11 @@ export default function HousesContent() {
             ].map((img) => (
               <div
                 key={img.src}
+                role="button"
+                tabIndex={0}
                 onClick={() => openLightbox(img.src)}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openLightbox(img.src); } }}
+                aria-label={`View ${img.alt} full size`}
                 style={{
                   position: "relative",
                   aspectRatio: "4/3",
@@ -963,7 +991,7 @@ export default function HousesContent() {
                   alt={img.alt}
                   fill
                   style={{ objectFit: "cover", filter: "saturate(0.85)" }}
-                  sizes="50vw"
+                  sizes="(max-width: 768px) 100vw, 50vw"
                 />
               </div>
             ))}
@@ -1001,7 +1029,11 @@ export default function HousesContent() {
               }}
             >
               <span
+                role="button"
+                tabIndex={0}
                 onClick={() => openLightbox("/images/houses/french-castle.jpg")}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openLightbox("/images/houses/french-castle.jpg"); } }}
+                aria-label="View French castle full size"
                 style={{
                   position: "relative",
                   display: "inline-block",
@@ -1100,7 +1132,11 @@ export default function HousesContent() {
             }}
           >
             <div
+              role="button"
+              tabIndex={0}
               onClick={() => openLightbox("/images/houses/fools-valley-5.jpg")}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openLightbox("/images/houses/fools-valley-5.jpg"); } }}
+              aria-label="View Fools Valley — parting glimpse full size"
               style={{
                 position: "relative",
                 aspectRatio: "3/4",
@@ -1115,11 +1151,15 @@ export default function HousesContent() {
                 alt="Fools Valley — parting glimpse"
                 fill
                 style={{ objectFit: "cover", filter: "saturate(0.85)" }}
-                sizes="375px"
+                sizes="(max-width: 768px) 100vw, 50vw"
               />
             </div>
             <div
+              role="button"
+              tabIndex={0}
               onClick={() => openLightbox("/images/houses/fools-valley-1.jpg")}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openLightbox("/images/houses/fools-valley-1.jpg"); } }}
+              aria-label="View Fools Valley — the valley at rest full size"
               style={{
                 position: "relative",
                 aspectRatio: "3/4",
@@ -1134,7 +1174,7 @@ export default function HousesContent() {
                 alt="Fools Valley — the valley at rest"
                 fill
                 style={{ objectFit: "cover", filter: "saturate(0.85)" }}
-                sizes="375px"
+                sizes="(max-width: 768px) 100vw, 50vw"
               />
             </div>
           </motion.div>

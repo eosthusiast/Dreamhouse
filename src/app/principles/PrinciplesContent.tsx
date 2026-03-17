@@ -35,6 +35,16 @@ function TarotCard({ principleColor, title, frontImage }: { principleColor: stri
       onMouseEnter={() => setIsFlipped(true)}
       onMouseLeave={() => setIsFlipped(false)}
       onClick={() => setIsFlipped((f) => !f)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          setIsFlipped((f) => !f);
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-pressed={isFlipped}
+      aria-label={`${title} — ${isFlipped ? "showing illustration" : "tap to reveal"}`}
     >
       <div
         style={{
@@ -208,6 +218,7 @@ export default function PrinciplesContent() {
             src="/images/sections/pexels-jplenio.jpg"
             alt="Landscape"
             fill
+            priority
             style={{
               objectFit: "cover",
               filter: "saturate(0.85)",
@@ -314,7 +325,10 @@ export default function PrinciplesContent() {
                   <style>{`
                     @media (max-width: 767px) {
                       .tarot-row { flex-direction: column !important; align-items: center !important; }
-                      .tarot-card-wrap { width: 60% !important; margin-bottom: 1.5rem; }
+                      .tarot-card-wrap { width: 60% !important; max-width: 220px !important; margin-bottom: 1.5rem; }
+                    }
+                    @media (max-width: 374px) {
+                      .tarot-card-wrap { width: 55% !important; max-width: 180px !important; }
                     }
                   `}</style>
                   <div

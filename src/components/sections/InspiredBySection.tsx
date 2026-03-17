@@ -28,6 +28,10 @@ export default function InspiredBySection() {
           .inspired-col2 { margin-top: 1rem; margin-left: 1rem; }
           .inspired-col3 { margin-top: 1rem; margin-left: 2rem; }
         }
+        @media (max-width: 374px) {
+          .inspired-col2 { margin-left: 0.5rem; }
+          .inspired-col3 { margin-left: 1rem; }
+        }
       `}</style>
       <div className="flex flex-col justify-between h-full md:h-auto md:grid md:grid-cols-3 md:gap-12 max-w-5xl w-full">
         {/* Column 1 - top left */}

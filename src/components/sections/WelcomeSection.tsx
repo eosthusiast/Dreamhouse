@@ -7,12 +7,16 @@ export default function WelcomeSection() {
         @media (min-width: 768px) {
           .welcome-details { color: rgba(10,26,58,0.8) !important; text-shadow: none !important; gap: 1.25rem !important; }
         }
+        @media (max-width: 400px) {
+          .welcome-heading-wrap { left: 1rem !important; }
+          .welcome-heading-wrap img { width: 55vw !important; }
+        }
       `}</style>
 
       {/* Heading - large, left side, vertically centered */}
       <div
         data-reveal
-        className="absolute"
+        className="absolute welcome-heading-wrap"
         style={{ left: "6%", top: "28%", transform: "translateY(-50%)" }}
       >
         {/* Dark vignette behind PNG */}
@@ -31,13 +35,14 @@ export default function WelcomeSection() {
           height={500}
           className="relative h-auto"
           style={{ width: "48vw", maxWidth: "780px" }}
+          sizes="(max-width: 400px) 55vw, 48vw"
         />
       </div>
 
       {/* Details - right side, vertically centered */}
       <div
         className="absolute"
-        style={{ right: "10%", top: "58%", transform: "translateY(-30%)" }}
+        style={{ right: "clamp(1rem, 10%, 10%)", top: "58%", transform: "translateY(-30%)" }}
       >
         <div className="welcome-details font-playfair italic text-lg md:text-xl lg:text-2xl" style={{ display: "flex", flexDirection: "column", gap: "0.6rem", color: "rgba(255,255,255,0.95)", textShadow: "0 2px 20px rgba(0,0,0,0.6), 0 0 40px rgba(0,0,0,0.3)" }}>
           <p data-reveal>1 month</p>

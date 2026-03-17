@@ -73,6 +73,16 @@
   }
 }
 
+/* Focus-visible outlines for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--color-turquoise);
+  outline-offset: 2px;
+}
+
+[data-page-wrapper] :focus-visible {
+  outline-color: #e8806a;
+}
+
 /* Blinking cursor for dream input */
 @keyframes blink {
   0%,

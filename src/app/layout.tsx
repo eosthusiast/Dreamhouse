@@ -23,8 +23,14 @@ export const metadata: Metadata = {
     "A carefully curated, consciously held, co-created experience. Fertile soil for the truest version of yourself to play.",
   openGraph: {
     title: "The Dream House",
-    description: "Dream your way in.",
+    description: "A carefully curated, consciously held, co-created experience. Dream your way in.",
     type: "website",
+    siteName: "The Dream House",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "The Dream House",
+    description: "A carefully curated, consciously held, co-created experience. Dream your way in.",
   },
 };
 
@@ -36,7 +42,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${cormorant.variable} antialiased`}>
-        <LenisProvider>{children}</LenisProvider>
+        <LenisProvider><main>{children}</main></LenisProvider>
       </body>
     </html>
   );

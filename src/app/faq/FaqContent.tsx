@@ -147,6 +147,7 @@ export default function FaqContent() {
             src="/images/sections/pexels-wolfram.jpg"
             alt="Mountain landscape"
             fill
+            priority
             style={{
               objectFit: "cover",
               filter: "saturate(0.85)",
@@ -164,7 +165,7 @@ export default function FaqContent() {
         </motion.div>
 
         {/* Content container */}
-        <div style={{ maxWidth: "750px", margin: "0 auto", padding: "0 2rem 6rem" }}>
+        <div style={{ maxWidth: "750px", margin: "0 auto", padding: "0 clamp(1rem, 4vw, 2rem) 6rem" }}>
           {/* Accordion */}
           <div>
             {QUESTIONS.map((item, i) => (
@@ -178,6 +179,8 @@ export default function FaqContent() {
                 {/* Question row */}
                 <button
                   onClick={() => setOpen(open === i ? null : i)}
+                  aria-expanded={open === i}
+                  aria-controls={`faq-answer-${i}`}
                   style={{
                     width: "100%",
                     display: "flex",
@@ -202,6 +205,7 @@ export default function FaqContent() {
                     ✦
                   </span>
                   <span
+                    id={`faq-question-${i}`}
                     style={{
                       fontFamily: "var(--font-fraunces)",
                       fontSize: "clamp(1.05rem, 2vw, 1.25rem)",
@@ -232,6 +236,9 @@ export default function FaqContent() {
                   {open === i && (
                     <motion.div
                       key="answer"
+                      id={`faq-answer-${i}`}
+                      role="region"
+                      aria-labelledby={`faq-question-${i}`}
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}

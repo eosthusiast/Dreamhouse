@@ -175,6 +175,7 @@ export default function WhoContent() {
             src="/images/sections/pexels-lum3n.jpg"
             alt="Nature landscape"
             fill
+            priority
             style={{
               objectFit: "cover",
               filter: "saturate(0.85)",
