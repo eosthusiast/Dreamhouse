@@ -301,6 +301,7 @@ export default function Home() {
                 poster="/videos/hero-bg-2-poster.jpg"
                 className="absolute inset-0 w-full h-full object-cover"
                 aria-hidden="true"
+                onError={(e) => { (e.currentTarget as HTMLVideoElement).style.display = "none"; }}
               >
                 <source src="/videos/hero-bg-2.mp4" type="video/mp4" />
                 <source src="/videos/hero-bg-2.webm" type="video/webm" />
