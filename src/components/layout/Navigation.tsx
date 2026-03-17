@@ -32,7 +32,10 @@ export default function Navigation({ visible = true, variant = "dark" }: Navigat
               : "translate-y-0 opacity-100"
             : "-translate-y-full opacity-0 pointer-events-none"
         }`}
-        style={{ visibility: visible ? "visible" : "hidden" }}
+        style={{
+          visibility: visible ? "visible" : "hidden",
+          background: isDark ? undefined : "linear-gradient(to bottom, rgba(253,248,240,0.97) 0%, rgba(253,248,240,0.85) 70%, transparent 100%)",
+        }}
       >
         <div className="flex items-center justify-between flex-row-reverse md:flex-row py-4 md:py-6" style={{ paddingLeft: "2rem", paddingRight: "3rem" }}>
           {/* Logo left */}

@@ -280,8 +280,7 @@ function DreamDuesSlider() {
         {/* Tick labels — positioned at true % along the 3k–9k range */}
         <div style={{ position: "relative", height: "1.5rem", marginTop: "0.75rem" }}>
           {SLIDER_TIERS.map(({ value: v }) => {
-            const nudge: Record<number, number> = { 5000: -3, 8000: -5.6, 9000: -4 };
-            const pos = ((v - 3000) / (9000 - 3000)) * 100 + (nudge[v] ?? 0);
+            const pos = ((v - 3000) / (9000 - 3000)) * 100;
             const isActive = tier.value === v;
             return (
               <span
