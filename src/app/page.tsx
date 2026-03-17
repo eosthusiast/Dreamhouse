@@ -48,6 +48,11 @@ export default function Home() {
     const params = new URLSearchParams(window.location.search);
     if (isIOSDevice && !params.has("home")) {
       setGalaxyBackdropVisible(true);
+    } else if (isIOSDevice && params.has("home")) {
+      // Show beach backdrop during /?home skip — covers the black gap
+      // before GSAP initializes and reveals sections
+      setGalaxyBackdropVisible(true);
+      setBackdropImage("beach");
     }
 
     // Configure ScrollCanvas hero video
@@ -90,6 +95,20 @@ export default function Home() {
       setSkipGate(true);
       // Clean the URL so a reload shows the gate again
       history.replaceState(null, "", window.location.pathname);
+
+      // Clean up beach backdrop after first scroll (toolbar auto-hides, gap gone)
+      const onScroll = () => {
+        setGalaxyBackdropVisible(false);
+        window.removeEventListener("scroll", onScroll);
+      };
+      // Delay listener so the auto-scroll to beach doesn't trigger it
+      setTimeout(() => {
+        window.addEventListener("scroll", onScroll, { once: true, passive: true });
+      }, 500);
+      // Safety fallback
+      setTimeout(() => {
+        setGalaxyBackdropVisible(false);
+      }, 3000);
     }
   }, []);
 
@@ -266,8 +285,8 @@ export default function Home() {
           Fills the toolbar gap that visualViewport.height causes on the sticky ScrollCanvas. */}
       {galaxyBackdropVisible && (
         <div
-          className="fixed inset-0 z-[9998]"
-          style={{ pointerEvents: "none" }}
+          className="fixed inset-0"
+          style={{ pointerEvents: "none", zIndex: skipGate ? -1 : 9998 }}
           data-galaxy-backdrop
         >
           {backdropImage === "galaxy" ? (
