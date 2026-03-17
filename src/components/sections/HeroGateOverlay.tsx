@@ -158,48 +158,14 @@ export default function HeroGateOverlay({
           });
         }
 
-        // 2. After fade: compute scroll target (keyboard now dismissed, viewport correct)
+        // 2. After fade: navigate to /?home for a clean page state.
+        // The GSAP scroll animation caused persistent horizontal scroll on iOS
+        // (keyboard interaction shifts scrollX, overflow-x:clip doesn't survive).
+        // Navigating to /?home triggers the skip flow (HeroSection auto-scrolls
+        // to beach) with a fresh page state — no keyboard artifacts.
+        // The galaxy backdrop stays visible during the brief reload.
         tl.call(() => {
-          if (overlayRef.current) {
-            overlayRef.current.style.pointerEvents = "none";
-          }
-
-          // Read actual container height from DOM (always correct, matches CSS vh)
-          const container = document.querySelector("#scroll-canvas > div");
-          const containerHeight = container?.getBoundingClientRect().height
-            ?? document.documentElement.scrollHeight;
-          const scrollRange = containerHeight - window.innerHeight;
-
-          const baseSectionVhs = [530, 530, 325, 315, 330, 340, 315, 235];
-          const mobile = window.innerWidth < 768;
-          const sectionVhs = baseSectionVhs.map((v) =>
-            mobile ? Math.round(v * 0.85) : v
-          );
-          const totalVh = sectionVhs.reduce((a, b) => a + b, 0);
-          // Target: 60vh into section 2 (safely past galaxy→beach crossfade which ends at 40vh)
-          const section2StartVh = sectionVhs[0] + sectionVhs[1];
-          const targetVh = section2StartVh + 60;
-          const targetProgress = targetVh / totalVh;
-          const targetScroll = targetProgress * scrollRange;
-
-          // Reset any horizontal scroll caused by iOS keyboard interaction
-          window.scrollTo(0, window.scrollY);
-          // Re-apply overflow-x:clip in case iOS keyboard interaction cleared it
-          document.documentElement.style.overflowX = "clip";
-
-          const scrollProxy = { y: window.scrollY };
-          gsap.to(scrollProxy, {
-            y: targetScroll,
-            duration: 3.5,
-            ease: "power2.inOut",
-            onUpdate: () => window.scrollTo(0, scrollProxy.y),
-            onComplete: () => {
-              // Final horizontal scroll reset after animation
-              window.scrollTo(0, targetScroll);
-              onScrollComplete?.();
-              onDismiss();
-            },
-          });
+          window.location.href = "/?home";
         });
       }, 400);
     },
