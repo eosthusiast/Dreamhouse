@@ -31,7 +31,7 @@ function TarotCard({ principleColor, title, frontImage }: { principleColor: stri
 
   return (
     <div
-      style={{ perspective: "800px", width: "260px", maxWidth: "100%", height: "390px", flexShrink: 0 }}
+      style={{ perspective: "800px", width: "260px", maxWidth: "100%", aspectRatio: "2/3", flexShrink: 0 }}
       onMouseEnter={() => setIsFlipped(true)}
       onMouseLeave={() => setIsFlipped(false)}
       onClick={() => setIsFlipped((f) => !f)}
@@ -52,8 +52,9 @@ function TarotCard({ principleColor, title, frontImage }: { principleColor: stri
           width: "100%",
           height: "100%",
           transformStyle: "preserve-3d",
-          transition: "transform 0.6s cubic-bezier(0.22, 1, 0.36, 1)",
+          transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
           transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
+          willChange: "transform",
           cursor: "pointer",
         }}
       >
@@ -64,6 +65,7 @@ function TarotCard({ principleColor, title, frontImage }: { principleColor: stri
             inset: 0,
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",
+            willChange: "transform",
             borderRadius: "12px",
             overflow: "hidden",
             boxShadow: "0 8px 32px rgba(35,24,16,0.18)",
@@ -86,6 +88,7 @@ function TarotCard({ principleColor, title, frontImage }: { principleColor: stri
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",
             transform: "rotateY(180deg)",
+            willChange: "transform",
             borderRadius: "12px",
             overflow: "hidden",
             boxShadow: "0 8px 32px rgba(35,24,16,0.18)",
@@ -325,7 +328,7 @@ export default function PrinciplesContent() {
                   <style>{`
                     @media (max-width: 767px) {
                       .tarot-row { flex-direction: column !important; align-items: center !important; }
-                      .tarot-card-wrap { width: 60% !important; max-width: 220px !important; margin-bottom: 1.5rem; }
+                      .tarot-card-wrap { width: 60% !important; max-width: 240px !important; margin-bottom: 1.5rem; }
                     }
                     @media (max-width: 374px) {
                       .tarot-card-wrap { width: 55% !important; max-width: 180px !important; }

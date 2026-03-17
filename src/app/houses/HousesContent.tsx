@@ -218,14 +218,8 @@ function DreamDuesSlider() {
             appearance: none;
             width: 100%;
             height: 2px;
-            background: linear-gradient(
-              to right,
-              ${trackColor} ${pct}%,
-              rgba(35,24,16,0.12) ${pct}%
-            );
             outline: none;
             cursor: pointer;
-            transition: background 0.3s;
           }
           .dh-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
@@ -234,31 +228,29 @@ function DreamDuesSlider() {
             height: 28px;
             border-radius: 50%;
             background: #fdf8f0;
-            border: 2px solid ${trackColor};
-            box-shadow: 0 2px 12px ${trackColor}55, 0 0 0 0 ${trackColor}00;
+            border: 2px solid var(--track-color, #e8806a);
+            box-shadow: 0 2px 12px color-mix(in srgb, var(--track-color, #e8806a) 33%, transparent);
             cursor: pointer;
-            transition: box-shadow 0.3s, border-color 0.3s, transform 0.15s;
           }
           .dh-slider::-webkit-slider-thumb:hover {
-            box-shadow: 0 2px 18px ${trackColor}88, 0 0 0 6px ${trackColor}15;
+            box-shadow: 0 2px 18px color-mix(in srgb, var(--track-color, #e8806a) 53%, transparent), 0 0 0 6px color-mix(in srgb, var(--track-color, #e8806a) 8%, transparent);
             transform: scale(1.1);
           }
           .dh-slider::-webkit-slider-thumb:active {
             transform: scale(0.95);
-            box-shadow: 0 1px 8px ${trackColor}66;
+            box-shadow: 0 1px 8px color-mix(in srgb, var(--track-color, #e8806a) 40%, transparent);
           }
           .dh-slider::-moz-range-thumb {
             width: 28px;
             height: 28px;
             border-radius: 50%;
             background: #fdf8f0;
-            border: 2px solid ${trackColor};
-            box-shadow: 0 2px 12px ${trackColor}55;
+            border: 2px solid var(--track-color, #e8806a);
+            box-shadow: 0 2px 12px color-mix(in srgb, var(--track-color, #e8806a) 33%, transparent);
             cursor: pointer;
-            transition: box-shadow 0.3s, border-color 0.3s;
           }
           .dh-slider::-moz-range-thumb:hover {
-            box-shadow: 0 2px 18px ${trackColor}88, 0 0 0 6px ${trackColor}15;
+            box-shadow: 0 2px 18px color-mix(in srgb, var(--track-color, #e8806a) 53%, transparent), 0 0 0 6px color-mix(in srgb, var(--track-color, #e8806a) 8%, transparent);
           }
         `}</style>
 
@@ -270,6 +262,10 @@ function DreamDuesSlider() {
           value={sliderVal}
           onChange={(e) => setSliderVal(Number(e.target.value))}
           className="dh-slider"
+          style={{
+            background: `linear-gradient(to right, ${trackColor} ${pct}%, rgba(35,24,16,0.12) ${pct}%)`,
+            ["--track-color" as string]: trackColor,
+          }}
           aria-label={`Dream Dues amount: €${sliderVal.toLocaleString()}`}
           aria-valuemin={3000}
           aria-valuemax={9000}
