@@ -280,7 +280,7 @@ function DreamDuesSlider() {
         {/* Tick labels — positioned at true % along the 3k–9k range */}
         <div style={{ position: "relative", height: "1.5rem", marginTop: "0.75rem" }}>
           {SLIDER_TIERS.map(({ value: v }) => {
-            const pos = ((v - 3000) / (9000 - 3000)) * 100;
+            const frac = (v - 3000) / (9000 - 3000);
             const isActive = tier.value === v;
             return (
               <span
@@ -288,7 +288,7 @@ function DreamDuesSlider() {
                 onClick={() => setSliderVal(v)}
                 style={{
                   position: "absolute",
-                  left: `${pos}%`,
+                  left: `calc(14px + (100% - 28px) * ${frac})`,
                   transform: "translateX(-50%)",
                   fontFamily: "var(--font-nunito)",
                   fontSize: "0.78rem",
