@@ -182,6 +182,11 @@ export default function HeroGateOverlay({
           const targetProgress = targetVh / totalVh;
           const targetScroll = targetProgress * scrollRange;
 
+          // Reset any horizontal scroll caused by iOS keyboard interaction
+          window.scrollTo(0, window.scrollY);
+          // Re-apply overflow-x:clip in case iOS keyboard interaction cleared it
+          document.documentElement.style.overflowX = "clip";
+
           const scrollProxy = { y: window.scrollY };
           gsap.to(scrollProxy, {
             y: targetScroll,
@@ -189,6 +194,8 @@ export default function HeroGateOverlay({
             ease: "power2.inOut",
             onUpdate: () => window.scrollTo(0, scrollProxy.y),
             onComplete: () => {
+              // Final horizontal scroll reset after animation
+              window.scrollTo(0, targetScroll);
               onScrollComplete?.();
               onDismiss();
             },
@@ -246,7 +253,7 @@ export default function HeroGateOverlay({
             placeholder="share a dream of yours"
             autoFocus
             visible={phase === "hero1" || phase === "loading"}
-            compact={keyboardOpen}
+
           />
         </div>
       </div>
@@ -305,7 +312,7 @@ export default function HeroGateOverlay({
             placeholder="imagine it here"
             autoFocus={phase === "hero2"}
             visible={phase === "hero2"}
-            compact={keyboardOpen}
+
           />
         </div>
       </div>
