@@ -32,7 +32,10 @@ export default function Navigation({ visible = true, variant = "dark" }: Navigat
               : "translate-y-0 opacity-100"
             : "-translate-y-full opacity-0 pointer-events-none"
         }`}
-        style={{ visibility: visible ? "visible" : "hidden" }}
+        style={{
+          visibility: visible ? "visible" : "hidden",
+          background: isDark ? "#050518" : "#fdf8f0",
+        }}
       >
         <div className="flex items-center justify-between flex-row-reverse md:flex-row py-4 md:py-6" style={{ paddingLeft: "2rem", paddingRight: "3rem" }}>
           {/* Logo left */}
