@@ -145,6 +145,12 @@ video {
   object-fit: cover;
 }
 
+/* Hide native play button on decorative background videos (iOS Safari) */
+video[aria-hidden="true"]::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
 /* Hide scrollbar for smooth scroll experience */
 html.lenis,
 html.lenis body {
