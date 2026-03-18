@@ -571,8 +571,14 @@ export default function ScrollCanvas({
           }
         },
       });
+
+      // Force ScrollTrigger to process current scroll position immediately.
+      // With revertOnUpdate, each re-run resets all sections to hidden (except 0).
+      // If the user is already scrolled (e.g. /?home skip flow), this ensures the
+      // correct section is revealed right away instead of waiting for a scroll event.
+      ScrollTrigger.update();
     },
-    { scope: containerRef, dependencies: [scrollPerSection, sections, isMobile] }
+    { scope: containerRef, dependencies: [scrollPerSection, sections, isMobile], revertOnUpdate: true }
   );
 
   const MOBILE_TOTAL_SCALE = 0.85;

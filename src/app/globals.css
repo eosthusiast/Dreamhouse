@@ -146,7 +146,10 @@ video {
 }
 
 /* Hide native play button on decorative background videos (iOS Safari) */
-video[aria-hidden="true"]::-webkit-media-controls-start-playback-button {
+video[aria-hidden="true"]::-webkit-media-controls-start-playback-button,
+video[aria-hidden="true"]::-webkit-media-controls,
+video[aria-hidden="true"]::-webkit-media-controls-panel,
+video[aria-hidden="true"]::-webkit-media-controls-overlay-play-button {
   display: none !important;
   -webkit-appearance: none;
 }
