@@ -94,22 +94,47 @@ export default function ScrollCanvas({
     }
   }, []);
 
-  // Safety fallback: if GSAP fails to init, reveal first section after 3s
+  // Safety fallback: if GSAP fails to init, reveal the appropriate section after 3s.
+  // On /?home skip flow, the user is scrolled to section 2 (beach) — revealing only
+  // section 0 (galaxy dark) would show a black screen. Instead, detect scroll position
+  // and reveal whichever section the user is actually viewing.
   useEffect(() => {
     const fallback = setTimeout(() => {
       if (!stickyRef.current) return;
       const images = stickyRef.current.querySelectorAll("[data-scroll-image]");
       const contents = stickyRef.current.querySelectorAll("[data-scroll-content]");
-      if (images[0]) (images[0] as HTMLElement).style.cssText += "visibility:visible;opacity:1;";
-      if (contents[0]) (contents[0] as HTMLElement).style.cssText += "visibility:visible;opacity:1;";
-      // Also reveal hero gate elements in case GSAP hasn't loaded
+
+      // Determine which section should be visible based on scroll position
+      let revealIdx = 0;
+      const scrollY = window.scrollY;
+      if (scrollY > 0 && containerRef.current) {
+        const containerHeight = containerRef.current.getBoundingClientRect().height;
+        const scrollRange = containerHeight - window.innerHeight;
+        if (scrollRange > 0) {
+          const progress = scrollY / scrollRange;
+          revealIdx = Math.min(
+            Math.floor(progress * sections.length),
+            sections.length - 1
+          );
+        }
+      }
+
+      // Reveal the target section
+      if (images[revealIdx]) (images[revealIdx] as HTMLElement).style.cssText += "visibility:visible;opacity:1;";
+      if (contents[revealIdx]) (contents[revealIdx] as HTMLElement).style.cssText += "visibility:visible;opacity:1;";
+      // Also reveal section 0 for gate fallback
+      if (revealIdx !== 0) {
+        if (images[0]) (images[0] as HTMLElement).style.cssText += "visibility:visible;opacity:1;";
+        if (contents[0]) (contents[0] as HTMLElement).style.cssText += "visibility:visible;opacity:1;";
+      }
+      // Reveal hero gate elements in case GSAP hasn't loaded
       const heroHeading = document.querySelector("[data-hero-heading]") as HTMLElement;
       const heroInput = document.querySelector("[data-hero-input]") as HTMLElement;
       if (heroHeading) heroHeading.style.cssText += "visibility:visible;opacity:1;";
       if (heroInput) heroInput.style.cssText += "visibility:visible;opacity:1;";
     }, 3000);
     return () => clearTimeout(fallback);
-  }, []);
+  }, [sections.length]);
 
   useGSAP(
     () => {

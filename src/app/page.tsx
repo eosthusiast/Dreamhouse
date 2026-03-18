@@ -186,7 +186,12 @@ export default function Home() {
   // On iOS (non-skip), overlay handles gate — section 0 content is empty
   const showOverlay = isIOS && !skipGate && !overlayDone;
 
-  const sections = [
+  // Memoize sections to prevent useGSAP re-initialization cascade in ScrollCanvas.
+  // Without this, every state update (gateComplete, showScrollHint, galaxyBackdropVisible, etc.)
+  // creates a new array reference, causing useGSAP to destroy and recreate the ScrollTrigger —
+  // re-hiding all sections and restarting scrub smoothing. On the /?home skip flow this caused
+  // a multi-second black screen as 7+ state updates each reset the GSAP animation state.
+  const sections = useMemo(() => [
     {
       id: "hero-1",
       image: null,
@@ -243,7 +248,7 @@ export default function Home() {
       content: <PortalSection />,
       scrollVh: 235,
     },
-  ];
+  ], [isIOS, skipGate, isMobile, handleGateComplete, handleScrollComplete]);
 
   const heroVideo = useMemo(() => (
     <>
@@ -315,6 +320,7 @@ export default function Home() {
               src="/images/sections/beach-sunset.jpg"
               alt=""
               fill
+              priority
               className="object-cover"
               style={{ objectPosition: "center 33%" }}
               sizes="100vw"
