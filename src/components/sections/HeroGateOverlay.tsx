@@ -21,7 +21,7 @@ export default function HeroGateOverlay({
   const [phase, setPhase] = useState<"loading" | "hero1" | "hero2" | "done">(
     "loading"
   );
-  const [keyboardOpen, setKeyboardOpen] = useState(false);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
   const overlayRef = useRef<HTMLDivElement>(null);
   const hero1Ref = useRef<HTMLDivElement>(null);
   const hero2Ref = useRef<HTMLDivElement>(null);
@@ -29,26 +29,36 @@ export default function HeroGateOverlay({
   const inputRef = useRef<HTMLDivElement>(null);
   const initialVpHeight = useRef(0);
 
-  // Track visualViewport.height, offsetTop, AND keyboard state.
-  // iOS shifts the visual viewport down when keyboard opens — offsetTop tracks this.
-  // Keyboard detection enables compact layout for small viewports (iPhone SE etc).
+  const keyboardOpen = keyboardHeight > 0;
+
+  // Track keyboard height via visualViewport for content positioning.
+  // Instead of resizing the overlay (which creates a gap with the fixed backdrop),
+  // we keep the overlay at fixed inset-0 and use padding to center content
+  // above the keyboard. visualViewport.resize fires once at the end of the
+  // keyboard animation — the CSS transition on padding-bottom smooths this.
   useEffect(() => {
     const vv = window.visualViewport;
     if (!vv) return;
-    const el = overlayRef.current;
-    if (!el) return;
     initialVpHeight.current = vv.height;
     const update = () => {
-      el.style.height = `${vv.height}px`;
-      el.style.top = `${vv.offsetTop}px`;
-      setKeyboardOpen(vv.height < initialVpHeight.current * 0.75);
+      const kbHeight = initialVpHeight.current - vv.height;
+      setKeyboardHeight(kbHeight > 100 ? kbHeight : 0);
     };
-    update();
+
     vv.addEventListener("resize", update);
     vv.addEventListener("scroll", update);
+
+    // iOS 17+ bug: visualViewport.offsetTop may not reset after keyboard dismiss.
+    // Force a scroll reset on focusout to clear stale viewport state.
+    const onFocusOut = () => {
+      setTimeout(() => window.scrollBy(0, 0), 120);
+    };
+    document.addEventListener("focusout", onFocusOut);
+
     return () => {
       vv.removeEventListener("resize", update);
       vv.removeEventListener("scroll", update);
+      document.removeEventListener("focusout", onFocusOut);
     };
   }, []);
 
@@ -170,77 +180,82 @@ export default function HeroGateOverlay({
   return (
     <div
       ref={overlayRef}
-      className="fixed left-0 right-0 z-[9999] flex flex-col items-center px-4"
+      className="fixed inset-0 z-[9999]"
       style={{
-        top: 0,
-        height: "100dvh",
         background: "transparent",
         pointerEvents: phase === "done" ? "none" : "auto",
         overscrollBehavior: "none",
         overflow: "hidden",
       }}
     >
-      {/* Hero 1 Content — my-auto centers safely (no top-clipping on overflow) */}
+      {/* Hero 1 Content — padding-bottom accounts for keyboard, centering content above it.
+          Overlay stays fixed inset-0 (matching the backdrop) so no dark gap appears. */}
       <div
         ref={hero1Ref}
-        className="flex flex-col items-center w-full my-auto"
+        className="flex flex-col items-center w-full h-full px-4"
+        style={{
+          paddingBottom: keyboardHeight,
+          transition: "padding-bottom 0.15s ease-out",
+        }}
       >
-        <div
-          ref={headingRef}
-          data-hero-heading
-          className="text-center"
-          style={{ marginBottom: "0.75rem", overflow: "hidden" }}
-        >
-          <Image
-            src="/images/typography/dream-your-way-in.png"
-            alt="Dream your way in"
-            width={800}
-            height={160}
-            priority
-            className="h-auto mx-auto"
-            style={{
-              width: "70vw",
-              maxWidth: "600px",
-              marginTop: "-14%",
-              marginBottom: "-18%",
-            }}
-          />
+        <div className="flex flex-col items-center w-full my-auto">
+          <div
+            ref={headingRef}
+            data-hero-heading
+            className="text-center"
+            style={{ marginBottom: "0.75rem", overflow: "hidden" }}
+          >
+            <Image
+              src="/images/typography/dream-your-way-in.png"
+              alt="Dream your way in"
+              width={800}
+              height={160}
+              priority
+              className="h-auto mx-auto"
+              style={{
+                width: "70vw",
+                maxWidth: "600px",
+                marginTop: "-14%",
+                marginBottom: "-18%",
+              }}
+            />
+          </div>
+
+          <div ref={inputRef} data-hero-input>
+            <DreamInput
+              onSubmit={handleHero1Submit}
+              ctaText="Submit your dream"
+              placeholder="share a dream of yours"
+              autoFocus
+              visible={phase === "hero1" || phase === "loading"}
+
+            />
+          </div>
         </div>
 
-        <div ref={inputRef} data-hero-input>
-          <DreamInput
-            onSubmit={handleHero1Submit}
-            ctaText="Submit your dream"
-            placeholder="share a dream of yours"
-            autoFocus
-            visible={phase === "hero1" || phase === "loading"}
-
-          />
-        </div>
+        {/* Skip link — hidden when keyboard open to save vertical space */}
+        {phase !== "hero2" && phase !== "done" && !keyboardOpen && (
+          <a
+            href="/?home"
+            className="font-playfair italic text-xs tracking-wider pb-8"
+            style={{ color: "rgba(251, 240, 224, 0.55)" }}
+          >
+            done this before? skip ahead
+          </a>
+        )}
       </div>
 
-      {/* Skip link — hidden when keyboard open to save vertical space */}
-      {phase !== "hero2" && phase !== "done" && !keyboardOpen && (
-        <a
-          href="/?home"
-          className="font-playfair italic text-xs tracking-wider pb-8"
-          style={{ color: "rgba(251, 240, 224, 0.55)" }}
-        >
-          done this before? skip ahead
-        </a>
-      )}
-
       {/* Hero 2 Content (hidden initially by GSAP) */}
-      {/* Uses my-auto wrapper for safe centering — prevents top-clipping
-          that justify-center causes when content exceeds viewport height
-          (e.g. iPhone SE with keyboard open). Content aligns to top when
-          it overflows instead of clipping the heading. */}
       <div
         ref={hero2Ref}
         onClick={() => {
           hero2Ref.current?.querySelector("input")?.focus();
         }}
         className="absolute inset-0 flex flex-col items-center w-full px-4"
+        style={{
+          paddingBottom: keyboardHeight,
+          transition: "padding-bottom 0.15s ease-out",
+        }}
       >
         <div className="flex flex-col items-center w-full my-auto"
           style={{ padding: "0.5rem 0" }}

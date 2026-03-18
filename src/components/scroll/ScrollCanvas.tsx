@@ -64,11 +64,15 @@ export default function ScrollCanvas({
     if (isIOS && stickyRef.current) {
       const sticky = stickyRef.current;
       let rafId: number;
+      const baseHeight = window.visualViewport?.height ?? window.innerHeight;
 
       const updateHeight = () => {
         cancelAnimationFrame(rafId);
         rafId = requestAnimationFrame(() => {
           const h = window.visualViewport?.height ?? window.innerHeight;
+          // Skip keyboard-triggered resizes (>25% height reduction).
+          // Only track toolbar show/hide (~50-70px changes).
+          if (h < baseHeight * 0.75) return;
           sticky.style.height = `${h}px`;
         });
       };
