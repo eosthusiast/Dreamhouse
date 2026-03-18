@@ -203,7 +203,13 @@ export default function HeroGateOverlay({
             ref={headingRef}
             data-hero-heading
             className="text-center"
-            style={{ marginBottom: "0.75rem", overflow: "hidden" }}
+            style={{
+              marginBottom: keyboardOpen ? 0 : "0.75rem",
+              overflow: "hidden",
+              height: keyboardOpen ? 0 : "auto",
+              opacity: keyboardOpen ? 0 : 1,
+              transition: "height 0.2s ease-out, opacity 0.2s ease-out, margin-bottom 0.2s ease-out",
+            }}
           >
             <Image
               src="/images/typography/dream-your-way-in.png"
@@ -263,8 +269,11 @@ export default function HeroGateOverlay({
           <div
             className="text-center"
             style={{
-              marginBottom: "0.5rem",
+              marginBottom: keyboardOpen ? 0 : "0.5rem",
               overflow: "hidden",
+              height: keyboardOpen ? 0 : "auto",
+              opacity: keyboardOpen ? 0 : 1,
+              transition: "height 0.2s ease-out, opacity 0.2s ease-out, margin-bottom 0.2s ease-out",
             }}
           >
             <Image

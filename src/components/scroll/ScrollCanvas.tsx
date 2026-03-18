@@ -258,12 +258,27 @@ export default function ScrollCanvas({
         }
       }
 
-      // Set initial states — everything hidden except section 0
+      // Determine which section should be visible based on current scroll position.
+      // On /?home skip flow, user is already scrolled to beach — showing section 0
+      // (galaxy dark) would flash black before ScrollTrigger.update() processes.
+      let initActiveIdx = 0;
+      if (window.scrollY > 0 && containerRef.current) {
+        const scrollRange = containerRef.current.scrollHeight - window.innerHeight;
+        if (scrollRange > 0) {
+          const progress = window.scrollY / scrollRange;
+          for (let i = 0; i < N; i++) {
+            if (progress < sectionNormStarts[i] + sectionNormWidths[i] || i === N - 1) {
+              initActiveIdx = i;
+              break;
+            }
+          }
+        }
+      }
       images.forEach((img, i) => {
-        gsap.set(img, { autoAlpha: i === 0 ? 1 : 0 });
+        gsap.set(img, { autoAlpha: i === initActiveIdx ? 1 : 0 });
       });
       contents.forEach((content, i) => {
-        gsap.set(content, { autoAlpha: i === 0 ? 1 : 0 });
+        gsap.set(content, { autoAlpha: i === initActiveIdx ? 1 : 0 });
       });
       // Hide all reveal elements
       revealsPerSection.forEach((reveals) => {
