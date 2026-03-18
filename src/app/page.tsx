@@ -113,7 +113,7 @@ export default function Home() {
   }, []);
 
   // Sections with light backgrounds where nav needs dark text
-  const LIGHT_SECTIONS = new Set([4]); // welcome
+  const LIGHT_SECTIONS = new Set<number>(); // no scroll sections use light nav
 
   const handleActiveSection = useCallback((index: number) => {
     if (inGalleryRef.current) return; // gallery overrides
