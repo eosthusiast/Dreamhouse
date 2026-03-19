@@ -247,14 +247,14 @@ export default function Home() {
 
   const heroVideo = useMemo(() => (
     <>
-      <div className="absolute inset-0 w-full h-full" style={{ background: "#050a1a" }} />
+      <div className="absolute inset-0 w-full h-full" style={{ background: `#050a1a url('/videos/galaxy-poster.jpg') center/cover no-repeat` }} />
       <video
         ref={videoRef}
         autoPlay
         loop
         muted
         playsInline
-        poster="/videos/hero-bg-2-poster.jpg"
+        poster="/videos/galaxy-poster.jpg"
         className="absolute inset-0 w-full h-full object-cover"
         aria-hidden="true"
         onError={(e) => { (e.currentTarget as HTMLVideoElement).style.display = "none"; }}
@@ -291,14 +291,14 @@ export default function Home() {
         >
           {backdropImage === "galaxy" ? (
             <>
-              <div className="absolute inset-0" style={{ background: "#050a1a" }} />
+              <div className="absolute inset-0" style={{ background: `#050a1a url('/videos/galaxy-poster.jpg') center/cover no-repeat` }} />
               <video
                 ref={backdropVideoRef}
                 autoPlay
                 loop
                 muted
                 playsInline
-                poster="/videos/hero-bg-2-poster.jpg"
+                poster="/videos/galaxy-poster.jpg"
                 className="absolute inset-0 w-full h-full object-cover"
                 aria-hidden="true"
               >
