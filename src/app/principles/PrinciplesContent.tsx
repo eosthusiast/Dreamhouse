@@ -145,7 +145,7 @@ const PRINCIPLES = [
     title: "Surrender",
     body: "Not everything needs to be solved, built, or transformed. Sometimes the bravest thing is to stop. To sit with what is, without needing it to be different. To trust that not-knowing is its own kind of wisdom.",
     color: "#c4a882",
-    frontImage: "/images/principles/card-back.jpeg",
+    frontImage: "/images/principles/surrender.jpg",
   },
 ];
 
