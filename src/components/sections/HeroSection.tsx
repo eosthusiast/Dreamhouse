@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import DreamInput from "@/components/ui/DreamInput";
 
@@ -74,6 +75,7 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
       const targetProgress = targetVh / totalVh;
       const targetScroll = targetProgress * scrollRange;
       window.scrollTo(0, targetScroll);
+      ScrollTrigger.update();
       onScrollComplete?.();
     });
   }, [skipGate, onGateComplete, onScrollComplete]);

@@ -29,8 +29,12 @@ export function LenisProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Force scroll to top before anything else (scroll restoration fix)
-    window.scrollTo(0, 0);
+    // Force scroll to top before anything else (scroll restoration fix).
+    // Skip on /?home — HeroSection will scrollTo the beach section target.
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has("home")) {
+      window.scrollTo(0, 0);
+    }
 
     const lenis = new Lenis({
       lerp: 0.1,
@@ -50,9 +54,11 @@ export function LenisProvider({ children }: { children: ReactNode }) {
     // Disable GSAP lag smoothing for accurate Lenis sync
     gsap.ticker.lagSmoothing(0);
 
-    // Only lock scroll on the homepage (hero gate)
+    // Only lock scroll on the homepage (hero gate) — skip on /?home return flow
     const isHomepage = pathname === "/";
-    if (isHomepage) {
+    const skipParams = new URLSearchParams(window.location.search);
+    const isSkipFlow = skipParams.has("home");
+    if (isHomepage && !isSkipFlow) {
       lenis.stop();
 
       // iOS: overflow:hidden doesn't prevent touch scroll
