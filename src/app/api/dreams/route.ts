@@ -26,6 +26,11 @@ export async function POST(request: Request) {
 }
 
 export async function GET(request: Request) {
+  const authHeader = request.headers.get("authorization");
+  if (authHeader !== `Bearer ${process.env.DREAMS_API_KEY}`) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const type = searchParams.get("type");
