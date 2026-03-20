@@ -262,13 +262,13 @@ export default function WhoContent() {
               marginBottom: "2rem",
             }}
           >
-            This is for the ambitious weirdos &amp; genuinely good eggs.
+            This is for the people who take life seriously enough to be playful about it, the ambitious weirdos &amp; genuinely good eggs.
           </motion.p>
 
           {/* Yes-list — each item reveals individually on scroll */}
           <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
             {[
-              "We accidentally inspire people, constantly",
+              "We inspire people, whether we intend to or not",
               "We believe joy and ambition belong in the same room",
               "We share our gifts and being of service energises us",
               "We have something we're building that means something to us",
@@ -579,6 +579,8 @@ export default function WhoContent() {
                 This is my passionate project. A gift. I join the experiment
                 just like everyone else, and am along for the rollercoaster,
                 the adventure.
+                <br /><br />
+                I&apos;m learning too. Every Dream House teaches me something I didn&apos;t expect. I don&apos;t know what each container will evoke, I just know it&apos;s worth doing.
               </blockquote>
 
               {/* Additional photos */}
@@ -693,6 +695,7 @@ export default function WhoContent() {
               <p>Some fell in love.</p>
               <p>Some launched companies.</p>
               <p>Others met parts of themselves they&apos;d never known.</p>
+              <p>Some found a stillness they&apos;d been running from.</p>
             </div>
 
             <p
@@ -720,7 +723,7 @@ export default function WhoContent() {
                 marginTop: "0.75rem",
               }}
             >
-              As it does when you&apos;re surrounded by the right community.
+              As it does when you&apos;re surrounded by a community that sees you.
             </p>
           </motion.section>
 

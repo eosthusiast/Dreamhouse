@@ -727,12 +727,12 @@ export default function HousesContent() {
                   {
                     icon: "/images/icons/ComputerClear.png",
                     title: "Deep work",
-                    body: "Opportunities created to get into deep focus with supportive accountability and collaboration if useful. It could be your most productive month of the year.",
+                    body: "Opportunities created to get into deep focus with supportive accountability and collaboration if useful. Some people find it their most productive month. Others find it\u2019s the month they finally stop producing.",
                   },
                   {
                     icon: "/images/icons/StarsClear.png",
                     title: "Peer workshops",
-                    body: "Everyone in this house knows something the others don\u2019t. We make structured space for that exchange. You will teach. You will be taught. Often by the person you least expected.",
+                    body: "Everyone in this house knows something the others don\u2019t. We make structured space for that exchange. The teaching goes in every direction. Often from the person you\u2019d least expect.",
                   },
                   {
                     icon: "/images/icons/HandClear.png",
@@ -866,9 +866,8 @@ export default function HousesContent() {
                 that grew nearby.
               </p>
               <p>
-                Everything here is designed, quietly and carefully, to bring us
-                back to ourselves. Our circadian rhythms, which the modern world
-                quietly broke slowly return. We sleep deeply. Think clearly. Feel
+                Everything here is designed, quietly and carefully, to
+                invite us a little closer to ourselves. Our circadian rhythms, which we&apos;ve slowly drifted from, return. We sleep deeply. Think clearly. Feel
                 more like ourselves, or perhaps like the persons we always
                 suspected we could be.
               </p>
