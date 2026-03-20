@@ -56,17 +56,20 @@ export default function Home() {
     }
 
     // Configure ScrollCanvas hero video
+    // In Low Power Mode, iOS blocks autoplay and shows a native play button.
+    // Hide the video element entirely so the poster/solid bg shows instead.
     const video = videoRef.current;
-    const tryPlayVideo = video ? () => { video.play().catch(() => {}); } : null;
-    if (video && tryPlayVideo) {
+    if (video) {
       video.muted = true;
-      tryPlayVideo();
-      video.addEventListener("canplay", tryPlayVideo, { once: true });
+      const tryPlay = () => {
+        video.play().catch(() => {
+          video.style.display = "none";
+        });
+      };
+      tryPlay();
+      video.addEventListener("canplay", tryPlay, { once: true });
+      return () => video.removeEventListener("canplay", tryPlay);
     }
-
-    return () => {
-      if (video && tryPlayVideo) video.removeEventListener("canplay", tryPlayVideo);
-    };
   }, []);
 
   // Configure backdrop video playback when it mounts (iOS gate only)
@@ -74,7 +77,7 @@ export default function Home() {
     const bdVideo = backdropVideoRef.current;
     if (!bdVideo) return;
     bdVideo.muted = true;
-    const tryPlay = () => { bdVideo.play().catch(() => {}); };
+    const tryPlay = () => { bdVideo.play().catch(() => { bdVideo.style.display = "none"; }); };
     tryPlay();
     bdVideo.addEventListener("canplay", tryPlay, { once: true });
     return () => bdVideo.removeEventListener("canplay", tryPlay);
@@ -186,7 +189,12 @@ export default function Home() {
   // On iOS (non-skip), overlay handles gate — section 0 content is empty
   const showOverlay = isIOS && !skipGate && !overlayDone;
 
-  const sections = [
+  // Memoize sections to prevent useGSAP re-initialization cascade in ScrollCanvas.
+  // Without this, every state update (gateComplete, showScrollHint, galaxyBackdropVisible, etc.)
+  // creates a new array reference, causing useGSAP to destroy and recreate the ScrollTrigger —
+  // re-hiding all sections and restarting scrub smoothing. On the /?home skip flow this caused
+  // a multi-second black screen as 7+ state updates each reset the GSAP animation state.
+  const sections = useMemo(() => [
     {
       id: "hero-1",
       image: null,
@@ -243,7 +251,7 @@ export default function Home() {
       content: <PortalSection />,
       scrollVh: 235,
     },
-  ];
+  ], [isIOS, skipGate, isMobile, handleGateComplete, handleScrollComplete]);
 
   const heroVideo = useMemo(() => (
     <>
@@ -298,6 +306,7 @@ export default function Home() {
                 loop
                 muted
                 playsInline
+                preload="metadata"
                 poster="/videos/hero-bg-2-poster.jpg"
                 className="absolute inset-0 w-full h-full object-cover"
                 aria-hidden="true"
@@ -315,6 +324,7 @@ export default function Home() {
               src="/images/sections/beach-sunset.jpg"
               alt=""
               fill
+              priority
               className="object-cover"
               style={{ objectPosition: "center 33%" }}
               sizes="100vw"

@@ -94,22 +94,47 @@ export default function ScrollCanvas({
     }
   }, []);
 
-  // Safety fallback: if GSAP fails to init, reveal first section after 3s
+  // Safety fallback: if GSAP fails to init, reveal the appropriate section after 3s.
+  // On /?home skip flow, the user is scrolled to section 2 (beach) — revealing only
+  // section 0 (galaxy dark) would show a black screen. Instead, detect scroll position
+  // and reveal whichever section the user is actually viewing.
   useEffect(() => {
     const fallback = setTimeout(() => {
       if (!stickyRef.current) return;
       const images = stickyRef.current.querySelectorAll("[data-scroll-image]");
       const contents = stickyRef.current.querySelectorAll("[data-scroll-content]");
-      if (images[0]) (images[0] as HTMLElement).style.cssText += "visibility:visible;opacity:1;";
-      if (contents[0]) (contents[0] as HTMLElement).style.cssText += "visibility:visible;opacity:1;";
-      // Also reveal hero gate elements in case GSAP hasn't loaded
+
+      // Determine which section should be visible based on scroll position
+      let revealIdx = 0;
+      const scrollY = window.scrollY;
+      if (scrollY > 0 && containerRef.current) {
+        const containerHeight = containerRef.current.getBoundingClientRect().height;
+        const scrollRange = containerHeight - window.innerHeight;
+        if (scrollRange > 0) {
+          const progress = scrollY / scrollRange;
+          revealIdx = Math.min(
+            Math.floor(progress * sections.length),
+            sections.length - 1
+          );
+        }
+      }
+
+      // Reveal the target section
+      if (images[revealIdx]) (images[revealIdx] as HTMLElement).style.cssText += "visibility:visible;opacity:1;";
+      if (contents[revealIdx]) (contents[revealIdx] as HTMLElement).style.cssText += "visibility:visible;opacity:1;";
+      // Also reveal section 0 for gate fallback
+      if (revealIdx !== 0) {
+        if (images[0]) (images[0] as HTMLElement).style.cssText += "visibility:visible;opacity:1;";
+        if (contents[0]) (contents[0] as HTMLElement).style.cssText += "visibility:visible;opacity:1;";
+      }
+      // Reveal hero gate elements in case GSAP hasn't loaded
       const heroHeading = document.querySelector("[data-hero-heading]") as HTMLElement;
       const heroInput = document.querySelector("[data-hero-input]") as HTMLElement;
       if (heroHeading) heroHeading.style.cssText += "visibility:visible;opacity:1;";
       if (heroInput) heroInput.style.cssText += "visibility:visible;opacity:1;";
     }, 3000);
     return () => clearTimeout(fallback);
-  }, []);
+  }, [sections.length]);
 
   useGSAP(
     () => {
@@ -233,12 +258,27 @@ export default function ScrollCanvas({
         }
       }
 
-      // Set initial states — everything hidden except section 0
+      // Determine which section should be visible based on current scroll position.
+      // On /?home skip flow, user is already scrolled to beach — showing section 0
+      // (galaxy dark) would flash black before ScrollTrigger.update() processes.
+      let initActiveIdx = 0;
+      if (window.scrollY > 0 && containerRef.current) {
+        const scrollRange = containerRef.current.scrollHeight - window.innerHeight;
+        if (scrollRange > 0) {
+          const progress = window.scrollY / scrollRange;
+          for (let i = 0; i < N; i++) {
+            if (progress < sectionNormStarts[i] + sectionNormWidths[i] || i === N - 1) {
+              initActiveIdx = i;
+              break;
+            }
+          }
+        }
+      }
       images.forEach((img, i) => {
-        gsap.set(img, { autoAlpha: i === 0 ? 1 : 0 });
+        gsap.set(img, { autoAlpha: i === initActiveIdx ? 1 : 0 });
       });
       contents.forEach((content, i) => {
-        gsap.set(content, { autoAlpha: i === 0 ? 1 : 0 });
+        gsap.set(content, { autoAlpha: i === initActiveIdx ? 1 : 0 });
       });
       // Hide all reveal elements
       revealsPerSection.forEach((reveals) => {
@@ -546,8 +586,14 @@ export default function ScrollCanvas({
           }
         },
       });
+
+      // Force ScrollTrigger to process current scroll position immediately.
+      // With revertOnUpdate, each re-run resets all sections to hidden (except 0).
+      // If the user is already scrolled (e.g. /?home skip flow), this ensures the
+      // correct section is revealed right away instead of waiting for a scroll event.
+      ScrollTrigger.update();
     },
-    { scope: containerRef, dependencies: [scrollPerSection, sections, isMobile] }
+    { scope: containerRef, dependencies: [scrollPerSection, sections, isMobile], revertOnUpdate: true }
   );
 
   const MOBILE_TOTAL_SCALE = 0.85;
