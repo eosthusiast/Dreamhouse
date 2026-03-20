@@ -704,8 +704,7 @@ export default function WhoContent() {
                 fontStyle: "italic",
                 fontWeight: 600,
                 fontSize: "1.1rem",
-                color: "var(--text-dark)",
-                opacity: 0.7,
+                color: "var(--text-soft)",
                 lineHeight: 1.65,
               }}
             >
