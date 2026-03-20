@@ -710,37 +710,37 @@ export default function HousesContent() {
               <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
                 {[
                   {
-                    icon: "🌙",
+                    icon: "/images/icons/MoonClear.png",
                     title: "The opening ceremony: a mystery school for connection",
                     body: "Our first weekend together is a mystery school for connection. Everyone must arrive by 12pm on July 4th. It\u2019s super important we open the experience together.",
                   },
                   {
-                    icon: "🪄",
+                    icon: "/images/icons/WandClear.png",
                     title: "The whiteboard",
                     body: "A whiteboard that each of you is encouraged to fill with your ideas and offerings.",
                   },
                   {
-                    icon: "🍵",
+                    icon: "/images/icons/CupClear.png",
                     title: "Daily rituals",
                     body: "Sunrise tea ceremonies, morning intention settings, movement, lunch & learns\u2026 we get to create them, together.",
                   },
                   {
-                    icon: "💻",
+                    icon: "/images/icons/ComputerClear.png",
                     title: "Deep work",
                     body: "Opportunities created to get into deep focus with supportive accountability and collaboration if useful. It could be your most productive month of the year.",
                   },
                   {
-                    icon: "✨",
+                    icon: "/images/icons/StarsClear.png",
                     title: "Peer workshops",
                     body: "Everyone in this house knows something the others don\u2019t. We make structured space for that exchange. You will teach. You will be taught. Often by the person you least expected.",
                   },
                   {
-                    icon: "🌿",
+                    icon: "/images/icons/HandClear.png",
                     title: "Giving back",
                     body: "Opportunities to give back to the local community. Being of service.",
                   },
                   {
-                    icon: "🔮",
+                    icon: "/images/icons/CrystalClear.png",
                     title: "Community & hosting",
                     body: "Some days the valley belongs only to us \u2014 intimate, held, sacred. Other days we open the gates and invite our wider European community in.",
                   },
@@ -761,9 +761,12 @@ export default function HousesContent() {
                       textAlign: "center",
                     }}
                   >
-                    <span style={{ fontSize: "1.5rem" }} role="img" aria-hidden="true">
-                      {ritual.icon}
-                    </span>
+                    <img
+                      src={ritual.icon}
+                      alt=""
+                      aria-hidden="true"
+                      style={{ width: "48px", height: "48px", objectFit: "contain", opacity: 0.85 }}
+                    />
                     <div>
                       <p
                         style={{

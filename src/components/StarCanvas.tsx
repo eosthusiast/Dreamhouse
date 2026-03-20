@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "motion/react";
 
 const PALETTE = [
@@ -26,6 +26,9 @@ interface StarData {
 }
 
 export default function StarCanvas() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   const stars = useMemo<StarData[]>(() => {
     // Generate deterministic-looking but random stars at mount
     const count = typeof window !== "undefined" && window.innerWidth < 768 ? 15 : 40;
@@ -46,6 +49,8 @@ export default function StarCanvas() {
       };
     });
   }, []);
+
+  if (!mounted) return null;
 
   return (
     <div
