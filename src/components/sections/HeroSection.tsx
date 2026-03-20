@@ -161,7 +161,7 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
       fetch("/api/dreams", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ dream }),
+        body: JSON.stringify({ dream, type: "dream" }),
       }).catch(() => {});
     }
   }, []);
@@ -173,7 +173,7 @@ export default function HeroSection({ onGateComplete, onScrollComplete, skipGate
         fetch("/api/dreams", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ dream }),
+          body: JSON.stringify({ dream, type: "dream-support" }),
         }).catch(() => {});
       }
       // Disable input immediately but keep it rendered (no layout shift)
