@@ -40,6 +40,7 @@ export default function ScrollCanvas({
 }: ScrollCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
+  const gsapReady = useRef(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isIOSSafari, setIsIOSSafari] = useState(false);
 
@@ -100,7 +101,7 @@ export default function ScrollCanvas({
   // and reveal whichever section the user is actually viewing.
   useEffect(() => {
     const fallback = setTimeout(() => {
-      if (!stickyRef.current) return;
+      if (!stickyRef.current || gsapReady.current) return;
       const images = stickyRef.current.querySelectorAll("[data-scroll-image]");
       const contents = stickyRef.current.querySelectorAll("[data-scroll-content]");
 
@@ -592,6 +593,7 @@ export default function ScrollCanvas({
       // If the user is already scrolled (e.g. /?home skip flow), this ensures the
       // correct section is revealed right away instead of waiting for a scroll event.
       ScrollTrigger.update();
+      gsapReady.current = true;
     },
     { scope: containerRef, dependencies: [scrollPerSection, sections, isMobile], revertOnUpdate: true }
   );
