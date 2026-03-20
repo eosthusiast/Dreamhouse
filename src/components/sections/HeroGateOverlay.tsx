@@ -21,7 +21,8 @@ export default function HeroGateOverlay({
   const [phase, setPhase] = useState<"loading" | "hero1" | "hero2" | "done">(
     "loading"
   );
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const [vpHeight, setVpHeight] = useState(0);
+  const [vpTop, setVpTop] = useState(0);
   const overlayRef = useRef<HTMLDivElement>(null);
   const hero1Ref = useRef<HTMLDivElement>(null);
   const hero2Ref = useRef<HTMLDivElement>(null);
@@ -29,20 +30,22 @@ export default function HeroGateOverlay({
   const inputRef = useRef<HTMLDivElement>(null);
   const initialVpHeight = useRef(0);
 
-  const keyboardOpen = keyboardHeight > 0;
+  const keyboardOpen = vpHeight > 0 && vpHeight < initialVpHeight.current * 0.75;
 
-  // Track keyboard height via visualViewport for content positioning.
-  // Instead of resizing the overlay (which creates a gap with the fixed backdrop),
-  // we keep the overlay at fixed inset-0 and use padding to center content
-  // above the keyboard. visualViewport.resize fires once at the end of the
-  // keyboard animation — the CSS transition on padding-bottom smooths this.
+  // Track visualViewport height and offsetTop for content positioning.
+  // The outer overlay stays fixed inset-0 (covers full screen, no dark gap).
+  // The inner content wrapper uses vpHeight/vpTop to center content in the
+  // actual visible area — matching the fceaaee approach without the gap.
   useEffect(() => {
     const vv = window.visualViewport;
     if (!vv) return;
     initialVpHeight.current = vv.height;
+    setVpHeight(vv.height);
+    setVpTop(vv.offsetTop);
+
     const update = () => {
-      const kbHeight = initialVpHeight.current - vv.height;
-      setKeyboardHeight(kbHeight > 100 ? kbHeight : 0);
+      setVpHeight(vv.height);
+      setVpTop(vv.offsetTop);
     };
 
     vv.addEventListener("resize", update);
@@ -177,6 +180,18 @@ export default function HeroGateOverlay({
     [onGateComplete, onScrollComplete, onDismiss]
   );
 
+  // Inner content wrapper style: sized and positioned to the visual viewport.
+  // This centers content in the actual visible area (accounting for keyboard
+  // and iOS toolbar offset) while the outer overlay stays full-screen.
+  const innerStyle = {
+    position: "absolute" as const,
+    left: 0,
+    right: 0,
+    top: vpTop,
+    height: vpHeight || "100%",
+    transition: "height 0.15s ease-out, top 0.15s ease-out",
+  };
+
   return (
     <div
       ref={overlayRef}
@@ -188,25 +203,19 @@ export default function HeroGateOverlay({
         overflow: "hidden",
       }}
     >
-      {/* Hero 1 Content — padding-bottom accounts for keyboard, centering content above it.
-          Overlay stays fixed inset-0 (matching the backdrop) so no dark gap appears. */}
+      {/* Hero 1 Content — inner wrapper tracks visualViewport for centering.
+          Outer overlay stays fixed inset-0 (matching backdrop) so no dark gap. */}
       <div
         ref={hero1Ref}
-        className="flex flex-col items-center w-full h-full px-4"
-        style={{
-          paddingBottom: keyboardHeight,
-          transition: "padding-bottom 0.15s ease-out",
-        }}
+        className="flex flex-col items-center w-full px-4"
+        style={innerStyle}
       >
         <div className="flex flex-col items-center w-full my-auto">
           <div
             ref={headingRef}
             data-hero-heading
             className="text-center"
-            style={{
-              marginBottom: "0.75rem",
-              overflow: "hidden",
-            }}
+            style={{ marginBottom: "0.75rem", overflow: "hidden" }}
           >
             <Image
               src="/images/typography/dream-your-way-in.png"
@@ -254,11 +263,8 @@ export default function HeroGateOverlay({
         onClick={() => {
           hero2Ref.current?.querySelector("input")?.focus();
         }}
-        className="absolute inset-0 flex flex-col items-center w-full px-4"
-        style={{
-          paddingBottom: keyboardHeight,
-          transition: "padding-bottom 0.15s ease-out",
-        }}
+        className="flex flex-col items-center w-full px-4"
+        style={innerStyle}
       >
         <div className="flex flex-col items-center w-full my-auto"
           style={{ padding: "0.5rem 0" }}
