@@ -134,7 +134,7 @@ export default function HeroGateOverlay({
       fetch("/api/dreams", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ dream }),
+        body: JSON.stringify({ dream, type: "dream" }),
       }).catch(() => {});
     }
   }, []);
@@ -146,7 +146,7 @@ export default function HeroGateOverlay({
         fetch("/api/dreams", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ dream }),
+          body: JSON.stringify({ dream, type: "dream-support" }),
         }).catch(() => {});
       }
 
