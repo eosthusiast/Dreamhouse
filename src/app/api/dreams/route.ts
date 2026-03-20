@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
-import { promises as fs } from "fs";
-import path from "path";
+import { Redis } from "@upstash/redis";
 
-const DREAMS_FILE = path.join(process.cwd(), "data", "dreams.json");
+const redis = new Redis({
+  url: process.env.KV_REST_API_URL!,
+  token: process.env.KV_REST_API_TOKEN!,
+});
 
 export async function POST(request: Request) {
   try {
@@ -13,23 +15,22 @@ export async function POST(request: Request) {
 
     const entry = { text: dream.trim(), timestamp: new Date().toISOString() };
 
-    // Ensure data directory exists
-    await fs.mkdir(path.dirname(DREAMS_FILE), { recursive: true });
-
-    // Read existing dreams or start fresh
-    let dreams: typeof entry[] = [];
-    try {
-      const raw = await fs.readFile(DREAMS_FILE, "utf-8");
-      dreams = JSON.parse(raw);
-    } catch {
-      // File doesn't exist yet
-    }
-
-    dreams.push(entry);
-    await fs.writeFile(DREAMS_FILE, JSON.stringify(dreams, null, 2));
+    await redis.lpush("dreams", JSON.stringify(entry));
 
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ error: "Failed to save dream" }, { status: 500 });
+  }
+}
+
+export async function GET() {
+  try {
+    const dreams = await redis.lrange("dreams", 0, -1);
+    const parsed = dreams.map((d) =>
+      typeof d === "string" ? JSON.parse(d) : d
+    );
+    return NextResponse.json(parsed);
+  } catch {
+    return NextResponse.json({ error: "Failed to fetch dreams" }, { status: 500 });
   }
 }
