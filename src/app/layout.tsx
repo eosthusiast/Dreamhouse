@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { LenisProvider } from "@/providers/LenisProvider";
 import "./globals.css";
 
@@ -43,6 +44,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${cormorant.variable} antialiased`}>
         <LenisProvider><main>{children}</main></LenisProvider>
+        <Analytics />
       </body>
     </html>
   );
