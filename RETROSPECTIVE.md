@@ -420,3 +420,13 @@ The hero gate inputs ("share a dream" and "how can others support your dream") n
 **Fix**: Added a `mounted` state gate — component returns `null` during SSR, renders stars only after mount on the client. No server HTML means no mismatch.
 
 **Rule**: Components that use `Math.random()`, `Date.now()`, or any non-deterministic value must skip SSR rendering entirely. Use a `mounted` state pattern to render only on the client.
+
+### Lesson 18: iOS Low Power Mode silently blocks video autoplay
+
+**Problem**: On iOS in Low Power Mode, the hero galaxy video failed to autoplay. The `play().catch()` handler hid the video element (`display: none`), revealing only a solid `#050a1a` background — a dark purple screen with no visual content.
+
+**Root cause**: iOS Low Power Mode blocks all video autoplay regardless of the `muted` attribute. The existing code correctly detected the failure and hid the video, but the fallback behind it was just a solid color div — no poster image.
+
+**Fix**: Extracted a frame from `galaxy.mp4` (using ffmpeg) as `galaxy-poster.jpg`. Used it as both the `<video poster>` attribute and as a CSS `background-image` on the div behind the video (`background: #050a1a url('/videos/galaxy-poster.jpg') center/cover no-repeat`). When Low Power Mode blocks autoplay and the video is hidden, the galaxy starfield image shows through instead of a solid color. Applied to both the ScrollCanvas hero video and the iOS galaxy backdrop.
+
+**Rule**: Always provide a meaningful static fallback behind `<video>` elements — not just a solid color. iOS Low Power Mode, data saver modes, and slow connections can all prevent video playback. The fallback should be visually equivalent to a frame of the video.
