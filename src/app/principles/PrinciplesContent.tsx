@@ -113,7 +113,7 @@ function TarotCard({ principleColor, title, frontImage }: { principleColor: stri
 const PRINCIPLES = [
   {
     title: "Be a dreamer",
-    body: "Everything IS possible. Question the limiting belief, not the dream.",
+    body: "Most of what we\u2019ve been told is impossible, isn\u2019t. Question the limiting belief, not the dream.",
     color: "#e8806a",
     frontImage: "/images/principles/dreamer.jpeg",
   },
@@ -125,7 +125,7 @@ const PRINCIPLES = [
   },
   {
     title: "Be embodied",
-    body: "We move, rest, eat, and breathe with intention. We live in rhythm with nature. Your body knows things your mind talks you out of. This is the place where you get to listen.",
+    body: "We move, rest, eat, and breathe with intention. We live in rhythm with nature. Your body has been carrying things your mind hasn\u2019t caught up to yet. Here, there\u2019s space to listen.",
     color: "#8cb89a",
     frontImage: "/images/principles/embodied.jpeg",
   },
@@ -140,6 +140,12 @@ const PRINCIPLES = [
     body: "Do it your way. Be authentic, be bold. There's no template here, just you, doing the thing only you can do.",
     color: "#9ec8e0",
     frontImage: "/images/principles/maverick.jpeg",
+  },
+  {
+    title: "Surrender",
+    body: "Not everything needs to be solved, built, or transformed. Sometimes the bravest thing is to stop. To sit with what is, without needing it to be different. To trust that not-knowing is its own kind of wisdom.",
+    color: "#c4a882",
+    frontImage: "/images/principles/card-back.jpeg",
   },
 ];
 
@@ -271,7 +277,7 @@ export default function PrinciplesContent() {
             fontStyle: "italic",
             color: "var(--text-soft)",
           }}>
-            A detox from the modern world and its limiting beliefs.
+            A place to reconnect with your gifts and intuition.
           </span>
         </motion.p>
 

@@ -38,7 +38,7 @@ const QUESTIONS = [
   },
   {
     q: "What does a typical day look like?",
-    a: "The collective group will bring together their gifts and preferences and design this. Typically it could include mornings intention setting, time dedicated to focused work, lunch and learns, group workouts, collaboration & brainstorming, discussing the world\u2019s problems and how we could be of service, playing, exploring spirituality, evenings for communal meals, connection and workshops. Everyone participating only in what they want to.",
+    a: "The collective group will bring together their gifts and preferences and design this. Typically it could include mornings intention setting, time dedicated to focused work, lunch and learns, group workouts, collaboration & brainstorming, discussing the world\u2019s problems and how we could be of service, playing, exploring spirituality, evenings for communal meals, connection and workshops. Everyone free to participate in what calls to them, and equally free to step away when they need to.",
   },
   {
     q: "How much alone time will I have?",
@@ -46,7 +46,7 @@ const QUESTIONS = [
   },
   {
     q: "What\u2019s the gender and background composition of the cohort?",
-    a: "We\u2019re intentional about cohort composition, including gender balance and professional diversity. We don\u2019t publish specific targets, but community dynamics are something we think carefully about in the selection process. We design this believing you will be genuinely excited to meet everyone, and have a deep connection with at least 3 people.",
+    a: "We\u2019re intentional about cohort composition, including gender balance and professional diversity. We don\u2019t publish specific targets, but community dynamics are something we think carefully about in the selection process. We put real thought into who\u2019s in the room together. Our hope is that you\u2019ll be surprised by the connections that form.",
   },
   {
     q: "Can I bring my partner or a friend?",
@@ -58,7 +58,7 @@ const QUESTIONS = [
   },
   {
     q: "Is this a business networking event?",
-    a: "No, though many residents do find that professional relationships emerge organically. We\u2019re not building LinkedIn connections; we\u2019re building relationships. If those relationships turn into collaborations, referrals, or business, that\u2019s a natural byproduct of genuine connection, not the goal. Many businesses, collaborations and advisorships have formed from past Dream Houses based on deep care, respect and friendship.",
+    a: "No, though many residents do find that professional relationships emerge organically. We\u2019re not building LinkedIn connections; we\u2019re building relationships. If those relationships turn into collaborations, referrals, or business, that\u2019s a natural byproduct of genuine connection, not the goal. Many relationships \u2014 some personal, some professional, some hard to categorize \u2014 have formed from past Dream Houses, all rooted in deep care, respect and friendship.",
   },
   {
     q: "What happens after Dream House?",

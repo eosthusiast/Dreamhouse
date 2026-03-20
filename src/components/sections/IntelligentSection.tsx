@@ -15,7 +15,7 @@ interface TextConfig {
 
 const TEXTS: TextConfig[] = [
   {
-    text: "For those that feel the need for a more intelligent way to live...",
+    text: "For those drawn to a more intentional way of being...",
     x: 15,
     y: 30,
     mobileY: 12,
@@ -32,7 +32,7 @@ const TEXTS: TextConfig[] = [
     maxWidth: "24rem",
   },
   {
-    text: "Fertile soil for the truest version of yourself to play.",
+    text: "Fertile soil for the unmasked version of yourself to play.",
     x: 82,
     y: 75,
     mobileY: 76,

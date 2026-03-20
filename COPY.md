@@ -1,4 +1,4 @@
-# Dream House — All Website Copy
+# Dream House — All Website Copy revised
 
 All text content across the site, organized by page. Edit this file and reference it when updating the codebase.
 
@@ -43,7 +43,7 @@ All text content across the site, organized by page. Edit this file and referenc
 ### Section: Story — Ocean
 
 - Where dancing with your dreams is just a Tuesday...
-- Where your dreams become reality on the same day you dream them.
+- **Where the distance between imagining and beginning seems to disappear.**
 - What if that wasn't luck?
 
 ### Section: Welcome
@@ -52,7 +52,7 @@ All text content across the site, organized by page. Edit this file and referenc
 
 - 1 month
 - 10-16 people
-- Carefully curated
+- Thoughtfully gathered
 - Consciously held
 - Co-created
 - Where inspiring people go to get inspired
@@ -60,17 +60,20 @@ All text content across the site, organized by page. Edit this file and referenc
 ### Section: Inspired By
 
 **Column 1:**
+
 - Inspired by:
 - The depth of retreats.
 - The magic of Burning Man.
 - The intimacy of mystery schools.
 
 **Column 2:**
+
 - The aliveness of festivals.
 - The ambition of accelerators.
 - The surrender of vision quests.
 
 **Column 3:**
+
 - The spark of a TED Talk.
 - The pure grounding of nature.
 - The belonging of sitting in circle.
@@ -78,9 +81,9 @@ All text content across the site, organized by page. Edit this file and referenc
 
 ### Section: Intelligent
 
-- For those that feel the need for a more intelligent way to live...
+- **For those drawn to a more intentional way of being...**
 - ... in connection with nature, ourselves and each other.
-- Fertile soil for the truest version of yourself to play.
+- Fertile soil for the unmasked version of yourself to play.
 
 ### Section: Portal
 
@@ -88,8 +91,7 @@ All text content across the site, organized by page. Edit this file and referenc
 
 ### Gallery
 
-**Button 1**: Who will be there *(links to /who)*
-**Button 2**: Apply Now *(links to Google Form)*
+**Button 1**: Who will be there *(links to /who)***Button 2**: Apply Now *(links to Google Form)*
 
 ---
 
@@ -112,22 +114,22 @@ All text content across the site, organized by page. Edit this file and referenc
 
 ### Subtitle
 
-This is for the ambitious weirdos & genuinely good eggs.
+This is for the people who take life seriously enough to be playful about it, the ambitious weirdos & genuinely good eggs.
 
 ### Yes-List
 
-- We accidentally inspire people, constantly
+- We inspire people, whether we intend to or not
 - We believe joy and ambition belong in the same room
 - We share our gifts and being of service energises us
 - We have something we're building that means something to us
 - We miss the kind of community that was just around us earlier in life
 - We get genuinely energised by people who think differently to us
 - We are willing to be fully seen and see others honestly
+- We're comfortable with not having all the answers
 
 ### CTA Buttons (appears twice: after yes-list and at bottom)
 
-**Button 1**: Upcoming Dream House *(links to /houses)*
-**Button 2**: Apply Now *(links to Google Form)*
+**Button 1**: Upcoming Dream House *(links to /houses)***Button 2**: Apply Now *(links to Google Form)*
 
 ### "Not For You" Section
 
@@ -146,7 +148,9 @@ This is for the ambitious weirdos & genuinely good eggs.
 
 **Body**: The Dream House was born from my lifelong fascination with what makes humans dream bigger, do the impossible, and live with more presence, vitality, and love. It emerged from a decade spent building intentional teams and cultures *(which resulted in creating a multi-billion-dollar company that taught cars to drive themselves.)* Combined with the last few years that I have spent immersing myself in transformational containers around the world. After witnessing how culture can drive billion-dollar innovation, I became fascinated by how it might shape more loving, creative, and conscious ways of living.
 
-**Blockquote**: This is my passionate project. A gift. I join the experiment just like everyone else, and am along for the rollercoaster, the adventure.
+**Blockquote**: This is my passionate project. A gift. I join the experiment just like everyone else, and am along for the rollercoaster, the adventure. 
+
+I'm learning too. Every Dream House teaches me something I didn't expect. I don't know what each container will evoke, I just know it's worth doing.
 
 ### Testimonials Section
 
@@ -157,21 +161,24 @@ This is for the ambitious weirdos & genuinely good eggs.
 **Intro**: In 2025, we ran our first experiment. People called it
 
 **Quotes**:
+
 - "a home for inspiring people to be inspired"
 - "a manifestation accelerator"
 - "a container for miracles"
 - "the most fertile soil for transformation"
 
 **Follow-up**:
+
 - Some fell in love.
 - Some launched companies.
 - Others met parts of themselves they'd never known.
+- Some found a stillness they'd been running from.
 
 **Closing**:
 It was the kind of place where
-everything felt possible.
+everything felt possible. [please use same color as previous bold font]
 
-As it does when you're surrounded by the right community.
+As it does when you're surrounded by a community that sees you.
 
 ---
 
@@ -198,25 +205,19 @@ More chapters coming soon — apply here to register interest
 **Subtitle**: Enough structure to hold you, enough spaciousness to surprise you.
 
 1. **The opening ceremony: a mystery school for connection**
-   Our first weekend together is a mystery school for connection. Everyone must arrive by 12pm on July 4th. It's super important we open the experience together.
-
+Our first weekend together is a mystery school for connection. Everyone must arrive by 12pm on July 4th. It's super important we open the experience together.
 2. **The whiteboard**
-   A whiteboard that each of you is encouraged to fill with your ideas and offerings.
-
+A whiteboard that each of you is encouraged to fill with your ideas and offerings.
 3. **Daily rituals**
-   Sunrise tea ceremonies, morning intention settings, movement, lunch & learns... we get to create them, together.
-
+Sunrise tea ceremonies, morning intention settings, movement, lunch & learns... we get to create them, together.
 4. **Deep work**
-   Opportunities created to get into deep focus with supportive accountability and collaboration if useful. It could be your most productive month of the year.
-
+Opportunities created to get into deep focus with supportive accountability and collaboration if useful. Some people find it their most productive month. Others find it's the month they finally stop producing.
 5. **Peer workshops**
-   Everyone in this house knows something the others don't. We make structured space for that exchange. You will teach. You will be taught. Often by the person you least expected.
-
+Everyone in this house knows something the others don't. We make structured space for that exchange. The teaching goes in every direction. Often from the person you'd least expect.
 6. **Giving back**
-   Opportunities to give back to the local community. Being of service.
-
+Opportunities to give back to the local community. Being of service.
 7. **Community & hosting**
-   Some days the valley belongs only to us — intimate, held, sacred. Other days we open the gates and invite our wider European community in.
+Some days the valley belongs only to us — intimate, held, sacred. Other days we open the gates and invite our wider European community in.
 
 ### Fools Valley Section
 
@@ -230,7 +231,7 @@ Down a road that feels like it's keeping a secret. Past the olive groves. Into a
 
 This is your home for the month: with a pool, a pond, a sauna, a dance hall, a co-working space where ideas arrive easily, and a private chef who conjures three nourishing meals a day from things that grew nearby.
 
-Everything here is designed, quietly and carefully, to bring us back to ourselves. Our circadian rhythms, which the modern world quietly broke slowly return. We sleep deeply. Think clearly. Feel more like ourselves, or perhaps like the persons we always suspected we could be.
+Everything here is designed, quietly and carefully, to invite us a little closer to ourselves. Our circadian rhythms, which we've slowly drifted from, return. We sleep deeply. Think clearly. Feel more like ourselves, or perhaps like the persons we always suspected we could be.
 
 **Amenities**: Private bedrooms · Co-working space · Sauna & pool · Private pond · Dance hall · Private chef · 3 meals daily · Workshop spaces · 30 min from Lisbon · 20 min from the Ocean · Alcohol & Cigarette free
 
@@ -251,6 +252,7 @@ For those who wish to continue the story, an invitation awaits. The week immedia
 We offer a sliding scale: those who pay more help cover the true cost of running the residency and fund financial aid making this genuinely available to everyone who's meant to be here.
 
 **Slider tiers**:
+
 - €3,000 — covering costs
 - €5,000 — covering true costs of 1 person
 - €8,000 — supporting others in experiencing this
@@ -274,30 +276,30 @@ We offer a sliding scale: those who pay more help cover the true cost of running
 
 Where inspiring people go to get inspired.
 
-A detox from the modern world and its limiting beliefs.
+A place to reconnect with your gifts and intuition.
 
-### Intro
+Intro
 
 I could tell you that integrity, curiosity, kindness, etc is important. And they are. Those are expected....
 
 These are the principles that make us a little more unique: # no italics here
 
-### The Five Principles
+### The Six Principles
 
 1. **Be a dreamer**
-   Everything IS possible. Question the limiting belief, not the dream.
-
+**Most of what we've been told is impossible, isn't.** Question the limiting belief, not the dream.
 2. **Be ridiculous**
-   Play. Be silly. Take your masks off. No need for performing here. Fail. Take risks. Just try, and laugh at yourself when it doesn't work out, knowing that you are one step closer to brilliance.
-
+Play. Be silly. Take your masks off. No need for performing here. Fail. Take risks. Just try, and laugh at yourself when it doesn't work out, knowing that you are one step closer to brilliance.
 3. **Be embodied**
-   We move, rest, eat, and breathe with intention. We live in rhythm with nature. Your body knows things your mind talks you out of. This is the place where you get to listen.
-
+We move, rest, eat, and breathe with intention. We live in rhythm with nature. Your body has been carrying things your mind hasn't caught up to yet. Here, there's space to listen.
 4. **Be abundant**
-   We are generous with our gifts. We trust that everything we need, we already have. And we give freely — in time, in energy, in kindness.
-
+We are generous with our gifts. We trust that everything we need, we already have. And we give freely — in time, in energy, in kindness.
 5. **Be a maverick**
-   Do it your way. Be authentic, be bold. There's no template here, just you, doing the thing only you can do.
+Do it your way. Be authentic, be bold. There's no template here, just you, doing the thing only you can do.
+6. **Surrender**
+    
+    Not everything needs to be solved, built, or transformed. Sometimes the bravest thing is to stop. To sit with what is, without needing it to be different. To trust that not-knowing is its own kind of wisdom.
+    
 
 ---
 
@@ -316,13 +318,13 @@ A: We regularly add new future chapters, so even if you can't make the date of t
 A: Creative energy will be high, and you'll be surrounded by a bunch of inspiring people who may just have the missing ideas, or skills you've been waiting for. So whilst you do not need a formal project or business, it's a super fun place to be in an active creative, designing the next chapter, building a business, learning something, etc. Dream House works best for people who have something they want to move forward, even if that thing is still taking shape.
 
 **Q: What does a typical day look like?**
-A: The collective group will bring together their gifts and preferences and design this. Typically it could include mornings intention setting, time dedicated to focused work, lunch and learns, group workouts, collaboration & brainstorming, discussing the world's problems and how we could be of service, playing, exploring spirituality, evenings for communal meals, connection and workshops. Everyone participating only in what they want to.
+A: The collective group will bring together their gifts and preferences and design this. Typically it could include mornings intention setting, time dedicated to focused work, lunch and learns, group workouts, collaboration & brainstorming, discussing the world's problems and how we could be of service, playing, exploring spirituality, evenings for communal meals, connection and workshops. Everyone free to participate in what calls to them, and equally free to step away when they need to.
 
 **Q: How much alone time will I have?**
 A: As much as you need. The house is designed with communal and private spaces. You won't be expected to be "on" at all times. We all have say in how the space is designed, functions and activated. We all have private rooms, and a lot of land to explore to be alone too.
 
 **Q: What's the gender and background composition of the cohort?**
-A: We're intentional about cohort composition, including gender balance and professional diversity. We don't publish specific targets, but community dynamics are something we think carefully about in the selection process. We design this believing you will be genuinely excited to meet everyone, and have a deep connection with at least 3 people.
+A: We're intentional about cohort composition, including gender balance and professional diversity. We don't publish specific targets, but community dynamics are something we think carefully about in the selection process. We put real thought into who's in the room together. Our hope is that you'll be surprised by the connections that form.
 
 **Q: Can I bring my partner or a friend?**
 A: Dream House is designed as a community experience where relationships form organically from scratch. Bringing a pre-existing partner or close friend can change the group dynamics in ways that diminish the experience for everyone. We ask that each participant apply individually, so that they come on their own merit, and will add to the experience. Couples are welcome as long as they have both individually been approved.
@@ -331,7 +333,7 @@ A: Dream House is designed as a community experience where relationships form or
 A: We ask everyone to arrive for the opening weekend. We will only be allowing those who can commit to the whole time, though if you have some trips during the day that may take you away for a few days that is allowed. The community experience compounds over time, the magic of week four is built on weeks one through three.
 
 **Q: Is this a business networking event?**
-A: No, though many residents do find that professional relationships emerge organically. We're not building LinkedIn connections; we're building relationships. If those relationships turn into collaborations, referrals, or business, that's a natural byproduct of genuine connection, not the goal. Many businesses, collaborations and advisorships have formed from past Dream Houses based on deep care, respect and friendship.
+A: No, though many residents do find that professional relationships emerge organically. We're not building LinkedIn connections; we're building relationships. If those relationships turn into collaborations, referrals, or business, that's a natural byproduct of genuine connection, not the goal. Many relationships — some personal, some professional, some hard to categorize — have formed from past Dream Houses, all rooted in deep care, respect and friendship.
 
 **Q: What happens after Dream House?**
 A: Hopefully you leave inspired and expanded in some way, and you are encouraged to bring that into your life in whatever unique shape or form it needs to for you. You have ongoing support from Carolin, including an integration coaching session, should you desire it. You leave deeply connected with those that you met and let those relationships take form in the way that it most makes sense for your life. Or maybe, you end up at another Dream House together ;)

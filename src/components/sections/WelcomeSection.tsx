@@ -47,7 +47,7 @@ export default function WelcomeSection() {
         <div className="welcome-details font-playfair italic text-lg md:text-xl lg:text-2xl" style={{ display: "flex", flexDirection: "column", gap: "0.6rem", color: "rgba(255,255,255,0.95)", textShadow: "0 2px 20px rgba(0,0,0,0.6), 0 0 40px rgba(0,0,0,0.3)" }}>
           <p data-reveal>1 month</p>
           <p data-reveal>10-16 people</p>
-          <p data-reveal>Carefully curated</p>
+          <p data-reveal>Thoughtfully gathered</p>
           <p data-reveal>Consciously held</p>
           <p data-reveal>Co-created</p>
           <p data-reveal className="mt-2 md:mt-6 max-w-xs">
