@@ -1,12 +1,26 @@
 import { NextResponse } from "next/server";
 import { Redis } from "@upstash/redis";
+import { Ratelimit } from "@upstash/ratelimit";
 
 const redis = Redis.fromEnv();
+
+const ratelimit = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(5, "1 h"),
+  prefix: "ratelimit:dreams",
+});
 
 const VALID_TYPES = ["dream", "dream-support"] as const;
 
 export async function POST(request: Request) {
   try {
+    // Rate limit by IP — 5 submissions per hour
+    const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+    const { success } = await ratelimit.limit(ip);
+    if (!success) {
+      return NextResponse.json({ error: "Too many submissions. Try again later." }, { status: 429 });
+    }
+
     const { dream, type = "dream" } = await request.json();
     if (!dream || typeof dream !== "string") {
       return NextResponse.json({ error: "Missing dream text" }, { status: 400 });

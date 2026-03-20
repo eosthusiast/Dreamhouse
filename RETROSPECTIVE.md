@@ -372,3 +372,51 @@ Three more iOS Safari issues discovered through real-device testing on iPhone SE
 **Fix**: Replaced the inner `<div>` with Framer Motion `<motion.div animate={{ rotateY }}>`. Framer Motion drives the animation via JS requestAnimationFrame interpolation, completely bypassing WebKit's broken CSS transition engine for 3D transforms. Removed `will-change` from face divs.
 
 **Rule**: For 3D transforms on iOS, use JS-driven animation (Framer Motion) instead of CSS transitions. Don't add `will-change: transform` to children of `preserve-3d` containers.
+
+---
+
+## Part 8: Vercel Migration & API Layer (Day 15)
+
+### Migration from GitHub Pages to Vercel
+
+Moved hosting from GitHub Pages (static export) to Vercel to unlock serverless API routes. Key changes:
+
+- Removed `output: "export"` from `next.config.ts` — API routes now run as Vercel serverless functions
+- Deleted `.github/workflows/deploy.yml` (GitHub Pages workflow)
+- Vercel auto-deploys on push to `main` and creates preview deployments for every PR
+
+### Dream Capture API
+
+The hero gate inputs ("share a dream" and "how can others support your dream") now persist to Upstash Redis via a serverless API route:
+
+- `POST /api/dreams` — public, rate-limited (5 per IP per hour via `@upstash/ratelimit`)
+- `GET /api/dreams` — gated behind `Authorization: Bearer <DREAMS_API_KEY>` header
+- Hero1 entries stored under Redis key `dream`, hero2 under `dream-support`
+
+### Lesson 15: Safety fallbacks can become the bug
+
+**Problem**: After the hero gate skip to the beach section, the ocean section would flash in briefly after ~3 seconds, then correct itself when the user scrolled.
+
+**Root cause**: ScrollCanvas had a 3-second safety fallback that reveals sections if GSAP fails to initialize. It fired unconditionally — even when GSAP was already running. It used a simple linear index (`progress * sectionCount`) that didn't match GSAP's weighted `scrollVh` mapping, computing ocean (section 3) instead of beach (section 2). The forced inline styles overrode GSAP's correct state until the next scroll event.
+
+**Fix**: Added a `gsapReady` ref. The fallback now skips if GSAP has already initialized. The fallback still fires correctly if GSAP genuinely fails to load.
+
+**Rule**: Safety fallbacks must check whether the system they're backing up is already running. An unconditional fallback can fight with the primary system.
+
+### Lesson 16: iOS keyboard centering requires tracking `visualViewport.offsetTop`
+
+**Problem**: After refactoring the hero gate overlay to use `paddingBottom: keyboardHeight` for centering content above the keyboard, the input was pushed too high — above the visible viewport.
+
+**Root cause**: iOS Safari shifts the visual viewport downward when focusing an input (`visualViewport.offsetTop` becomes non-zero). The `paddingBottom` approach only accounted for keyboard height, not the viewport offset. The content was centered in a space that didn't match what the user actually saw.
+
+**Fix**: Hybrid architecture — outer overlay stays `fixed inset-0` (no dark gap with galaxy backdrop), inner content wrapper tracks both `visualViewport.height` and `visualViewport.offsetTop`. This gives the same correct centering as the original approach without exposing the dark gap that prompted the refactor.
+
+**Rule**: On iOS, `visualViewport.height` and `visualViewport.offsetTop` must always be tracked together. Using one without the other will misposition content when the keyboard is open.
+
+### Lesson 17: `Math.random()` in SSR components causes hydration mismatches
+
+**Problem**: StarCanvas generated random star positions using `Math.random()` in a `useMemo`. Server and client produced different values, causing a hydration mismatch warning (red error overlay in dev).
+
+**Fix**: Added a `mounted` state gate — component returns `null` during SSR, renders stars only after mount on the client. No server HTML means no mismatch.
+
+**Rule**: Components that use `Math.random()`, `Date.now()`, or any non-deterministic value must skip SSR rendering entirely. Use a `mounted` state pattern to render only on the client.
